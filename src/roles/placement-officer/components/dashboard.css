@@ -1,0 +1,33 @@
+/* Dashboard-only safeguards against page-level CSS rules leaking from other views. */
+.cn-placement .dashboard-page .hero-card { padding: 34px; }
+.cn-placement .dashboard-page .hero-card .hero-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  border-radius: 9px;
+  font-weight: 600;
+  transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
+}
+.cn-placement .dashboard-page .hero-card .hero-btn:hover { transform: translateY(-1px); }
+.cn-placement .dashboard-page .hero-card .hero-btn-outline {
+  margin-left: 12px;
+  background: #fff;
+  color: #9810fa;
+  border: 0;
+  box-shadow: none;
+}
+.cn-placement .dashboard-page .hero-card .hero-btn-outline:hover {
+  background: #fff;
+  color: #9810fa;
+  box-shadow: 0 4px 12px rgba(34, 0, 83, .2);
+}
+.cn-placement .dashboard-page .stats-row { gap: 16px; }
+.cn-placement .dashboard-page .panel { min-width: 0; }
+.cn-placement .dashboard-page .panel-header { align-items: center; }
+
+@media (max-width: 600px) {
+  .cn-placement .dashboard-page .hero-card { padding: 24px; }
+  .cn-placement .dashboard-page .hero-card .hero-btn { width: 100%; margin: 0 0 10px; }
+  .cn-placement .dashboard-page .hero-card .hero-btn-outline { margin-bottom: 0; }
+}
