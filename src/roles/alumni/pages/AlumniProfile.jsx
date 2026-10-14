@@ -1,14 +1,34 @@
 import React, { useState } from 'react';
+import { Building2, GraduationCap, UserRound } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 import SignOutModal from '../components/SignOutModal';
+import ChangePasswordModal from '../../../shared/components/ChangePasswordModal';
+import { readSession } from '../../../services/api.js';
 import '../styles/Alumni.css';
 
 export default function AlumniProfile({
   alumniData,
   referrals = [],
   onNavigate,
+  // Lifted state from AlumniApp (persists across navigation)
+  personalInfo,
+  onSavePersonalInfo,
+  skillsList,
+  onSetSkillsList,
 }) {
   const [isSignOutOpen, setIsSignOutOpen] = useState(false);
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
+  const session = readSession() || {};
+
+  // Personal info edit state
+  const [isEditing, setIsEditing] = useState(false);
+  const [editFields, setEditFields] = useState({});
+  const [isEditingSocials, setIsEditingSocials] = useState(false);
+  const [editSocials, setEditSocials] = useState({});
+
+  // Skills UI state
+  const [newSkill, setNewSkill] = useState('');
+  const [showAddSkill, setShowAddSkill] = useState(false);
 
   const alumni = alumniData || {
     initials: 'SR',
@@ -17,8 +37,19 @@ export default function AlumniProfile({
     company: 'Google',
     batch: 2021,
     role: 'Alumni',
-    totalReferrals: 6,
-    approved: 2,
+  };
+
+  // Merge: personalInfo (lifted) overrides alumniData defaults
+  const info = {
+    name: personalInfo?.name || alumni.name,
+    email: personalInfo?.email || alumni.email,
+    company: personalInfo?.company || alumni.company,
+    batch: personalInfo?.batch || alumni.batch,
+    role: personalInfo?.role || 'Software Engineer',
+    location: personalInfo?.location || 'Hyderabad, India',
+    linkedin: personalInfo?.linkedin ?? '',
+    github: personalInfo?.github ?? '',
+    portfolio: personalInfo?.portfolio ?? '',
   };
 
   const counts = {
@@ -28,7 +59,23 @@ export default function AlumniProfile({
     declined: referrals.filter((r) => r.status === 'declined').length,
   };
 
-  // Recent activity from referrals
+  // Helper to format timestamps into relative time
+  const formatTimeAgo = (timestamp) => {
+    if (!timestamp) return 'Recently';
+    const diffMs = Date.now() - timestamp;
+    if (diffMs < 0) return 'Just now';
+    const diffSec = Math.floor(diffMs / 1000);
+    if (diffSec < 60) return 'Just now';
+    const diffMin = Math.floor(diffSec / 60);
+    if (diffMin < 60) return `${diffMin}m ago`;
+    const diffHours = Math.floor(diffMin / 60);
+    if (diffHours < 24) return `${diffHours}h ago`;
+    const diffDays = Math.floor(diffHours / 24);
+    if (diffDays < 7) return `${diffDays}d ago`;
+    return new Date(timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  };
+
+  // Recent activities sorted strictly from latest activity performed to oldest activity
   const resolvedActivities = referrals
     .filter((r) => r.status !== 'pending')
     .map((r) => ({
@@ -39,7 +86,9 @@ export default function AlumniProfile({
       role: r.role,
       company: r.company,
       department: r.department,
-    }));
+      updatedAt: r.updatedAt || 0,
+    }))
+    .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
 
   const pendingActivities = referrals
     .filter((r) => r.status === 'pending')
@@ -51,22 +100,54 @@ export default function AlumniProfile({
       role: r.role,
       company: r.company,
       department: r.department,
-    }));
+      updatedAt: r.updatedAt || 0,
+    }))
+    .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
 
-  const skillsList = [
-    'JavaScript',
-    'Python',
-    'React',
-    'Node.js',
-    'System Design',
-    'Cloud (GCP)',
-    'Machine Learning',
-    'SQL',
-    'TypeScript',
-    'Go',
-    'Docker',
-    'Kubernetes',
-  ];
+  // ---- Edit handlers ----
+  const handleStartEdit = () => {
+    setEditFields({ ...info });
+    setIsEditing(true);
+  };
+
+  const handleEditChange = (field, value) => {
+    setEditFields((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSaveEdit = () => {
+    if (onSavePersonalInfo) onSavePersonalInfo({ ...editFields });
+    setIsEditing(false);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+  };
+
+  const handleStartSocialEdit = () => {
+    setEditSocials({ linkedin: info.linkedin, github: info.github, portfolio: info.portfolio });
+    setIsEditingSocials(true);
+  };
+
+  const handleSaveSocialEdit = () => {
+    if (onSavePersonalInfo) onSavePersonalInfo({ ...info, ...editSocials });
+    setIsEditingSocials(false);
+  };
+
+  // ---- Skill handlers ----
+  const handleAddSkill = () => {
+    const trimmed = newSkill.trim();
+    if (trimmed && skillsList && !skillsList.includes(trimmed)) {
+      if (onSetSkillsList) onSetSkillsList((prev) => [...prev, trimmed]);
+    }
+    setNewSkill('');
+    setShowAddSkill(false);
+  };
+
+  const handleRemoveSkill = (skill) => {
+    if (onSetSkillsList) onSetSkillsList((prev) => prev.filter((s) => s !== skill));
+  };
+
+  const skills = skillsList || [];
 
   return (
     <div className="layout alumni-app-container">
@@ -81,9 +162,15 @@ export default function AlumniProfile({
         <header className="topbar">
           <h1 className="page-title">My Profile</h1>
           <div className="topbar-right">
-            <div className="avatar avatar--topbar" title="My Profile">
+            <button
+              type="button"
+              className="avatar avatar--topbar"
+              title="My Profile"
+              onClick={() => onNavigate && onNavigate('profile')}
+              style={{ cursor: 'pointer', border: 'none' }}
+            >
               {alumni.initials || 'SR'}
-            </div>
+            </button>
           </div>
         </header>
 
@@ -92,13 +179,13 @@ export default function AlumniProfile({
           <div className="profile-hero">
             <div className="profile-hero-avatar">{alumni.initials || 'SR'}</div>
             <div className="profile-hero-info">
-              <div className="profile-hero-name">{alumni.name}</div>
-              <div className="profile-hero-role">Software Engineer at {alumni.company}</div>
-              <div className="profile-hero-email">{alumni.email}</div>
+              <div className="profile-hero-name">{info.name}</div>
+              <div className="profile-hero-role">{info.role} at {info.company}</div>
+              <div className="profile-hero-email">{info.email}</div>
               <div className="profile-hero-tags">
-                <span className="profile-hero-tag">🎓 Batch {alumni.batch}</span>
-                <span className="profile-hero-tag">🏢 {alumni.company}</span>
-                <span className="profile-hero-tag">👤 {alumni.role}</span>
+                <span className="profile-hero-tag"><GraduationCap size={15} aria-hidden="true" />Batch {info.batch}</span>
+                <span className="profile-hero-tag"><Building2 size={15} aria-hidden="true" />{info.company}</span>
+                <span className="profile-hero-tag"><UserRound size={15} aria-hidden="true" />{alumni.role}</span>
               </div>
             </div>
           </div>
@@ -125,155 +212,163 @@ export default function AlumniProfile({
 
           {/* Two-Column Grid */}
           <div className="profile-grid">
-            {/* Personal Information */}
+
+            {/* ── Personal Information ── */}
             <div className="profile-section">
-              <div className="profile-section-title">
-                <div className="profile-section-icon profile-section-icon--orange">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e76a00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
-                  </svg>
+              <div className="profile-section-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div className="profile-section-icon profile-section-icon--orange">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e76a00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                      <circle cx="12" cy="7" r="4" />
+                    </svg>
+                  </div>
+                  <span>Personal Information</span>
                 </div>
-                <span>Personal Information</span>
+
+                {!isEditing ? (
+                  <>
+                  <div style={{ display: 'flex', gap: '6px' }}>
+                    <button type="button" onClick={() => setIsChangePasswordOpen(true)} className="profile-edit-btn">
+                      Change Password
+                    </button>
+                    <button type="button" onClick={handleStartEdit} className="profile-edit-btn">
+                    ✏️ Edit
+                  </button>
+                  </div>
+                  </>
+                ) : (
+                  <div style={{ display: 'flex', gap: '6px' }}>
+                    <button type="button" onClick={handleSaveEdit} className="profile-save-btn">Save</button>
+                    <button type="button" onClick={handleCancelEdit} className="profile-cancel-btn">Cancel</button>
+                  </div>
+                )}
               </div>
 
-              <div className="profile-info-row">
-                <span className="profile-info-label">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
-                  </svg>
-                  Full Name
-                </span>
-                <span className="profile-info-value">{alumni.name}</span>
-              </div>
-
-              <div className="profile-info-row">
-                <span className="profile-info-label">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                    <polyline points="22,6 12,13 2,6" />
-                  </svg>
-                  Email
-                </span>
-                <span className="profile-info-value">{alumni.email}</span>
-              </div>
-
-              <div className="profile-info-row">
-                <span className="profile-info-label">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-                  </svg>
-                  Company
-                </span>
-                <span className="profile-info-value">{alumni.company}</span>
-              </div>
-
-              <div className="profile-info-row">
-                <span className="profile-info-label">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-                    <path d="M6 12v5c3 3 10 3 12 0v-5" />
-                  </svg>
-                  Graduation Batch
-                </span>
-                <span className="profile-info-value">{alumni.batch}</span>
-              </div>
-
-              <div className="profile-info-row">
-                <span className="profile-info-label">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="3" />
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
-                  </svg>
-                  Role
-                </span>
-                <span className="profile-info-value">Software Engineer</span>
-              </div>
-
-              <div className="profile-info-row">
-                <span className="profile-info-label">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                    <circle cx="12" cy="10" r="3" />
-                  </svg>
-                  Location
-                </span>
-                <span className="profile-info-value">Hyderabad, India</span>
-              </div>
+              {isEditing ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '12px' }}>
+                  {[
+                    { field: 'name',     label: 'Full Name',           type: 'text'  },
+                    { field: 'email',    label: 'Email',               type: 'email' },
+                    { field: 'company',  label: 'Company',             type: 'text'  },
+                    { field: 'batch',    label: 'Graduation Batch',    type: 'text'  },
+                    { field: 'role',     label: 'Role / Designation',  type: 'text'  },
+                    { field: 'location', label: 'Location',            type: 'text'  },
+                  ].map(({ field, label, type }) => (
+                    <div key={field}>
+                      <label className="profile-edit-label">{label}</label>
+                      <input
+                        type={type}
+                        value={editFields[field] || ''}
+                        onChange={(e) => handleEditChange(field, e.target.value)}
+                        className="profile-edit-input"
+                      />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <>
+                  <InfoRow label="Full Name"        value={info.name} />
+                  <InfoRow label="Email"            value={info.email} />
+                  <InfoRow label="Company"          value={info.company} />
+                  <InfoRow label="Graduation Batch" value={info.batch} />
+                  <InfoRow label="Role"             value={info.role} />
+                  <InfoRow label="Location"         value={info.location} />
+                </>
+              )}
             </div>
 
-            {/* Skills & Expertise */}
+            {/* ── Skills & Expertise ── */}
             <div className="profile-section">
-              <div className="profile-section-title">
-                <div className="profile-section-icon profile-section-icon--purple">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                  </svg>
+              <div className="profile-section-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div className="profile-section-icon profile-section-icon--purple">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                    </svg>
+                  </div>
+                  <span>Skills &amp; Expertise</span>
                 </div>
-                <span>Skills &amp; Expertise</span>
+                <button type="button" onClick={() => setShowAddSkill((v) => !v)} className="profile-add-skill-btn">
+                  + Add Skill
+                </button>
               </div>
 
+              {showAddSkill && (
+                <div style={{ display: 'flex', gap: '8px', marginBottom: '12px', marginTop: '4px' }}>
+                  <input
+                    type="text"
+                    placeholder="e.g. Kotlin, Figma..."
+                    value={newSkill}
+                    onChange={(e) => setNewSkill(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleAddSkill()}
+                    className="profile-skill-input"
+                    autoFocus
+                  />
+                  <button type="button" onClick={handleAddSkill} className="profile-save-btn">Add</button>
+                  <button type="button" onClick={() => { setShowAddSkill(false); setNewSkill(''); }} className="profile-cancel-btn">✕</button>
+                </div>
+              )}
+
               <div className="profile-skills">
-                {skillsList.map((skill, idx) => (
-                  <span key={idx} className="profile-skill-tag">
+                {skills.map((skill, idx) => (
+                  <span key={idx} className="profile-skill-tag" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                     {skill}
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveSkill(skill)}
+                      title={`Remove ${skill}`}
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', fontSize: '13px', lineHeight: 1, padding: '0 0 0 2px' }}
+                    >
+                      ×
+                    </button>
                   </span>
                 ))}
               </div>
 
-              <div className="profile-section-title" style={{ marginTop: '8px' }}>
-                <div className="profile-section-icon profile-section-icon--blue">
+              {/* Social Links */}
+              <div className="profile-section-title" style={{ marginTop: '18px', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div className="profile-section-icon profile-section-icon--blue">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
                     <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
                   </svg>
+                  </div>
+                  <span>Social Links</span>
                 </div>
-                <span>Social Links</span>
+                {!isEditingSocials ? (
+                  <button type="button" onClick={handleStartSocialEdit} className="profile-edit-btn">Edit</button>
+                ) : (
+                  <div style={{ display: 'flex', gap: '6px' }}>
+                    <button type="button" onClick={handleSaveSocialEdit} className="profile-save-btn">Save</button>
+                    <button type="button" onClick={() => setIsEditingSocials(false)} className="profile-cancel-btn">Cancel</button>
+                  </div>
+                )}
               </div>
-
-              <div className="profile-info-row">
-                <span className="profile-info-label">LinkedIn</span>
-                <a
-                  href="https://linkedin.com/in/sneha-reddy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="profile-info-value"
-                  style={{ color: '#2563eb', textDecoration: 'none' }}
-                >
-                  linkedin.com/in/sneha-reddy
-                </a>
-              </div>
-
-              <div className="profile-info-row">
-                <span className="profile-info-label">GitHub</span>
-                <a
-                  href="https://github.com/snehareddy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="profile-info-value"
-                  style={{ color: '#2563eb', textDecoration: 'none' }}
-                >
-                  github.com/snehareddy
-                </a>
-              </div>
-
-              <div className="profile-info-row">
-                <span className="profile-info-label">Portfolio</span>
-                <a
-                  href="https://snehareddy.dev"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="profile-info-value"
-                  style={{ color: '#2563eb', textDecoration: 'none' }}
-                >
-                  snehareddy.dev
-                </a>
-              </div>
+              {isEditingSocials ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '12px' }}>
+                  {[
+                    { field: 'linkedin', label: 'LinkedIn URL', placeholder: 'https://linkedin.com/in/your-profile' },
+                    { field: 'github', label: 'GitHub URL', placeholder: 'https://github.com/your-username' },
+                    { field: 'portfolio', label: 'Portfolio URL', placeholder: 'https://your-portfolio.com' },
+                  ].map(({ field, label, placeholder }) => (
+                    <div key={field}>
+                      <label className="profile-edit-label">{label}</label>
+                      <input type="url" value={editSocials[field] || ''} placeholder={placeholder} onChange={(e) => setEditSocials((prev) => ({ ...prev, [field]: e.target.value }))} className="profile-edit-input" />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <>
+                  <SocialLinkRow label="LinkedIn" value={info.linkedin} />
+                  <SocialLinkRow label="GitHub" value={info.github} />
+                  <SocialLinkRow label="Portfolio" value={info.portfolio} />
+                </>
+              )}
             </div>
 
-            {/* Recent Activity (Full Width) */}
+            {/* ── Recent Activity (Full Width) ── */}
             <div className="profile-section profile-full-width">
               <div className="profile-section-title">
                 <div className="profile-section-icon profile-section-icon--green">
@@ -286,6 +381,12 @@ export default function AlumniProfile({
               </div>
 
               <div className="profile-activity">
+                {resolvedActivities.length === 0 && pendingActivities.length === 0 && (
+                  <div style={{ color: '#94a3b8', fontSize: '13px', padding: '12px 0' }}>
+                    No referral activity yet.
+                  </div>
+                )}
+
                 {resolvedActivities.map((act) => (
                   <div key={act.id} className="profile-activity-item">
                     <div className={`profile-activity-dot profile-activity-dot--${act.status}`}>
@@ -305,7 +406,7 @@ export default function AlumniProfile({
                         <strong>{act.action}</strong> {act.name}'s referral for <strong>{act.role}</strong>
                       </div>
                       <div className="profile-activity-time">
-                        {act.company} • {act.department}
+                        {act.company} • {act.department} • <span style={{ color: '#e76a00', fontWeight: 600 }}>{formatTimeAgo(act.updatedAt)}</span>
                       </div>
                     </div>
                   </div>
@@ -324,22 +425,47 @@ export default function AlumniProfile({
                         <strong>Pending</strong> review for {act.name} &mdash; <strong>{act.role}</strong>
                       </div>
                       <div className="profile-activity-time">
-                        {act.company} • {act.department}
+                        {act.company} • {act.department} • <span style={{ color: '#64748b' }}>Received {formatTimeAgo(act.updatedAt)}</span>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
+
           </div>
         </div>
       </main>
 
-      <SignOutModal
-        isOpen={isSignOutOpen}
-        onClose={() => setIsSignOutOpen(false)}
+      <SignOutModal isOpen={isSignOutOpen} onClose={() => setIsSignOutOpen(false)} />
+      <ChangePasswordModal
+        isOpen={isChangePasswordOpen}
+        onClose={() => setIsChangePasswordOpen(false)}
+        userId={session.id}
+        accentColor="#e76a00"
       />
     </div>
   );
 }
 
+function InfoRow({ label, value }) {
+  return (
+    <div className="profile-info-row">
+      <span className="profile-info-label">{label}</span>
+      <span className="profile-info-value">{value}</span>
+    </div>
+  );
+}
+
+function SocialLinkRow({ label, value }) {
+  return (
+    <div className="profile-info-row">
+      <span className="profile-info-label">{label}</span>
+      {value ? (
+        <a href={value} target="_blank" rel="noopener noreferrer" className="profile-info-value" style={{ color: '#2563eb', textDecoration: 'none' }}>
+          {value.replace(/^https?:\/\//, '')}
+        </a>
+      ) : <span className="profile-info-value" style={{ color: '#94a3b8' }}>Not added</span>}
+    </div>
+  );
+}

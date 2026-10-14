@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Sidebar from '../components/Sidebar';
 import SignOutModal from '../components/SignOutModal';
-import { mockDirectoryAlumni } from '../data/alumniData';
+import featuresApi from '../data/featuresApi';
 import '../styles/Alumni.css';
 
 const AVATAR_COLORS = [
@@ -15,8 +15,13 @@ const AVATAR_COLORS = [
   '#ec4899',
 ];
 
+const DEPT_CODES = {
+  'computer science': 'CSE', electronics: 'ECE', electrical: 'EEE',
+  mechanical: 'MECH', civil: 'CIV', it: 'IT', 'data science': 'DS',
+};
+
 export default function AlumniDirectory({ alumniData, onNavigate }) {
-  const [company, setCompany] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [batch, setBatch] = useState('');
   const [dept, setDept] = useState('');
   const [alumniList, setAlumniList] = useState([]);
@@ -24,59 +29,52 @@ export default function AlumniDirectory({ alumniData, onNavigate }) {
   const [errorMessage, setErrorMessage] = useState('');
   const [isSignOutOpen, setIsSignOutOpen] = useState(false);
 
-  const fetchDirectory = useCallback(async (compParam, batchParam, deptParam) => {
+  const applyFilters = useCallback((query, batchParam, deptParam) => {
     setLoading(true);
     setErrorMessage('');
     try {
-      // Check if FeaturesAPI exists in global or imported context
-      if (typeof window !== 'undefined' && window.FeaturesAPI?.alumni?.getDirectory) {
-        const data = await window.FeaturesAPI.alumni.getDirectory(
-          compParam || undefined,
-          batchParam || undefined,
-          deptParam || undefined
-        );
-        setAlumniList(data || []);
-      } else {
-        // Fallback filter over mockDirectoryAlumni
-        let filtered = [...mockDirectoryAlumni];
-        if (compParam) {
-          filtered = filtered.filter((a) =>
-            a.company.toLowerCase().includes(compParam.toLowerCase())
+      featuresApi.getDirectory().then((data) => {
+        // The API stores full department names; the filter uses short codes.
+        let filtered = (data || []).map((a) => ({ ...a, dept: DEPT_CODES[(a.dept || '').toLowerCase()] || a.dept }));
+        if (batchParam) filtered = filtered.filter((a) => String(a.batch) === String(batchParam));
+        if (deptParam) filtered = filtered.filter((a) => (a.dept || '').toLowerCase() === deptParam.toLowerCase());
+        if (query) {
+          const q = query.toLowerCase();
+          filtered = filtered.filter(
+            (a) =>
+              a.name.toLowerCase().includes(q) ||
+              a.company.toLowerCase().includes(q) ||
+              (a.location && a.location.toLowerCase().includes(q))
           );
         }
-        if (batchParam) {
-          filtered = filtered.filter((a) => String(a.batch) === String(batchParam));
-        }
-        if (deptParam) {
-          filtered = filtered.filter((a) => a.dept.toLowerCase() === deptParam.toLowerCase());
-        }
         setAlumniList(filtered);
-      }
+        setLoading(false);
+      }).catch((err) => {
+        const msg = err?.message || 'Failed to fetch directory';
+        if (msg.includes('PREMIUM') || msg.includes('403')) {
+          setErrorMessage('PREMIUM_REQUIRED');
+        } else {
+          setErrorMessage(msg);
+        }
+        setLoading(false);
+      });
+    
     } catch (err) {
       const msg = err?.message || 'Failed to fetch directory';
-      if (msg.includes('PREMIUM') || msg.includes('403')) {
-        setErrorMessage('PREMIUM_REQUIRED');
-      } else {
-        setErrorMessage(msg);
-      }
-    } finally {
+      setErrorMessage(msg);
       setLoading(false);
     }
   }, []);
 
+  // Trigger on any filter change
   useEffect(() => {
-    fetchDirectory();
-  }, [fetchDirectory]);
-
-  const handleSearch = () => {
-    fetchDirectory(company.trim(), batch, dept);
-  };
+    applyFilters(searchQuery, batch, dept);
+  }, [searchQuery, batch, dept, applyFilters]);
 
   const handleClear = () => {
-    setCompany('');
+    setSearchQuery('');
     setBatch('');
     setDept('');
-    fetchDirectory('', '', '');
   };
 
   return (
@@ -92,50 +90,67 @@ export default function AlumniDirectory({ alumniData, onNavigate }) {
         <header className="topbar">
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <h1 className="page-title">Alumni Directory</h1>
-            <span
-              style={{
-                background: '#faf5ff',
-                color: '#7c3aed',
-                border: '1px solid #ddd6fe',
-                padding: '3px 10px',
-                borderRadius: '20px',
-                fontSize: '12px',
-                fontWeight: 600,
-              }}
-            >
-              👑 Premium
-            </span>
           </div>
           <div className="topbar-right">
-            <div className="avatar avatar--topbar" title="My Profile">
+            <button
+              type="button"
+              className="avatar avatar--topbar"
+              title="My Profile"
+              onClick={() => onNavigate && onNavigate('profile')}
+              style={{ cursor: 'pointer', border: 'none', background: undefined }}
+            >
               {alumniData?.initials || 'SR'}
-            </div>
+            </button>
           </div>
         </header>
 
         <div className="directory-container">
           <p className="portal-sub">
-            Search and connect with alumni by company, batch, or department.
+            Search and connect with alumni by name, company, location, batch, or department.
           </p>
+
+          {/* All-in-one Search Bar */}
+          <div className="directory-search-wrapper">
+            <svg
+              className="search-icon"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#94a3b8"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              type="text"
+              className="directory-search-input"
+              placeholder="Search by name, company, or location..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                className="directory-search-clear"
+                onClick={() => setSearchQuery('')}
+                aria-label="Clear search"
+              >
+                ×
+              </button>
+            )}
+          </div>
 
           {/* Filter Bar */}
           <div className="filter-bar">
             <div className="filter-group">
-              <label htmlFor="company-filter">Company</label>
-              <input
-                id="company-filter"
-                type="text"
-                placeholder="e.g. Google, Microsoft"
-                value={company}
-                onChange={(e) => setCompany(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-              />
-            </div>
-
-            <div className="filter-group">
               <label htmlFor="batch-filter">Batch Year</label>
               <select
                 id="batch-filter"
+                className="directory-filter-select"
                 value={batch}
                 onChange={(e) => setBatch(e.target.value)}
               >
@@ -152,6 +167,7 @@ export default function AlumniDirectory({ alumniData, onNavigate }) {
               <label htmlFor="dept-filter">Department</label>
               <select
                 id="dept-filter"
+                className="directory-filter-select"
                 value={dept}
                 onChange={(e) => setDept(e.target.value)}
               >
@@ -165,12 +181,11 @@ export default function AlumniDirectory({ alumniData, onNavigate }) {
               </select>
             </div>
 
-            <button type="button" className="btn-search" onClick={handleSearch}>
-              🔍 Search
-            </button>
-            <button type="button" className="btn-clear" onClick={handleClear}>
-              ✕ Clear
-            </button>
+            {(searchQuery || batch || dept) && (
+              <button type="button" className="btn-clear" onClick={handleClear}>
+                ✕ Clear All
+              </button>
+            )}
           </div>
 
           {/* Results Meta */}
@@ -189,10 +204,10 @@ export default function AlumniDirectory({ alumniData, onNavigate }) {
 
           {!loading && errorMessage === 'PREMIUM_REQUIRED' && (
             <div className="empty-state">
-              <div className="empty-state-icon">👑</div>
-              <div className="empty-state-title">Premium Plan Required</div>
+              <div className="empty-state-icon">🔒</div>
+              <div className="empty-state-title">Access Restricted</div>
               <div className="empty-state-desc">
-                Alumni Directory requires the Premium plan. Contact your college admin to upgrade.
+                Alumni Directory is currently restricted. Contact your college admin for access.
               </div>
             </div>
           )}
@@ -273,4 +288,3 @@ export default function AlumniDirectory({ alumniData, onNavigate }) {
     </div>
   );
 }
-
