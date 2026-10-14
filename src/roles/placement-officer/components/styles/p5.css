@@ -1,0 +1,221 @@
+/* ═══ p5.css — User Oversight Page-Specific Styles ═══ */
+/* Global layout, sidebar, header styles are in p1.css (shared) */
+
+/* ── Filter Tabs ── */
+.cn-placement .filter-tabs { display: flex; gap: 12px; padding: 0 0 20px 0; margin-bottom: 16px; border-bottom: 2px solid #e5e7eb; }
+
+.cn-placement .tab { 
+  all: unset;
+  box-sizing: border-box;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #6b7280;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+  border: none;
+  white-space: nowrap;
+}
+
+.cn-placement .tab:hover { 
+  color: #374151;
+  background: #f3f4f6;
+}
+
+.cn-placement .tab.active { 
+  color: #fff;
+  background: linear-gradient(135deg, #9810fa, #7c3aed);
+  box-shadow: 0 4px 12px rgba(152, 16, 250, 0.3);
+  border: none;
+}
+
+.cn-placement .tab.active:hover { 
+  background: linear-gradient(135deg, #8b0de3, #6d2adc);
+  box-shadow: 0 6px 16px rgba(152, 16, 250, 0.4);
+}
+
+/* ── Table Card ── */
+.cn-placement .table-card { background: #fff; border-radius: 14px; padding: 24px; border: 1px solid #f3f4f6; box-shadow: 0 1px 3px #0000000d; }
+.cn-placement .search-wrap { position: relative; margin-bottom: 20px; }
+.cn-placement .search-wrap input { width: 100%; padding: 12px 16px 12px 48px; border: 1px solid #d1d5dc; border-radius: 10px; font-size: 15px; font-family: inherit; color: #1e2939; }
+.cn-placement .search-wrap input::placeholder { color: #9ca3af; }
+.cn-placement .search-wrap input:focus { outline: none; border-color: #9810fa; box-shadow: 0 0 0 3px #9810fa1a; }
+.cn-placement .search-icon { position: absolute; top: 14px; left: 16px; }
+
+/* ── Table ── */
+.cn-placement .rec-table { width: 100%; border-collapse: collapse; }
+.cn-placement .rec-table th { text-align: left; padding: 14px 16px; font-weight: 500; font-size: 14px; color: #364153; border-bottom: 1px solid #e5e7eb; }
+.cn-placement .rec-table td { padding: 16px; font-size: 15px; color: #364153; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
+
+/* ── Modal Styles ── */
+.cn-placement .modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.cn-placement .modal-overlay.open {
+  display: flex;
+}
+
+.cn-placement .modal {
+  background: #fff;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.cn-placement .modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.cn-placement .modal-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1e2939;
+  margin: 0;
+}
+
+.cn-placement .modal-close {
+  all: unset;
+  box-sizing: border-box;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #9ca3af;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.cn-placement .modal-close:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.cn-placement .modal-body {
+  padding: 24px;
+}
+
+.cn-placement .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.cn-placement .form-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.cn-placement .form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 15px;
+  color: #1e2939;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.cn-placement .form-input:focus {
+  outline: none;
+  border-color: #9810fa;
+  box-shadow: 0 0 0 3px rgba(152, 16, 250, 0.1);
+}
+
+.cn-placement .form-input::placeholder {
+  color: #9ca3af;
+}
+
+.cn-placement .form-input:disabled {
+  background: #f9fafb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.cn-placement .modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding: 20px 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.cn-placement .modal-btn-cancel,
+.cn-placement .modal-btn-confirm {
+  all: unset;
+  box-sizing: border-box;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 500;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cn-placement .modal-btn-cancel {
+  border: 1.5px solid #d1d5db;
+  color: #374151;
+  background: transparent;
+}
+
+.cn-placement .modal-btn-cancel:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.cn-placement .modal-btn-confirm {
+  color: #fff;
+  background: linear-gradient(135deg, #9810fa, #7c3aed);
+  border: none;
+}
+
+.cn-placement .modal-btn-confirm:hover {
+  background: linear-gradient(135deg, #8b0de3, #6d2adc);
+  box-shadow: 0 4px 12px rgba(152, 16, 250, 0.3);
+}
+
+.cn-placement .modal-btn-confirm:active {
+  transform: scale(0.98);
+}
+
+/* ── Action Buttons (Approve/Decline in tables) ── */
+.cn-placement .btn-approve { all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 8px; padding: 12px 24px; background: #16a34a; color: #fff; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; transition: background .2s; }
+.cn-placement .btn-approve:hover { background: #15803d; }
+.cn-placement .btn-decline { all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 8px; padding: 12px 24px; background: #dc2626; color: #fff; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; transition: background .2s; }
+.cn-placement .btn-decline:hover { background: #b91c1c; }

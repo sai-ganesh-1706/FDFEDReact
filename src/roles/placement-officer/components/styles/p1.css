@@ -130,6 +130,21 @@
 .cn-placement .sidebar-signout:hover {
     background: #ffffff1a;
 }
+.cn-placement .placement-nav-label { display: inline-flex; align-items: center; gap: 10px; }
+.cn-placement .placement-nav-label svg { flex: 0 0 auto; }
+
+/* Sign-out confirmation modal */
+.cn-placement .placement-signout-overlay { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(0, 0, 0, .5); backdrop-filter: blur(4px); }
+.cn-placement .placement-signout-popup { width: min(380px, 100%); padding: 32px; border-radius: 16px; background: #fff; box-shadow: 0 20px 60px rgba(0, 0, 0, .2); text-align: center; }
+.cn-placement .placement-signout-icon { display: inline-flex; width: 56px; height: 56px; align-items: center; justify-content: center; margin-bottom: 12px; border-radius: 50%; background: #f5f3ff; color: #7c3aed; }
+.cn-placement .placement-signout-popup h2 { margin: 0; color: #101828; font-size: 18px; }
+.cn-placement .placement-signout-popup p { margin: 10px 0 20px; color: #6b7280; font-size: 14px; line-height: 1.5; }
+.cn-placement .placement-signout-actions { display: flex; gap: 12px; }
+.cn-placement .placement-signout-actions button { flex: 1; padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; cursor: pointer; }
+.cn-placement .placement-signout-cancel { border: 1px solid #d1d5db; background: #fff; color: #374151; }
+.cn-placement .placement-signout-confirm { border: 0; background: #7c3aed; color: #fff; }
+.cn-placement .placement-signout-cancel:hover { background: #f9fafb; }
+.cn-placement .placement-signout-confirm:hover { background: #6d28d9; }
 
 /* ── Header ── */
 .cn-placement .header {
