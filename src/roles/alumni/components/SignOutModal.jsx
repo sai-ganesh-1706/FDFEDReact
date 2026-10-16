@@ -33,7 +33,7 @@ export default function SignOutModal({ isOpen, onClose, onConfirm }) {
                 onConfirm();
               } else {
                 clearSession();
-                window.location.href = '/login';
+                window.location.replace('/login');
               }
             }}
           >
