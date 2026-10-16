@@ -8,7 +8,8 @@ export default function Applications({
   onUpdateRound,
   onUpdateEvaluation,
   selectedRoleFilter,
-  setSelectedRoleFilter 
+  setSelectedRoleFilter,
+  onSchedule
 }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterReferred, setFilterReferred] = useState(false);
@@ -135,10 +136,55 @@ export default function Applications({
                   <p className="app-card-metadata">
                     {app.branch} · CGPA: <strong>{app.cgpa}</strong> · Role: <strong>{app.role}</strong>
                   </p>
+                  {app.isReferred && app.referrerName && (
+                    <div style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      marginTop: '6px',
+                      background: '#FFFBEB',
+                      border: '1px solid #FDE68A',
+                      borderRadius: '8px',
+                      padding: '5px 10px',
+                      fontSize: '12px',
+                      color: '#92400E',
+                    }}>
+                      <div style={{
+                        width: '22px',
+                        height: '22px',
+                        borderRadius: '50%',
+                        background: app.referrerAvatarColor || '#D97706',
+                        color: 'white',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '10px',
+                        fontWeight: 700,
+                        flexShrink: 0,
+                      }}>
+                        {app.referrerInitials || app.referrerName.split(' ').map(w => w[0]).join('').slice(0, 2)}
+                      </div>
+                      <span>
+                        Referred by <strong>{app.referrerName}</strong>{app.referrerDesignation ? ` · ${app.referrerDesignation}` : ''}
+                        {app.referrerCompany && <span> · {app.referrerCompany}</span>}
+                        {app.referrerBatch && <span> · {app.referrerBatch}</span>}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              <div className="app-card-right">
+ <div className="app-card-right" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                {onSchedule && !['Rejected', 'Withdrawn', 'Offered'].includes(app.status) && (
+                  <button
+                    className="btn-secondary-action"
+                    style={{ padding: '6px 12px', fontSize: 12 }}
+                    onClick={() => onSchedule(app.id)}
+                    title="Schedule an assessment or interview for this candidate"
+                  >
+                    Schedule
+                  </button>
+                )}
                 <button 
                   className={`badge-status ${statusClass}`}
                   onClick={() => setSelectedCandidate(app)}
