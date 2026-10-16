@@ -5,6 +5,25 @@ import DeclineModal from '../components/DeclineModal';
 import SignOutModal from '../components/SignOutModal';
 import '../styles/Alumni.css';
 
+// Dummy summaries per candidate (keyed by id)
+const DUMMY_SUMMARIES = {
+  'arjun-sharma':
+    'Arjun is a passionate Computer Science student with strong problem-solving skills and hands-on experience in Java and Spring Boot. He has consistently maintained a high CGPA and has demonstrated leadership in technical clubs.',
+  'rahul-verma':
+    'Rahul is a front-end enthusiast skilled in React and TypeScript, with a portfolio of production-grade UI projects. He is detail-oriented and has a strong design sensibility.',
+  'priya-patel':
+    'Priya is a data-driven thinker specializing in Python-based analytics and machine learning pipelines. She has hands-on Tableau experience and has led several data visualization projects.',
+  'neha-gupta':
+    'Neha is an exceptional IT graduate with a 9.1 CGPA and practical experience in cloud-native back-end architecture. Her internship at a high-growth startup demonstrates her ability to deliver results under pressure.',
+  'karan-singh':
+    'Karan combines mechanical engineering fundamentals with modern simulation tools. As the Formula Student team lead, he has demonstrated project management, CAD proficiency, and cross-functional collaboration.',
+  'aisha-khan':
+    'Aisha is a quality-focused engineer with a strong interest in test automation. She has completed Selenium certification and has practical experience automating web applications end-to-end.',
+};
+
+const DEFAULT_SUMMARY =
+  'This candidate has a strong academic background and relevant technical skills. They have demonstrated initiative in pursuing their career goals and show promise as a professional in their field.';
+
 export default function ReferralRequests({
   referrals = [],
   alumniData,
@@ -17,7 +36,7 @@ export default function ReferralRequests({
   const [searchQuery, setSearchQuery] = useState('');
   const [openCards, setOpenCards] = useState(() => (openCardId ? { [openCardId]: true } : {}));
   const [replyMessages, setReplyMessages] = useState({});
-  const [resumeModalData, setResumeModalData] = useState({ isOpen: false, candidateName: '' });
+  const [resumeModalData, setResumeModalData] = useState({ isOpen: false, candidateName: '', candidateId: '' });
   const [declineModalData, setDeclineModalData] = useState({ isOpen: false, candidateId: null, candidateName: '' });
   const [isSignOutOpen, setIsSignOutOpen] = useState(false);
 
@@ -120,6 +139,17 @@ export default function ReferralRequests({
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
+
+          {/* Topbar Avatar → Profile */}
+          <button
+            type="button"
+            className="avatar avatar--topbar"
+            title="My Profile"
+            onClick={() => onNavigate && onNavigate('profile')}
+            style={{ cursor: 'pointer', border: 'none', marginLeft: '12px', flexShrink: 0 }}
+          >
+            {alumni.initials || 'SR'}
+          </button>
         </header>
 
         {/* Filter Tabs */}
@@ -164,6 +194,7 @@ export default function ReferralRequests({
             filteredReferrals.map((r) => {
               const isOpen = !!openCards[r.id];
               const isPending = r.status === 'pending';
+              const candidateSummary = DUMMY_SUMMARIES[r.id] || DEFAULT_SUMMARY;
 
               return (
                 <div
@@ -216,6 +247,25 @@ export default function ReferralRequests({
                       onClick={(e) => e.stopPropagation()}
                     >
                       <hr className="divider" />
+
+                      {/* Profile Summary */}
+                      <h3 className="section-title">Profile Summary</h3>
+                      <div
+                        style={{
+                          background: '#f8fafc',
+                          border: '1px solid #e2e8f0',
+                          borderRadius: '8px',
+                          padding: '12px 14px',
+                          marginBottom: '16px',
+                          color: '#475569',
+                          fontSize: '13.5px',
+                          lineHeight: 1.6,
+                          fontStyle: 'italic',
+                        }}
+                      >
+                        "{candidateSummary}"
+                      </div>
+
                       <h3 className="section-title">Candidate Details</h3>
                       <div className="details-grid">
                         <div className="detail-box">
@@ -270,6 +320,8 @@ export default function ReferralRequests({
                           setResumeModalData({
                             isOpen: true,
                             candidateName: r.name,
+                            candidateId: r.id,
+                            candidate: r,
                           })
                         }
                       >
@@ -339,7 +391,8 @@ export default function ReferralRequests({
       <ResumeModal
         isOpen={resumeModalData.isOpen}
         candidateName={resumeModalData.candidateName}
-        onClose={() => setResumeModalData({ isOpen: false, candidateName: '' })}
+        candidate={resumeModalData.candidate}
+        onClose={() => setResumeModalData({ isOpen: false, candidateName: '', candidateId: '', candidate: null })}
       />
 
       <DeclineModal
@@ -356,4 +409,3 @@ export default function ReferralRequests({
     </div>
   );
 }
-

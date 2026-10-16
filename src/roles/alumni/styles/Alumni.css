@@ -160,6 +160,20 @@
   margin-bottom: 12px;
 }
 
+.cn-alumni .alumni-header-notifications { position: fixed; z-index: 6; top: 20px; right: 82px; }
+.cn-alumni .alumni-header-bell { position: relative; width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; color: #64748b; cursor: pointer; transition: all .2s; }
+.cn-alumni .alumni-header-bell:hover { border-color: #fed7aa; background: #fff7ed; color: #e76a00; }
+.cn-alumni .alumni-header-notification-dot { position: absolute; top: 7px; right: 7px; width: 7px; height: 7px; border: 1.5px solid #fff; border-radius: 50%; background: #ef4444; }
+.cn-alumni .alumni-header-notification-panel { position: absolute; top: calc(100% + 8px); right: 0; width: min(360px, calc(100vw - 32px)); max-height: 360px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; box-shadow: 0 12px 28px rgba(15, 23, 42, .18); color: #1e293b; }
+.cn-alumni .alumni-header-notification-head { display: flex; align-items: center; justify-content: space-between; padding: 13px 14px; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+.cn-alumni .alumni-header-notification-head button { border: 0; background: none; color: #e76a00; font-size: 11px; font-weight: 700; cursor: pointer; }
+.cn-alumni .alumni-header-notification-panel > p { margin: 0; padding: 20px 14px; color: #64748b; font-size: 13px; text-align: center; }
+.cn-alumni .alumni-header-notification-item { display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-bottom: 1px solid #f1f5f9; font-size: 12px; }
+.cn-alumni .alumni-header-notification-item:last-child { border-bottom: 0; }
+.cn-alumni .alumni-header-notification-item.unread { background: #fff7ed; }
+.cn-alumni .alumni-header-notification-item strong { color: #0f172a; }
+.cn-alumni .alumni-header-notification-item span { color: #64748b; line-height: 1.4; }
+
 /* Main Content */
 .cn-alumni .main {
   flex: 1;
@@ -676,9 +690,11 @@
 /* ==================== REFERRALS STYLES ==================== */
 .cn-alumni .search-container {
   position: relative;
-  width: 360px;
+  width: min(300px, 100%);
+  flex: 0 1 300px;
   display: flex;
   align-items: center;
+  margin-left: auto;
 }
 
 .cn-alumni .search-icon {
@@ -1064,6 +1080,9 @@
 }
 
 .cn-alumni .profile-hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   background: rgba(255, 255, 255, 0.2);
   color: #fff;
   font-weight: 500;
@@ -1286,12 +1305,12 @@
 .cn-alumni .filter-bar {
   background: #fff;
   border-radius: 12px;
-  padding: 16px 20px;
+  padding: 14px 18px;
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 14px;
   align-items: flex-end;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
   border: 1px solid #e2e8f0;
 }
 
@@ -1299,31 +1318,61 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
+  flex: 1;
+  min-width: 140px;
 }
 
 .cn-alumni .filter-group label {
   font-size: 11px;
-  font-weight: 600;
-  color: #64748b;
+  font-weight: 700;
+  color: #94a3b8;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
 }
 
 .cn-alumni .filter-group input,
 .cn-alumni .filter-group select {
-  border: 1px solid #e2e8f0;
+  border: 1.5px solid #e2e8f0;
   border-radius: 8px;
-  padding: 8px 12px;
-  font-size: 13px;
+  padding: 9px 12px;
+  font-size: 13.5px;
   color: #1e293b;
   background: #f8fafc;
   outline: none;
-  min-width: 130px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
 }
 
 .cn-alumni .filter-group input:focus,
 .cn-alumni .filter-group select:focus {
   border-color: #e76a00;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(231,106,0,0.12);
+}
+
+/* Alumni Directory filter dropdowns */
+.cn-alumni .directory-filter-select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  padding-right: 38px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+}
+
+.cn-alumni .directory-filter-select:hover {
+  border-color: #cbd5e1;
+  background-color: #fff;
+}
+
+.cn-alumni .directory-filter-select:focus {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23e76a00' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+.cn-alumni .directory-filter-select option {
+  color: #1e293b;
   background: #fff;
 }
 
@@ -1345,14 +1394,76 @@
 }
 
 .cn-alumni .btn-clear {
-  background: transparent;
-  color: #64748b;
-  border: 1px solid #e2e8f0;
+  background: #fff;
+  color: #e76a00;
+  border: 1.5px solid #fed7aa;
   border-radius: 8px;
-  padding: 9px 14px;
+  padding: 9px 16px;
   font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
   margin-top: auto;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.cn-alumni .btn-clear:hover {
+  background: #fff7ed;
+}
+
+/* Directory search bar — full-width prominent style */
+.cn-alumni .directory-search-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.cn-alumni .directory-search-wrapper .search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.cn-alumni .directory-search-input {
+  width: 100%;
+  padding: 12px 44px 12px 44px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 14.5px;
+  color: #1e293b;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.cn-alumni .directory-search-input:focus {
+  border-color: #e76a00;
+  box-shadow: 0 0 0 3px rgba(231,106,0,0.12);
+}
+
+.cn-alumni .directory-search-input::placeholder {
+  color: #94a3b8;
+}
+
+.cn-alumni .directory-search-clear {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  font-size: 20px;
+  line-height: 1;
+  padding: 0 4px;
+  transition: color 0.15s;
+}
+
+.cn-alumni .directory-search-clear:hover {
+  color: #64748b;
 }
 
 .cn-alumni .directory-grid {
@@ -1865,6 +1976,32 @@
   text-decoration: none;
   border: none;
   cursor: pointer;
+  transition: background 0.2s;
+}
+
+.cn-alumni .resume-download-btn:hover {
+  background: #c65400;
+}
+
+.cn-alumni .resume-print-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f8fafc;
+  color: #475569;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1.5px solid #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cn-alumni .resume-print-btn:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #0f172a;
 }
 
 .cn-alumni .resume-modal-close {
@@ -2029,6 +2166,7 @@
 }
 
 @media (max-width: 768px) {
+  .cn-alumni .alumni-header-notifications { top: 16px; right: 66px; }
   .cn-alumni .sidebar {
     width: 70px;
   }
@@ -2059,6 +2197,14 @@
   }
   .cn-alumni .topbar {
     padding: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .cn-alumni .topbar .page-title {
+    flex: 1 1 100%;
+  }
+  .cn-alumni .topbar .search-container {
+    min-width: 0;
   }
   .cn-alumni .dash-content,
 .cn-alumni .cards,
@@ -2070,3 +2216,110 @@
   }
 }
 
+
+/* ==================== PROFILE EDIT / SKILL STYLES ==================== */
+.cn-alumni .profile-edit-btn {
+  background: #fff7ed;
+  border: 1.5px solid #fed7aa;
+  color: #e76a00;
+  border-radius: 8px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.cn-alumni .profile-edit-btn:hover { background: #fed7aa; }
+
+.cn-alumni .profile-save-btn {
+  background: #e76a00;
+  border: none;
+  color: #fff;
+  border-radius: 8px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.cn-alumni .profile-save-btn:hover { background: #c65400; }
+
+.cn-alumni .profile-cancel-btn {
+  background: #f1f5f9;
+  border: 1.5px solid #e2e8f0;
+  color: #64748b;
+  border-radius: 8px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.cn-alumni .profile-cancel-btn:hover { background: #e2e8f0; }
+
+.cn-alumni .profile-edit-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.cn-alumni .profile-edit-input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 13.5px;
+  color: #1e293b;
+  background: #f8fafc;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: inherit;
+}
+.cn-alumni .profile-edit-input:focus {
+  border-color: #e76a00;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(231,106,0,0.12);
+}
+
+.cn-alumni .profile-add-skill-btn {
+  background: #f5f3ff;
+  border: 1.5px solid #ddd6fe;
+  color: #7c3aed;
+  border-radius: 8px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.cn-alumni .profile-add-skill-btn:hover { background: #ede9fe; }
+
+.cn-alumni .profile-skill-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1.5px solid #ddd6fe;
+  border-radius: 8px;
+  font-size: 13.5px;
+  color: #1e293b;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: inherit;
+}
+.cn-alumni .profile-skill-input:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
+}

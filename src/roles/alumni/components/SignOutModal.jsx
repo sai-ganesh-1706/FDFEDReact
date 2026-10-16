@@ -1,4 +1,5 @@
 import React from 'react';
+import { clearSession } from '../../../services/api.js';
 
 export default function SignOutModal({ isOpen, onClose, onConfirm }) {
   if (!isOpen) return null;
@@ -31,7 +32,8 @@ export default function SignOutModal({ isOpen, onClose, onConfirm }) {
               if (onConfirm) {
                 onConfirm();
               } else {
-                window.location.href = '../../login.html';
+                clearSession();
+                window.location.href = '/login';
               }
             }}
           >
