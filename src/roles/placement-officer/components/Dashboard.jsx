@@ -3,15 +3,15 @@ import Sidebar from './Sidebar';
 import Header from './Header';
 import './styles/p1.css';
 import './styles/dashboard.css';
-import { MOCK } from '../data/mockdata';
+import { useOfficerData } from '../services/officerApi';
 
 export default function Dashboard({ onNavigate, activePage = 'p1' }) {
-  const [stats, setStats] = useState(MOCK.stats);
-  const [stakeholders] = useState(MOCK.stakeholders);
-  const [submissions] = useState(MOCK.submissions);
-  const [drives] = useState(MOCK.drives);
-  const [interviews] = useState(MOCK.interviews);
-  const [alertVisible, setAlertVisible] = useState(stats.pending > 0);
+  const { data } = useOfficerData();
+  const { stats, stakeholders, drives, interviews } = data;
+  const submissions = (data.submissions || []).slice(0, 6);
+  const [alertDismissed, setAlertDismissed] = useState(false);
+  const alertVisible = stats.pending > 0 && !alertDismissed;
+  const setAlertVisible = (visible) => setAlertDismissed(!visible);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -26,7 +26,7 @@ export default function Dashboard({ onNavigate, activePage = 'p1' }) {
 
   const statItems = [
     { value: stats.pending, label: 'Opportunities Pending', colorClass: 'yellow', icon: <><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></>, stroke: '#EAB308' },
-    { value: stats.published, label: 'Published', colorClass: 'green', icon: <><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></>, stroke: '#22C55E' },
+    { value: stats.published, label: 'Published', colorClass: 'green', icon: <><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></>, stroke: '#22C55E' },
     { value: stats.totalOpps, label: 'Total opportunities', colorClass: 'blue', icon: <><rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></>, stroke: '#3B82F6' },
     { value: stats.totalApplicants, label: 'Total applicants', colorClass: 'purple', icon: <><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="8.5" cy="7" r="4" /></>, stroke: '#A855F7' },
   ];

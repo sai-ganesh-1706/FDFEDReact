@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MOCK } from '../data/mockdata';
+import { clearSession } from '../../../services/api.js';
+import { useOfficerData } from '../services/officerApi';
+import SignOutModal from './SignOutModal';
 
 const PAGES = [
   { title: 'Dashboard', page: 'p1', badge: 'Overview' },
@@ -16,12 +18,14 @@ const PAGES = [
 
 export default function Header({ title = 'Dashboard', onNavigate }) {
   const [profileOpen, setProfileOpen] = useState(false);
+  const [isSignOutOpen, setIsSignOutOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResultsOpen, setSearchResultsOpen] = useState(false);
-  const [notifications, setNotifications] = useState(
-    (MOCK.notifications || []).map(n => ({ ...n }))
-  );
+  const { data } = useOfficerData();
+  // Notifications are derived from what needs attention; read-state is kept per browser tab.
+  const [readIds, setReadIds] = useState([]);
+  const notifications = (data.notifications || []).map(n => ({ ...n, read: readIds.includes(n.id) }));
 
   const headerRef = useRef(null);
 
@@ -66,13 +70,11 @@ export default function Header({ title = 'Dashboard', onNavigate }) {
 
   const markAllRead = (e) => {
     e.stopPropagation();
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    setReadIds(notifications.map(n => n.id));
   };
 
   const handleNotifClick = (notif) => {
-    setNotifications(prev =>
-      prev.map(n => (n.id === notif.id ? { ...n, read: true } : n))
-    );
+    setReadIds(prev => (prev.includes(notif.id) ? prev : [...prev, notif.id]));
     setNotifOpen(false);
     if (onNavigate) {
       if (notif.href === 'p2.html') onNavigate('p2');
@@ -85,13 +87,13 @@ export default function Header({ title = 'Dashboard', onNavigate }) {
   // Filter items for search
   const q = searchQuery.toLowerCase().trim();
   const matchedOpps = q
-    ? (MOCK.submissions || []).filter(
+    ? (data.submissions || []).filter(
         s => s.title.toLowerCase().includes(q) || s.company.toLowerCase().includes(q)
       )
     : [];
 
   const matchedRecruiters = q
-    ? (MOCK.recruiters || []).filter(
+    ? (data.recruiters || []).filter(
         r => r.name.toLowerCase().includes(q) || r.company.toLowerCase().includes(q)
       )
     : [];
@@ -127,7 +129,7 @@ export default function Header({ title = 'Dashboard', onNavigate }) {
             id="headerSearchInput"
             className="header-search-input"
             type="text"
-            placeholder="Search opportunities, recruiters, pages... (Ctrl+K)"
+            placeholder="Search opportunities, recruiters, pages.."
             value={searchQuery}
             onChange={handleSearchChange}
             onFocus={() => {
@@ -349,17 +351,32 @@ export default function Header({ title = 'Dashboard', onNavigate }) {
 
             <div className="profile-dd-divider" />
 
-            <a className="profile-dd-item signout" href="../../login.html">
+            <div
+              className="profile-dd-item signout"
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                setProfileOpen(false);
+                setIsSignOutOpen(true);
+              }}
+            >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                 <polyline points="16 17 21 12 16 7" />
                 <line x1="21" y1="12" x2="9" y2="12" />
               </svg>
               Sign Out
-            </a>
+            </div>
           </div>
         </div>
       </div>
+      <SignOutModal
+        isOpen={isSignOutOpen}
+        onClose={() => setIsSignOutOpen(false)}
+        onConfirm={() => {
+          clearSession();
+          window.location.href = '/login';
+        }}
+      />
     </header>
   );
 }

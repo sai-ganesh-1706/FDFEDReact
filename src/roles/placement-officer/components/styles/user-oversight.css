@@ -1,0 +1,42 @@
+/* User management view, aligned with the existing placement portal UI. */
+.cn-placement .user-oversight-page .main-content { max-width: 1540px; }
+.cn-placement .oversight-intro {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.cn-placement .oversight-intro h1 { margin: 0 0 6px; color: #1e2939; font-size: 28px; letter-spacing: -.4px; }
+.cn-placement .oversight-intro p { margin: 0; color: #64748b; line-height: 1.55; }
+.cn-placement .oversight-summary { display: flex; flex-wrap: wrap; gap: 8px; }
+.cn-placement .oversight-summary span,
+.cn-placement .oversight-tabs .tab span {
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.cn-placement .oversight-summary span { padding: 8px 11px; background: #f5f3ff; color: #6d28d9; white-space: nowrap; }
+.cn-placement .oversight-summary strong { margin-right: 3px; color: #4c1d95; }
+.cn-placement .user-oversight-page .oversight-tabs { gap: 10px; margin-bottom: 0; padding-bottom: 14px; }
+.cn-placement .oversight-tabs .tab { display: inline-flex; align-items: center; gap: 8px; }
+.cn-placement .oversight-tabs .tab span { padding: 1px 7px; background: #f3f4f6; color: #6b7280; }
+.cn-placement .oversight-tabs .tab.active { color: #fff; }
+.cn-placement .oversight-tabs .tab.active span { background: rgba(255,255,255,.22); color: #fff; }
+.cn-placement .user-oversight-page #userListContainer { border: 1px solid #e9e5f8; box-shadow: 0 8px 22px rgba(78, 40, 150, .06); }
+.cn-placement .user-oversight-page .table-header-row { gap: 16px; flex-wrap: wrap; }
+.cn-placement .user-oversight-page .table-actions { flex-wrap: wrap; }
+.cn-placement .user-oversight-page .search-input { min-width: 250px; }
+.cn-placement .user-oversight-page table th { background: #faf9ff; color: #667085; font-size: 12px; letter-spacing: .02em; text-transform: uppercase; }
+.cn-placement .user-oversight-page table th,
+.cn-placement .user-oversight-page table td { padding: 14px 16px; border-bottom: 1px solid #f0edf8; text-align: left; }
+.cn-placement .user-oversight-page table tbody tr:hover { background: #fcfbff; }
+.cn-placement .user-oversight-page .btn-edit-sm,
+.cn-placement .user-oversight-page .btn-delete-sm { margin: 2px 5px 2px 0; }
+
+@media (max-width: 760px) {
+  .cn-placement .oversight-intro { align-items: flex-start; flex-direction: column; }
+  .cn-placement .user-oversight-page .search-input { min-width: 100%; width: 100%; }
+  .cn-placement .user-oversight-page .table-actions { width: 100%; }
+  .cn-placement .user-oversight-page .table-actions .btn { flex: 1; }
+}
