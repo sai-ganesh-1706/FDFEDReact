@@ -7,6 +7,9 @@ import '../styles/Alumni.css';
 
 // Dummy summaries per candidate (keyed by id)
 const DUMMY_SUMMARIES = {
+  // ★ MAIN CANDIDATE — Shameer Basha Shaik
+  'shameer-basha':
+    'Shameer is a passionate Computer Science student (CGPA 8.7) from CareerNest University with strong expertise in React, Node.js, and AWS. He completed a successful summer internship at TechWave Solutions, improving frontend load times by 15%, and leads the college Coding Club. His HackerRank profile reflects consistent competitive programming performance — a well-rounded candidate for the Software Engineer role at TechCorp Solutions.',
   'arjun-sharma':
     'Arjun is a passionate Computer Science student with strong problem-solving skills and hands-on experience in Java and Spring Boot. He has consistently maintained a high CGPA and has demonstrated leadership in technical clubs.',
   'rahul-verma':
