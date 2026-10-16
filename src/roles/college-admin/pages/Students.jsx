@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { errorMessage } from '../../../services/api.js';
-import { Search, GraduationCap, CheckSquare, UserCheck } from 'lucide-react';
+import { GraduationCap } from 'lucide-react';
 
 function cgpaClass(cgpa) {
   if (!cgpa) return '';
@@ -9,11 +8,10 @@ function cgpaClass(cgpa) {
   return 'cgpa-low';
 }
 
-export default function Students({ students, platform, collegeName, showToast }) {
+export default function Students({ students, collegeName }) {
   const [query, setQuery]   = useState('');
   const [deptFilter, setDeptFilter] = useState('All');
   const [yearFilter, setYearFilter] = useState('All');
-  const [selectedIds, setSelectedIds] = useState([]);
 
   const departments = useMemo(() => {
     const depts = [...new Set(students.map(s => s.department).filter(Boolean))];
@@ -35,39 +33,18 @@ export default function Students({ students, platform, collegeName, showToast })
     });
   }, [students, query, deptFilter, yearFilter]);
 
-  const allFilteredSelected = filtered.length > 0 && filtered.every((student) => selectedIds.includes(student.id));
-  const toggleAll = () => {
-    const filteredIds = filtered.map((student) => student.id);
-    setSelectedIds((current) => allFilteredSelected
-      ? current.filter((id) => !filteredIds.includes(id))
-      : [...new Set([...current, ...filteredIds])]);
-  };
-  const toggleOne = (id) => setSelectedIds((current) => current.includes(id)
-    ? current.filter((studentId) => studentId !== id)
-    : [...current, id]);
-  const updateSelected = async (status) => {
-    if (!selectedIds.length) return;
-    try {
-      await platform.setStudentsStatus(selectedIds, status);
-      showToast(`${selectedIds.length} student${selectedIds.length === 1 ? '' : 's'} updated to ${status}.`, 'success');
-      setSelectedIds([]);
-    } catch (error) {
-      showToast(errorMessage(error, 'Could not update the selected students.'), 'error');
-    }
-  };
-
   return (
     <>
       <div className="section-header">
         <h2>Students — <span style={{ color: '#0ea5e9' }}>{collegeName || 'Your College'}</span></h2>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-          {selectedIds.length > 0 && <>
-            <button className="btn btn-outline btn-sm" onClick={() => updateSelected('active')}><UserCheck size={13} /> Activate ({selectedIds.length})</button>
-            <button className="btn btn-primary btn-sm" onClick={() => updateSelected('placed')}><CheckSquare size={13} /> Mark placed</button>
-          </>}
           <span className="badge badge-blue">{filtered.length} student{filtered.length !== 1 ? 's' : ''}</span>
         </div>
       </div>
+
+      <p style={{ fontSize: 13, color: '#64748b', marginBottom: 14 }}>
+        A read-only view of your college's students. Placement status and student records are managed by the placement cell.
+      </p>
 
       {/* Filters */}
       <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
@@ -98,7 +75,6 @@ export default function Students({ students, platform, collegeName, showToast })
         <table>
           <thead>
             <tr>
-              <th><input type="checkbox" aria-label="Select all filtered students" checked={allFilteredSelected} onChange={toggleAll} /></th>
               <th>Student</th>
               <th>Roll No.</th>
               <th>Department</th>
@@ -111,7 +87,7 @@ export default function Students({ students, platform, collegeName, showToast })
           <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={8}>
+                <td colSpan={7}>
                   <div className="empty-state">
                     <GraduationCap />
                     <p>{query ? 'No students match your search.' : 'No students found.'}</p>
@@ -120,7 +96,6 @@ export default function Students({ students, platform, collegeName, showToast })
               </tr>
             ) : filtered.map(u => (
               <tr key={u.id}>
-                <td><input type="checkbox" aria-label={`Select ${u.name}`} checked={selectedIds.includes(u.id)} onChange={() => toggleOne(u.id)} /></td>
                 <td>
                   <div className="chip">
                     <div className="chip-avatar">{u.name.slice(0, 2).toUpperCase()}</div>

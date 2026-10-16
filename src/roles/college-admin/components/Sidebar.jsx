@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   LayoutDashboard, ShieldCheck, GraduationCap,
-  Megaphone, BarChart2, Building2, LogOut
+  Megaphone, BarChart2, Building2, LogOut, Mail
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -9,10 +9,11 @@ const NAV_ITEMS = [
   { id: 'officers',       label: 'Placement Officers',  icon: ShieldCheck },
   { id: 'students',       label: 'Students',            icon: GraduationCap },
   { id: 'announcements',  label: 'Announcements',       icon: Megaphone },
+  { id: 'messages',       label: 'Messages',            icon: Mail },
   { id: 'reports',        label: 'Reports',             icon: BarChart2 },
 ];
 
-export default function CollegeAdminSidebar({ activeTab, setActiveTab, collegeName, onSignOut }) {
+export default function CollegeAdminSidebar({ activeTab, setActiveTab, collegeName, onSignOut, unreadMessages = 0 }) {
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
@@ -33,6 +34,9 @@ export default function CollegeAdminSidebar({ activeTab, setActiveTab, collegeNa
           >
             <Icon size={17} />
             {label}
+            {id === 'messages' && unreadMessages > 0 && (
+              <span style={{ marginLeft: 'auto', background: '#ef4444', color: '#fff', fontSize: 11, fontWeight: 700, borderRadius: 10, padding: '1px 7px' }}>{unreadMessages}</span>
+            )}
           </button>
         ))}
       </nav>

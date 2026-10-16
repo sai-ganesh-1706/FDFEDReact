@@ -194,6 +194,18 @@
   flex-shrink: 0;
 }
 
+.cn-college-admin .avatar-button {
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.cn-college-admin .avatar-button:focus-visible,
+.cn-college-admin .ca-profile-dd-item:focus-visible {
+  outline: 3px solid rgba(14, 165, 233, .3);
+  outline-offset: 2px;
+}
+
 /* ================= PAGE CONTENT ================= */
 .cn-college-admin .page-content {
   padding: 24px;
@@ -868,3 +880,155 @@
 }
 .cn-college-admin .alert-item-text strong { font-size: 13px; color: #1e293b; }
 .cn-college-admin .alert-item-text span   { font-size: 11px; color: #64748b; }
+
+/* ================= PROFILE DROPDOWN ================= */
+.cn-college-admin .topbar-profile-wrapper { position: relative; }
+.cn-college-admin .ca-profile-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 110;
+  width: 200px;
+  padding: 6px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 10px 40px rgba(15, 23, 42, .15);
+  animation: ca-dropdown-in .15s ease-out;
+}
+.cn-college-admin .ca-profile-dd-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #374151;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+}
+.cn-college-admin .ca-profile-dd-item:hover { background: #f0f9ff; }
+.cn-college-admin .ca-profile-dd-signout { color: #dc2626; }
+.cn-college-admin .ca-profile-dd-signout:hover { background: #fef2f2; }
+.cn-college-admin .ca-profile-dd-divider { height: 1px; margin: 4px 0; background: #e2e8f0; }
+
+@keyframes ca-dropdown-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ================= SIGN-OUT MODAL ================= */
+.cn-college-admin .ca-signout-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(15, 23, 42, .52);
+  backdrop-filter: blur(4px);
+}
+.cn-college-admin .ca-signout-card {
+  width: min(380px, 100%);
+  padding: 32px;
+  border-radius: 16px;
+  background: #fff;
+  color: #101828;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, .25);
+  animation: ca-modal-in .2s ease-out;
+}
+.cn-college-admin .ca-signout-icon {
+  display: grid;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--ca-primary-light);
+  color: var(--ca-primary);
+}
+.cn-college-admin .ca-signout-card h2 { margin: 0; font-size: 18px; font-weight: 700; }
+.cn-college-admin .ca-signout-card p { margin: 10px 0 22px; color: #6b7280; font-size: 14px; line-height: 1.5; }
+.cn-college-admin .ca-signout-actions { display: flex; gap: 12px; }
+.cn-college-admin .ca-signout-actions button {
+  flex: 1;
+  padding: 10px 18px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: #fff;
+  color: #374151;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+}
+.cn-college-admin .ca-signout-actions button:hover { background: #f9fafb; }
+.cn-college-admin .ca-signout-actions .ca-signout-confirm { border-color: var(--ca-primary); background: var(--ca-primary); color: #fff; }
+.cn-college-admin .ca-signout-actions .ca-signout-confirm:hover { background: var(--ca-primary-hover); }
+
+@keyframes ca-modal-in {
+  from { opacity: 0; transform: scale(.95) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ================= PROFILE PAGE ================= */
+.cn-college-admin .btn-ghost { border: 1px solid var(--border-color); background: transparent; color: var(--text-dark); }
+.cn-college-admin .btn-ghost:hover { background: #f8fafc; }
+.cn-college-admin .ca-profile-loading { display: grid; min-height: 180px; place-items: center; color: var(--text-muted); font-size: 14px; }
+.cn-college-admin .ca-profile-hero {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 24px;
+  padding: 28px 32px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  color: #fff;
+  flex-wrap: wrap;
+}
+.cn-college-admin .ca-profile-hero-avatar {
+  display: grid;
+  width: 72px;
+  height: 72px;
+  place-items: center;
+  border: 3px solid rgba(255, 255, 255, .3);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .2);
+  font-size: 24px;
+  font-weight: 700;
+}
+.cn-college-admin .ca-profile-hero-info { flex: 1; min-width: 200px; }
+.cn-college-admin .ca-profile-hero-name { margin: 0 0 4px; font-size: 22px; }
+.cn-college-admin .ca-profile-hero-role,
+.cn-college-admin .ca-profile-hero-college,
+.cn-college-admin .ca-profile-hero-email { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 13px; opacity: .9; }
+.cn-college-admin .ca-profile-hero-actions { display: flex; gap: 8px; }
+.cn-college-admin .ca-profile-hero-actions .btn { border-color: rgba(255, 255, 255, .4); color: #fff; }
+.cn-college-admin .ca-profile-hero-actions .btn:hover { background: rgba(255, 255, 255, .15); }
+.cn-college-admin .ca-profile-hero-actions .btn-primary { background: rgba(255, 255, 255, .2); border-color: rgba(255, 255, 255, .3); }
+.cn-college-admin .ca-profile-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.cn-college-admin .ca-profile-section { padding: 24px; border: 1px solid var(--border-color); border-radius: 14px; background: var(--card-bg); }
+.cn-college-admin .ca-profile-section-title { display: flex; align-items: center; gap: 8px; margin: 0 0 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-dark); font-size: 15px; }
+.cn-college-admin .ca-profile-section-title svg { color: var(--ca-primary); }
+.cn-college-admin .ca-profile-social-title { margin-top: 20px; }
+.cn-college-admin .ca-profile-info-row { display: flex; justify-content: space-between; gap: 16px; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+.cn-college-admin .ca-profile-info-row:last-child { border-bottom: 0; }
+.cn-college-admin .ca-profile-info-label { min-width: 100px; color: var(--text-muted); font-size: 13px; font-weight: 500; }
+.cn-college-admin .ca-profile-info-value { color: var(--text-dark); font-size: 14px; font-weight: 500; text-align: right; overflow-wrap: anywhere; }
+.cn-college-admin .ca-profile-info-link { display: inline-flex; align-items: center; gap: 4px; color: var(--ca-primary); font-size: 13px; overflow-wrap: anywhere; text-align: right; }
+.cn-college-admin .ca-profile-info-link:hover { text-decoration: underline; }
+.cn-college-admin .ca-profile-edit-form { display: flex; flex-direction: column; gap: 14px; }
+.cn-college-admin .ca-profile-field label { display: block; margin-bottom: 4px; color: var(--text-muted); font-size: 12px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; }
+.cn-college-admin .ca-profile-field input,
+.cn-college-admin .ca-profile-field textarea { box-sizing: border-box; width: 100%; padding: 9px 12px; border: 1px solid var(--border-color); border-radius: 8px; background: #fff; color: var(--text-dark); font: inherit; font-size: 14px; }
+.cn-college-admin .ca-profile-field input:focus,
+.cn-college-admin .ca-profile-field textarea:focus { outline: 0; border-color: var(--ca-primary); box-shadow: 0 0 0 3px rgba(14, 165, 233, .1); }
+
+@media (max-width: 800px) {
+  .cn-college-admin .ca-profile-grid { grid-template-columns: 1fr; }
+}

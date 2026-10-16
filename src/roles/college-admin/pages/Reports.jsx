@@ -2,13 +2,13 @@ import React from 'react';
 import { BarChart2, Award, TrendingUp, GraduationCap, Users, CheckCircle, Clock } from 'lucide-react';
 
 // Build department-wise stats from the real students array
-function buildDeptStats(students) {
+function buildDeptStats(students, placedStudentIds) {
   const map = {};
   students.forEach(s => {
     const dept = s.department || s.branch || 'General';
     if (!map[dept]) map[dept] = { total: 0, placed: 0 };
     map[dept].total += 1;
-    if (s.status === 'placed') map[dept].placed += 1;
+    if (placedStudentIds?.has(s.id) || s.status === 'placed') map[dept].placed += 1;
   });
   return Object.entries(map)
     .map(([dept, d]) => ({
@@ -21,13 +21,13 @@ function buildDeptStats(students) {
 }
 
 // Build year-wise stats from the real students array
-function buildYearStats(students) {
+function buildYearStats(students, placedStudentIds) {
   const map = {};
   students.forEach(s => {
     const year = s.year ? `Year ${s.year}` : 'Unknown';
     if (!map[year]) map[year] = { total: 0, placed: 0 };
     map[year].total += 1;
-    if (s.status === 'placed') map[year].placed += 1;
+    if (placedStudentIds?.has(s.id) || s.status === 'placed') map[year].placed += 1;
   });
   return Object.entries(map)
     .map(([year, d]) => ({
@@ -107,7 +107,7 @@ function StatusDonut({ placed, total }) {
   );
 }
 
-export default function Reports({ students, collegeName }) {
+export default function Reports({ students, collegeName, placedStudentIds }) {
   if (!students || students.length === 0) {
     return (
       <>
@@ -122,10 +122,12 @@ export default function Reports({ students, collegeName }) {
     );
   }
 
-  const deptStats   = buildDeptStats(students);
-  const yearStats   = buildYearStats(students);
+  const deptStats   = buildDeptStats(students, placedStudentIds);
+  const yearStats   = buildYearStats(students, placedStudentIds);
   const cgpaBuckets = buildCgpaBuckets(students);
-  const placed      = students.filter(s => s.status === 'placed').length;
+  const placed      = placedStudentIds
+    ? students.filter(s => placedStudentIds.has(s.id) || s.status === 'placed').length
+    : students.filter(s => s.status === 'placed').length;
   const total       = students.length;
   const rate        = total > 0 ? Math.round((placed / total) * 100) : 0;
   const bestDept    = deptStats[0];

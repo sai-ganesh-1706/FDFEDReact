@@ -84,8 +84,8 @@ function OfficerSummaryCard({ officers }) {
   );
 }
 
-export default function CADashboard({ collegeName, userName, officers, students, alumniCount, recruiterCount, setActiveTab }) {
-  const placed = students.filter(s => s.status === 'placed').length;
+export default function CADashboard({ collegeName, userName, officers, students, alumniCount, recruiterCount, setActiveTab, placedCount }) {
+  const placed = placedCount ?? students.filter(s => s.status === 'placed').length;
 
   const kpis = [
     { label: 'Students',           value: students.length,  icon: GraduationCap, color: '#0ea5e9', accent: true },
@@ -100,7 +100,7 @@ export default function CADashboard({ collegeName, userName, officers, students,
       {/* Welcome Banner */}
       <div className="welcome-banner">
         <div>
-          <h2>Welcome, <span>{userName?.split(' ')[0] || 'Admin'}</span> 👋</h2>
+          <h2>Welcome, <span>{userName?.split(' ')[0] || 'Admin'}</span></h2>
           <p>Managing <strong style={{ color: '#fff' }}>{collegeName || 'your college portal'}</strong></p>
         </div>
         <div className="welcome-banner-meta">

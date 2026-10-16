@@ -45,11 +45,11 @@ export const mockStudents = [
 
 export const mockCollegeInfo = {
   id: 1,
-  name: 'IIT Madras',
-  code: 'IITM',
-  email: 'admin@iitm.ac.in',
-  phone: '+91 44 2257 8000',
-  address: 'Chennai, Tamil Nadu',
-  website: 'https://www.iitm.ac.in',
+  name: 'IIIT Sri City',
+  code: 'IIITSRICITY',
+  email: 'admin@iiitsricity.ac.in',
+  phone: '+91 8626 252525',
+  address: 'Chittoor, Andhra Pradesh',
+  website: 'https://iiits.ac.in',
 };
 

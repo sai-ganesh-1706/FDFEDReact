@@ -7,10 +7,10 @@ import { usePlatformData } from '../../../shared/context/PlatformDataContext.jsx
 import { errorMessage } from '../../../services/api.js';
 
 const TYPE_OPTIONS = [
-  { value: 'general',   label: '📢 General',     color: '#0ea5e9' },
-  { value: 'urgent',    label: '🚨 Urgent',       color: '#ef4444' },
-  { value: 'placement', label: '🎯 Placement',    color: '#a855f7' },
-  { value: 'event',     label: '📅 Event',        color: '#22c55e' },
+  { value: 'general',   label: 'General',     color: '#0ea5e9' },
+  { value: 'urgent',    label: 'Urgent',       color: '#ef4444' },
+  { value: 'placement', label: 'Placement',    color: '#a855f7' },
+  { value: 'event',     label: 'Event',        color: '#22c55e' },
 ];
 
 const TYPE_ICON = {
@@ -192,7 +192,7 @@ export default function Announcements({ collegeName }) {
                     <strong className="ann-card-title">{ann.title}</strong>
                     <span className="ann-card-time">
                       <Clock size={11} />
-                      {ann.postedAt || ann.createdAt || '—'} · by {ann.author || ann.postedBy || 'College Admin'}
+                      {ann.postedAt ? new Date(ann.postedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'} · by {ann.author || ann.postedBy || 'College Admin'}
                     </span>
                   </div>
                   <button
