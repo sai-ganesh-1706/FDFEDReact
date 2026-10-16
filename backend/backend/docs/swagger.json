@@ -1,0 +1,2213 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/users": {
+      "get": {
+        "operationId": "UsersController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "List of all users"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Get all users (placement_officer only)",
+        "tags": [
+          "Users"
+        ]
+      },
+      "post": {
+        "operationId": "UsersController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created"
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Create a new user (placement_officer only)",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "operationId": "UsersController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User found"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Get a single user by ID",
+        "tags": [
+          "Users"
+        ]
+      },
+      "put": {
+        "operationId": "UsersController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Update a user profile",
+        "tags": [
+          "Users"
+        ]
+      },
+      "delete": {
+        "operationId": "UsersController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted"
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Delete a user (placement_officer only)",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/opportunities": {
+      "get": {
+        "operationId": "OpportunitiesController_findAll",
+        "parameters": [
+          {
+            "name": "x-role",
+            "required": true,
+            "in": "header",
+            "description": "User role",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of opportunities"
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Get all opportunities (published for candidates, all for others)",
+        "tags": [
+          "Opportunities"
+        ]
+      },
+      "post": {
+        "operationId": "OpportunitiesController_create",
+        "parameters": [
+          {
+            "name": "x-role",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOpportunityDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Opportunity created with status pending"
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Post a new opportunity (recruiter / placement_officer)",
+        "tags": [
+          "Opportunities"
+        ]
+      }
+    },
+    "/opportunities/{id}": {
+      "get": {
+        "operationId": "OpportunitiesController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Opportunity details"
+          },
+          "404": {
+            "description": "Opportunity not found"
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Get a single opportunity by ID",
+        "description": "Returns full details of one opportunity including status, eligibility, and tags.",
+        "tags": [
+          "Opportunities"
+        ]
+      },
+      "put": {
+        "operationId": "OpportunitiesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOpportunityDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Update an opportunity (recruiter / placement_officer)",
+        "tags": [
+          "Opportunities"
+        ]
+      },
+      "delete": {
+        "operationId": "OpportunitiesController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Delete an opportunity",
+        "tags": [
+          "Opportunities"
+        ]
+      }
+    },
+    "/opportunities/{id}/approve": {
+      "patch": {
+        "description": "Marks a pending opportunity submission as **approved**. Workflow: `pending → approved → Published`. Set `x-role: placement_officer`.",
+        "operationId": "OpportunitiesController_approve",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Opportunity ID to approve",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Opportunity status set to approved"
+          },
+          "404": {
+            "description": "Opportunity not found"
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Approve a pending opportunity (placement_officer only)",
+        "tags": [
+          "Opportunities"
+        ]
+      }
+    },
+    "/opportunities/{id}/publish": {
+      "patch": {
+        "description": "Makes an approved opportunity **live** so that candidates can view and apply. This is the final step in the review workflow: `pending → approved → Published`. Only opportunities with status `approved` should be published, but the endpoint accepts any status for flexibility.",
+        "operationId": "OpportunitiesController_publish",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Opportunity ID to publish",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Opportunity status set to Published and is now live for candidates"
+          },
+          "404": {
+            "description": "Opportunity not found"
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Publish an approved opportunity to candidates (placement_officer only)",
+        "tags": [
+          "Opportunities"
+        ]
+      }
+    },
+    "/opportunities/{id}/reject": {
+      "patch": {
+        "operationId": "OpportunitiesController_reject",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RejectDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Reject an opportunity (placement_officer only)",
+        "tags": [
+          "Opportunities"
+        ]
+      }
+    },
+    "/applications": {
+      "get": {
+        "operationId": "ApplicationsController_findAll",
+        "parameters": [
+          {
+            "name": "opportunityId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by opportunity ID",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of applications"
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Get all applications (recruiter / placement_officer)",
+        "tags": [
+          "Applications"
+        ]
+      },
+      "post": {
+        "operationId": "ApplicationsController_apply",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "required": true,
+            "description": "Must be `candidate`",
+            "schema": { "type": "string", "enum": ["candidate"] }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateApplicationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Application submitted. If an assessment already exists for the opportunity, candidate also receives a notification."
+          },
+          "409": {
+            "description": "Candidate has already applied to this opportunity"
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Apply to an opportunity (candidate only)",
+        "description": "Submits a job/internship application. Use `opportunityId` from `GET /opportunities`. Duplicate applications are rejected with 409.",
+        "tags": [
+          "Applications"
+        ]
+      }
+    },
+    "/applications/my": {
+      "get": {
+        "operationId": "ApplicationsController_findMine",
+        "parameters": [
+          {
+            "name": "candidateId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Candidate applications"
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Get my applications (candidate) — candidateId=1 by default",
+        "tags": [
+          "Applications"
+        ]
+      }
+    },
+    "/applications/stats": {
+      "get": {
+        "operationId": "ApplicationsController_getStats",
+        "parameters": [
+          {
+            "name": "candidateId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Get application statistics for a candidate",
+        "tags": [
+          "Applications"
+        ]
+      }
+    },
+    "/applications/{id}": {
+      "get": {
+        "operationId": "ApplicationsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Get a single application by ID",
+        "tags": [
+          "Applications"
+        ]
+      },
+      "delete": {
+        "operationId": "ApplicationsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Delete an application (placement_officer only)",
+        "tags": [
+          "Applications"
+        ]
+      }
+    },
+    "/applications/{id}/status": {
+      "patch": {
+        "operationId": "ApplicationsController_updateStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateApplicationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Update application status (recruiter / placement_officer)",
+        "tags": [
+          "Applications"
+        ]
+      }
+    },
+    "/applications/{id}/withdraw": {
+      "patch": {
+        "operationId": "ApplicationsController_withdraw",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Withdraw an application (candidate only)",
+        "tags": [
+          "Applications"
+        ]
+      }
+    },
+    "/referrals": {
+      "get": {
+        "operationId": "ReferralsController_findAll",
+        "parameters": [
+          {
+            "name": "alumniId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of referrals"
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Get all referrals (alumni / placement_officer)",
+        "tags": [
+          "Referrals"
+        ]
+      },
+      "post": {
+        "operationId": "ReferralsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReferralDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Referral request created"
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Request a referral (candidate only)",
+        "tags": [
+          "Referrals"
+        ]
+      }
+    },
+    "/referrals/my": {
+      "get": {
+        "operationId": "ReferralsController_findMine",
+        "parameters": [
+          {
+            "name": "candidateId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Get my referral requests (candidate only)",
+        "tags": [
+          "Referrals"
+        ]
+      }
+    },
+    "/referrals/stats": {
+      "get": {
+        "operationId": "ReferralsController_getStats",
+        "parameters": [
+          {
+            "name": "alumniId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Get referral statistics for an alumni",
+        "tags": [
+          "Referrals"
+        ]
+      }
+    },
+    "/referrals/{id}": {
+      "get": {
+        "operationId": "ReferralsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Get a single referral by ID",
+        "tags": [
+          "Referrals"
+        ]
+      },
+      "patch": {
+        "operationId": "ReferralsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateReferralDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Approve or decline a referral (alumni only)",
+        "tags": [
+          "Referrals"
+        ]
+      },
+      "delete": {
+        "operationId": "ReferralsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Delete a referral request (candidate / placement_officer)",
+        "tags": [
+          "Referrals"
+        ]
+      }
+    },
+    "/assessments": {
+      "get": {
+        "operationId": "AssessmentsController_findAll",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "required": true,
+            "description": "Use `recruiter` or `placement_officer`",
+            "schema": { "type": "string", "enum": ["recruiter", "placement_officer"] }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all scheduled assessments"
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Get all assessments (recruiter / placement_officer)",
+        "description": "Returns every scheduled assessment. To filter by opportunity, check the `opportunityId` field in the response.",
+        "tags": [
+          "Assessments"
+        ]
+      },
+      "post": {
+        "operationId": "AssessmentsController_create",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "required": true,
+            "description": "Must be `recruiter`",
+            "schema": { "type": "string", "enum": ["recruiter"] }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAssessmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Assessment created and all existing applicants notified automatically"
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Create a new assessment (recruiter only)",
+        "description": "Schedules a new assessment linked to an opportunity. **Side-effect:** all candidates who have already applied to the linked `opportunityId` receive an in-app notification automatically.",
+        "tags": [
+          "Assessments"
+        ]
+      }
+    },
+    "/assessments/{id}": {
+      "get": {
+        "operationId": "AssessmentsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Get a single assessment by ID",
+        "tags": [
+          "Assessments"
+        ]
+      },
+      "put": {
+        "operationId": "AssessmentsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAssessmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Update an assessment (recruiter only)",
+        "tags": [
+          "Assessments"
+        ]
+      },
+      "delete": {
+        "operationId": "AssessmentsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Delete an assessment (recruiter only)",
+        "tags": [
+          "Assessments"
+        ]
+      }
+    },
+    "/notifications": {
+      "get": {
+        "operationId": "NotificationsController_findAll",
+        "parameters": [
+          {
+            "name": "candidateId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Candidate notifications"
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Get all notifications for the candidate",
+        "tags": [
+          "Notifications"
+        ]
+      },
+      "post": {
+        "operationId": "NotificationsController_create",
+        "parameters": [
+          {
+            "name": "candidateId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNotificationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Create a notification (placement_officer only)",
+        "tags": [
+          "Notifications"
+        ]
+      }
+    },
+    "/notifications/unread-count": {
+      "get": {
+        "operationId": "NotificationsController_getUnreadCount",
+        "parameters": [
+          {
+            "name": "candidateId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Get unread notification count",
+        "tags": [
+          "Notifications"
+        ]
+      }
+    },
+    "/notifications/read-all": {
+      "patch": {
+        "operationId": "NotificationsController_markAllRead",
+        "parameters": [
+          {
+            "name": "candidateId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Mark all notifications as read",
+        "tags": [
+          "Notifications"
+        ]
+      }
+    },
+    "/notifications/{id}/read": {
+      "patch": {
+        "operationId": "NotificationsController_markRead",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Mark a single notification as read",
+        "tags": [
+          "Notifications"
+        ]
+      }
+    },
+    "/notifications/{id}": {
+      "patch": {
+        "operationId": "NotificationsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateNotificationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Update a notification",
+        "tags": [
+          "Notifications"
+        ]
+      },
+      "delete": {
+        "operationId": "NotificationsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Delete a notification",
+        "tags": [
+          "Notifications"
+        ]
+      }
+    },
+    "/recruiters": {
+      "get": {
+        "operationId": "RecruitersController_findAll",
+        "parameters": [
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "active",
+                "pending",
+                "declined"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of recruiters"
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Get all recruiters (placement_officer only)",
+        "tags": [
+          "Recruiters"
+        ]
+      },
+      "post": {
+        "operationId": "RecruitersController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRecruiterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Recruiter registered with pending status"
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Register a new recruiter",
+        "tags": [
+          "Recruiters"
+        ]
+      }
+    },
+    "/recruiters/stats": {
+      "get": {
+        "operationId": "RecruitersController_getStats",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Get recruiter statistics (placement_officer only)",
+        "tags": [
+          "Recruiters"
+        ]
+      }
+    },
+    "/recruiters/{id}": {
+      "get": {
+        "operationId": "RecruitersController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Get a recruiter by ID (placement_officer only)",
+        "tags": [
+          "Recruiters"
+        ]
+      },
+      "put": {
+        "operationId": "RecruitersController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRecruiterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Update a recruiter (placement_officer only)",
+        "tags": [
+          "Recruiters"
+        ]
+      },
+      "delete": {
+        "operationId": "RecruitersController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Remove a recruiter (placement_officer only)",
+        "tags": [
+          "Recruiters"
+        ]
+      }
+    },
+    "/recruiters/{id}/approve": {
+      "patch": {
+        "operationId": "RecruitersController_approve",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Approve a pending recruiter (placement_officer only)",
+        "tags": [
+          "Recruiters"
+        ]
+      }
+    },
+    "/recruiters/{id}/decline": {
+      "patch": {
+        "operationId": "RecruitersController_decline",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "x-role": []
+          }
+        ],
+        "summary": "Decline a recruiter (placement_officer only)",
+        "tags": [
+          "Recruiters"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "CareerNest API",
+    "description": "## CareerNest Placement Portal — REST API\n\nFull-stack placement management system built with **NestJS + TypeScript**.\n\n### Authentication\nAll protected endpoints require an `x-role` header. Set it in **Authorize** (top-right) or per-request:\n\n| Role | Who uses it | Example header |\n|---|---|---|\n| `candidate` | Students applying for jobs | `x-role: candidate` |\n| `recruiter` | Company HR posting opportunities | `x-role: recruiter` |\n| `alumni` | Alumni providing referrals | `x-role: alumni` |\n| `placement_officer` | Admin managing the platform | `x-role: placement_officer` |\n\n### Demo Flow\n1. `GET /opportunities` — view live jobs\n2. `POST /applications` — candidate applies\n3. `PATCH /applications/{id}/status` — recruiter shortlists\n4. `POST /assessments` — recruiter schedules test (auto-notifies applicants)\n5. `GET /notifications?candidateId=1` — candidate sees announcement\n\n### Base URL\n`http://localhost:3000`",
+    "version": "1.0",
+    "contact": {
+      "name": "Sai Ganesh & Shammer Basha Shaik",
+      "email": "careernest@college.in"
+    }
+  },
+  "tags": [
+    { "name": "Opportunities", "description": "Job and internship postings. Recruiter posts → Placement Officer approves → published to candidates." },
+    { "name": "Applications", "description": "Candidate application lifecycle: Apply → Shortlist → Interview → Offer/Reject." },
+    { "name": "Assessments", "description": "Online tests and interview rounds linked to opportunities. Creating one auto-notifies all existing applicants." },
+    { "name": "Notifications", "description": "In-app announcements for candidates (assessment alerts, status changes, offer letters)." },
+    { "name": "Recruiters", "description": "Recruiter registration and approval workflow managed by the Placement Officer." },
+    { "name": "Referrals", "description": "Candidate requests alumni referrals for specific opportunities." },
+    { "name": "Users", "description": "Candidate and alumni user profiles managed by the Placement Officer." }
+  ],
+  "servers": [
+    { "url": "http://localhost:3000", "description": "Local Development Server" }
+  ],
+  "components": {
+    "schemas": {
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Shameer Basha Shaik"
+          },
+          "email": {
+            "type": "string",
+            "example": "shameer@college.in"
+          },
+          "role": {
+            "type": "string",
+            "example": "candidate",
+            "enum": [
+              "candidate",
+              "recruiter",
+              "alumni",
+              "placement_officer"
+            ]
+          },
+          "department": {
+            "type": "string",
+            "example": "Computer Science"
+          },
+          "cgpa": {
+            "type": "number",
+            "example": 8.7
+          },
+          "rollNumber": {
+            "type": "string",
+            "example": "B22CS012"
+          },
+          "backlogs": {
+            "type": "number",
+            "example": 0
+          },
+          "company": {
+            "type": "string",
+            "example": "Google"
+          },
+          "batch": {
+            "type": "string",
+            "example": "2022"
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "role"
+        ]
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Shameer Basha Shaik"
+          },
+          "email": {
+            "type": "string",
+            "example": "shameer@college.in"
+          },
+          "role": {
+            "type": "string",
+            "example": "candidate",
+            "enum": [
+              "candidate",
+              "recruiter",
+              "alumni",
+              "placement_officer"
+            ]
+          },
+          "department": {
+            "type": "string",
+            "example": "Computer Science"
+          },
+          "cgpa": {
+            "type": "number",
+            "example": 8.7
+          },
+          "rollNumber": {
+            "type": "string",
+            "example": "B22CS012"
+          },
+          "backlogs": {
+            "type": "number",
+            "example": 0
+          },
+          "company": {
+            "type": "string",
+            "example": "Google"
+          },
+          "batch": {
+            "type": "string",
+            "example": "2022"
+          },
+          "headline": {
+            "type": "string",
+            "example": "Computer Science Student | Aspiring Software Engineer"
+          },
+          "location": {
+            "type": "string",
+            "example": "Bangalore, India"
+          },
+          "university": {
+            "type": "string",
+            "example": "CareerNest University"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+91 9876543210"
+          },
+          "about": {
+            "type": "string",
+            "example": "I am a passionate CS student..."
+          },
+          "batchLabel": {
+            "type": "string",
+            "example": "Placement Season 2025-26"
+          }
+        }
+      },
+      "CreateOpportunityDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Software Engineer"
+          },
+          "company": {
+            "type": "string",
+            "example": "Google"
+          },
+          "location": {
+            "type": "string",
+            "example": "Bangalore, Karnataka"
+          },
+          "deadline": {
+            "type": "string",
+            "example": "2026-05-25"
+          },
+          "salary": {
+            "type": "string",
+            "example": "12 LPA"
+          },
+          "openings": {
+            "type": "number",
+            "example": 15
+          },
+          "cgpa": {
+            "type": "number",
+            "example": 7.5
+          },
+          "branches": {
+            "example": [
+              "CSE",
+              "ECE",
+              "IT"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "type": {
+            "type": "string",
+            "example": "Full-Time",
+            "enum": [
+              "Full-Time",
+              "Internship"
+            ]
+          },
+          "tags": {
+            "example": [
+              "JavaScript",
+              "Node.js",
+              "React"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": {
+            "type": "string",
+            "example": "Join our engineering team to build scalable applications."
+          },
+          "rounds": {
+            "type": "string",
+            "example": "Resume → Assessment → Technical → HR"
+          },
+          "backlogs": {
+            "type": "string",
+            "example": "Not allowed"
+          },
+          "submittedBy": {
+            "type": "string",
+            "example": "priya.kapoor@google.com",
+            "description": "Email of the recruiter who posted — used for per-recruiter filtering in My Opportunities"
+          }
+        },
+        "required": [
+          "title",
+          "company",
+          "location",
+          "deadline",
+          "salary",
+          "openings",
+          "cgpa",
+          "branches",
+          "type"
+        ]
+      },
+      "UpdateOpportunityDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Software Engineer"
+          },
+          "company": {
+            "type": "string",
+            "example": "TechCorp Solutions"
+          },
+          "location": {
+            "type": "string",
+            "example": "Bangalore, Karnataka"
+          },
+          "deadline": {
+            "type": "string",
+            "example": "2026-05-25"
+          },
+          "salary": {
+            "type": "string",
+            "example": "12 LPA"
+          },
+          "openings": {
+            "type": "number",
+            "example": 15
+          },
+          "cgpa": {
+            "type": "number",
+            "example": 7.5
+          },
+          "branches": {
+            "example": [
+              "CSE",
+              "ECE",
+              "IT"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "type": {
+            "type": "string",
+            "example": "Full-Time",
+            "enum": [
+              "Full-Time",
+              "Internship"
+            ]
+          },
+          "tags": {
+            "example": [
+              "JavaScript",
+              "Node.js",
+              "React"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": {
+            "type": "string",
+            "example": "Join our engineering team to build scalable applications."
+          },
+          "rounds": {
+            "type": "string",
+            "example": "Resume → Assessment → Technical → HR"
+          },
+          "backlogs": {
+            "type": "string",
+            "example": "Not allowed"
+          },
+          "status": {
+            "type": "string",
+            "example": "Published",
+            "enum": [
+              "Published",
+              "Draft",
+              "Closed",
+              "pending",
+              "approved",
+              "rejected"
+            ]
+          },
+          "rejectionRemark": {
+            "type": "string",
+            "example": "Eligibility criteria not met"
+          },
+          "applications": {
+            "type": "number",
+            "example": 78
+          }
+        }
+      },
+      "RejectDto": {
+        "type": "object",
+        "properties": {
+          "remark": {
+            "type": "string",
+            "example": "Does not meet eligibility criteria"
+          }
+        },
+        "required": [
+          "remark"
+        ]
+      },
+      "CreateApplicationDto": {
+        "type": "object",
+        "properties": {
+          "opportunityId": {
+            "type": "number",
+            "example": 1,
+            "description": "Opportunity ID to apply for"
+          },
+          "candidateId": {
+            "type": "number",
+            "example": 1,
+            "description": "Candidate user ID"
+          },
+          "candidateName": {
+            "type": "string",
+            "example": "Shameer Basha Shaik"
+          },
+          "branch": {
+            "type": "string",
+            "example": "Computer Science"
+          },
+          "cgpa": {
+            "type": "number",
+            "example": 8.7
+          },
+          "hasReferral": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "opportunityId"
+        ]
+      },
+      "UpdateApplicationDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "Interview",
+            "enum": [
+              "Applied",
+              "Shortlisted",
+              "Assessment",
+              "Interview",
+              "Offered",
+              "Rejected",
+              "Withdrawn"
+            ]
+          },
+          "interviewDate": {
+            "type": "string",
+            "example": "2026-03-15"
+          },
+          "remarks": {
+            "type": "string",
+            "example": "Strong technical background"
+          }
+        }
+      },
+      "CreateReferralDto": {
+        "type": "object",
+        "properties": {
+          "opportunityId": {
+            "type": "number",
+            "example": 1,
+            "description": "Opportunity ID for the referral"
+          },
+          "candidateId": {
+            "type": "number",
+            "example": 1,
+            "description": "Candidate user ID"
+          },
+          "alumniName": {
+            "type": "string",
+            "example": "Sneha Reddy",
+            "description": "Alumni name to request from"
+          },
+          "alumniId": {
+            "type": "number",
+            "example": 7,
+            "description": "Alumni user ID"
+          },
+          "userMessage": {
+            "type": "string",
+            "example": "Hi, I am applying for this role and would love a referral."
+          }
+        },
+        "required": [
+          "opportunityId",
+          "userMessage"
+        ]
+      },
+      "UpdateReferralDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "Approved",
+            "enum": [
+              "Approved",
+              "Pending",
+              "Rejected",
+              "approved",
+              "declined",
+              "pending"
+            ]
+          },
+          "alumniResponse": {
+            "type": "string",
+            "example": "Arjun is a strong candidate. Happy to refer him."
+          }
+        }
+      },
+      "CreateAssessmentDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Coding Assessment — Round 1"
+          },
+          "role": {
+            "type": "string",
+            "example": "Software Engineer"
+          },
+          "date": {
+            "type": "string",
+            "example": "2026-03-05"
+          },
+          "time": {
+            "type": "string",
+            "example": "10:00 AM"
+          },
+          "duration": {
+            "type": "string",
+            "example": "90 minutes"
+          },
+          "candidates": {
+            "type": "number",
+            "example": 12
+          },
+          "platform": {
+            "type": "string",
+            "example": "HackerRank"
+          },
+          "link": {
+            "type": "string",
+            "example": "https://hackerrank.com/test/x"
+          },
+          "type": {
+            "type": "string",
+            "example": "Online Test",
+            "enum": [
+              "Online Test",
+              "Technical Interview",
+              "HR Interview",
+              "Group Discussion"
+            ]
+          },
+          "isDraft": {
+            "type": "boolean",
+            "example": false
+          },
+          "opportunityId": {
+            "type": "number",
+            "example": 1,
+            "description": "Associated opportunity ID"
+          }
+        },
+        "required": [
+          "title",
+          "role",
+          "date",
+          "time",
+          "duration",
+          "candidates",
+          "platform",
+          "link",
+          "type"
+        ]
+      },
+      "UpdateAssessmentDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Coding Assessment — Round 1"
+          },
+          "role": {
+            "type": "string",
+            "example": "Software Engineer"
+          },
+          "date": {
+            "type": "string",
+            "example": "2026-03-05"
+          },
+          "time": {
+            "type": "string",
+            "example": "10:00 AM"
+          },
+          "duration": {
+            "type": "string",
+            "example": "90 minutes"
+          },
+          "candidates": {
+            "type": "number",
+            "example": 12
+          },
+          "platform": {
+            "type": "string",
+            "example": "HackerRank"
+          },
+          "link": {
+            "type": "string",
+            "example": "https://hackerrank.com/test/x"
+          },
+          "type": {
+            "type": "string",
+            "example": "Online Test",
+            "enum": [
+              "Online Test",
+              "Technical Interview",
+              "HR Interview",
+              "Group Discussion"
+            ]
+          },
+          "isDraft": {
+            "type": "boolean",
+            "example": false
+          },
+          "opportunityId": {
+            "type": "number",
+            "example": 1,
+            "description": "Associated opportunity ID"
+          }
+        }
+      },
+      "CreateNotificationDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Offer Extended!"
+          },
+          "message": {
+            "type": "string",
+            "example": "CloudBase Inc has extended an internship offer to you."
+          },
+          "isRead": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "title",
+          "message"
+        ]
+      },
+      "UpdateNotificationDto": {
+        "type": "object",
+        "properties": {
+          "isRead": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "CreateRecruiterDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Priya Kapoor"
+          },
+          "company": {
+            "type": "string",
+            "example": "Google"
+          },
+          "role": {
+            "type": "string",
+            "example": "HR Manager"
+          },
+          "email": {
+            "type": "string",
+            "example": "priya.kapoor@techcorp.com"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+91 98765 43210"
+          },
+          "location": {
+            "type": "string",
+            "example": "Mumbai, Maharashtra"
+          },
+          "bio": {
+            "type": "string",
+            "example": "Experienced HR professional with 8+ years in talent acquisition."
+          }
+        },
+        "required": [
+          "name",
+          "company",
+          "role",
+          "email"
+        ]
+      },
+      "UpdateRecruiterDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Priya Kapoor"
+          },
+          "company": {
+            "type": "string",
+            "example": "TechCorp Solutions"
+          },
+          "role": {
+            "type": "string",
+            "example": "HR Manager"
+          },
+          "email": {
+            "type": "string",
+            "example": "priya.kapoor@techcorp.com"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+91 98765 43210"
+          },
+          "location": {
+            "type": "string",
+            "example": "Mumbai, Maharashtra"
+          },
+          "bio": {
+            "type": "string",
+            "example": "Experienced HR professional with 8+ years in talent acquisition."
+          },
+          "status": {
+            "type": "string",
+            "example": "active",
+            "enum": [
+              "active",
+              "pending",
+              "declined"
+            ]
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "x-role": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-role",
+        "description": "Role of the caller. Valid values: `candidate`, `recruiter`, `alumni`, `placement_officer`"
+      }
+    }
+  }
+}
