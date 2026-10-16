@@ -1,0 +1,21 @@
+/* Geometry-only corrections for React pages converted from the static portal. */
+.cn-placement main.main-content[style] {
+  margin-left: 240px !important;
+  margin-right: 0 !important;
+  width: calc(100% - 240px) !important;
+  max-width: none !important;
+  padding: 88px 32px 40px !important;
+}
+
+.cn-placement .main-content { min-width: 0; }
+.cn-placement .panel-link { cursor: pointer; }
+.cn-placement .hero-btn-outline { margin-left: 10px; }
+
+@media (max-width: 760px) {
+  .cn-placement main.main-content[style] {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding: 84px 16px 28px !important;
+  }
+  .cn-placement .hero-btn-outline { margin-left: 0; margin-top: 10px; }
+}

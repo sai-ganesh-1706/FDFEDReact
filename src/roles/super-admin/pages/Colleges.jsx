@@ -3,96 +3,63 @@ import { errorMessage } from '../../../services/api.js';
 import { Plus, Ban, CheckCircle, ShieldCheck, AlertTriangle, Building2 } from 'lucide-react';
 
 const STATUS_OPTIONS = ['active', 'inactive', 'suspended'];
+const ACCESS_OPTIONS = ['full', 'limited', 'readonly'];
 
-const FIELD_META = [
-  { key: 'name', label: 'College name', required: true, placeholder: 'e.g. IIT Bombay' },
-  { key: 'code', label: 'College code', required: true, placeholder: 'e.g. IITB', hint: '2–12 capital letters, numbers or hyphens' },
-  { key: 'email', label: 'Official email', required: true, placeholder: 'admin@college.ac.in' },
-  { key: 'phone', label: 'Phone', placeholder: '+91 98765 43210' },
-  { key: 'address', label: 'Address', placeholder: 'City, State' },
-  { key: 'website', label: 'Website', placeholder: 'https://college.ac.in' },
-];
-
-/** One rule per field; returns an error message or ''. Mirrors the server-side checks. */
-function validateField(key, raw, existing = []) {
-  const v = (raw || '').trim();
-  switch (key) {
-    case 'name':
-      if (!v) return 'College name is required.';
-      if (v.length < 3 || v.length > 100) return 'Name must be 3–100 characters.';
-      if (!/^[A-Za-z0-9][A-Za-z0-9 .,&'()-]*$/.test(v)) return "Use letters, numbers, spaces and . , & ' ( ) - only.";
-      if (existing.some((c) => c.name.trim().toLowerCase() === v.toLowerCase())) return 'A college with this name already exists.';
-      return '';
-    case 'code':
-      if (!v) return 'College code is required.';
-      if (!/^[A-Z0-9-]{2,12}$/.test(v)) return 'Use 2–12 capital letters, numbers or hyphens (e.g. IITB).';
-      if (existing.some((c) => c.code.toLowerCase() === v.toLowerCase())) return 'This code is already used by another college.';
-      return '';
-    case 'email':
-      if (!v) return 'Email is required.';
-      if (!/^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/.test(v)) return 'Enter a valid email, e.g. admin@college.ac.in.';
-      if (existing.some((c) => (c.email || '').toLowerCase() === v.toLowerCase())) return 'Another college already uses this email.';
-      return '';
-    case 'phone':
-      if (v && !/^[+]?[0-9 ()-]{8,16}$/.test(v)) return 'Enter a valid phone number (8–16 digits).';
-      return '';
-    case 'address':
-      if (v && (v.length < 5 || v.length > 200)) return 'Address must be 5–200 characters.';
-      return '';
-    case 'website':
-      if (v && !/^https?:\/\/[^\s/$.?#][^\s]*\.[A-Za-z]{2,}[^\s]*$/.test(v)) return 'Use a full URL starting with http:// or https://';
-      return '';
-    default:
-      return '';
-  }
-}
-
-function AddCollegeModal({ onClose, onSave, existing }) {
-  const [form, setForm] = useState({ name: '', code: '', email: '', phone: '', address: '', website: '' });
-  const [touched, setTouched] = useState({});
+function AddCollegeModal({ onClose, onSave }) {
+  const [form, setForm] = useState({
+    name: '', code: '', email: '', phone: '', address: '', website: '', access: 'full'
+  });
   const [error, setError] = useState('');
-  const [saving, setSaving] = useState(false);
 
-  const set = (k, v) => setForm((f) => ({ ...f, [k]: k === 'code' ? v.toUpperCase() : v }));
-  const errors = Object.fromEntries(FIELD_META.map(({ key }) => [key, validateField(key, form[key], existing)]));
-  const hasErrors = Object.values(errors).some(Boolean);
+  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
-  const handleSave = async () => {
-    setTouched(Object.fromEntries(FIELD_META.map(({ key }) => [key, true])));
-    if (hasErrors) { setError('Please fix the highlighted fields.'); return; }
-    setError('');
-    const payload = {};
-    FIELD_META.forEach(({ key }) => { const v = form[key].trim(); if (v) payload[key] = v; });
-    setSaving(true);
-    const saved = await onSave(payload);
-    setSaving(false);
-    if (saved) onClose();
+  const handleSave = () => {
+    if (!form.name.trim() || !form.code.trim() || !form.email.trim()) {
+      setError('Name, code and email are required.');
+      return;
+    }
+    if (!/^\S+@\S+\.\S+$/.test(form.email.trim())) {
+      setError('Enter a valid college email address.');
+      return;
+    }
+    if (!/^[A-Za-z0-9-]{2,12}$/.test(form.code.trim())) {
+      setError('College code must be 2–12 letters, numbers, or hyphens.');
+      return;
+    }
+    const { access: _access, ...payload } = form;
+    onSave({
+      ...payload,
+      name: form.name.trim(),
+      code: form.code.trim(),
+      email: form.email.trim(),
+    }).then((saved) => { if (saved) onClose(); });
   };
 
   return (
     <div className="modal-backdrop open">
       <div className="modal">
         <h3><Building2 size={18} color="#7c3aed" /> Add New College</h3>
-        {FIELD_META.map(({ key, label, required, placeholder, hint }) => (
-          <div className="form-group" key={key}>
-            <label>{label}{required ? ' *' : ''}</label>
+        {['name', 'code', 'email', 'phone', 'address', 'website'].map(field => (
+          <div className="form-group" key={field}>
+            <label>{field.charAt(0).toUpperCase() + field.slice(1)}{['name','code','email'].includes(field) ? ' *' : ''}</label>
             <input
-              type="text"
-              placeholder={placeholder}
-              value={form[key]}
-              style={touched[key] && errors[key] ? { borderColor: '#ef4444' } : undefined}
-              onChange={(e) => set(key, e.target.value)}
-              onBlur={() => setTouched((t) => ({ ...t, [key]: true }))}
+              type={field === 'email' ? 'email' : field === 'website' ? 'url' : 'text'}
+              placeholder={field === 'name' ? 'e.g. IIT Bombay' : field === 'code' ? 'e.g. IITB' : ''}
+              value={form[field]}
+              onChange={e => set(field, e.target.value)}
             />
-            {touched[key] && errors[key]
-              ? <p className="form-error" style={{ marginTop: 4 }}>{errors[key]}</p>
-              : hint && <p className="form-hint" style={{ marginTop: 4 }}>{hint}</p>}
           </div>
         ))}
+        <div className="form-group">
+          <label>Access Level</label>
+          <select value={form.access} onChange={e => set('access', e.target.value)}>
+            {ACCESS_OPTIONS.map(a => <option key={a} value={a}>{a.charAt(0).toUpperCase() + a.slice(1)}</option>)}
+          </select>
+        </div>
         {error && <p className="form-error">{error}</p>}
         <div className="modal-actions">
           <button className="btn btn-outline" onClick={onClose}>Cancel</button>
-          <button className="btn btn-primary" onClick={handleSave} disabled={saving}>{saving ? 'Creating…' : 'Create College'}</button>
+          <button className="btn btn-primary" onClick={handleSave}>Create College</button>
         </div>
       </div>
     </div>
@@ -231,7 +198,7 @@ export default function Colleges({ colleges, platform, showToast, setActiveTab, 
       </div>
 
       {showAdd && (
-        <AddCollegeModal onClose={() => setShowAdd(false)} onSave={handleAddCollege} existing={colleges} />
+        <AddCollegeModal onClose={() => setShowAdd(false)} onSave={handleAddCollege} />
       )}
       {statusTarget && (
         <StatusModal

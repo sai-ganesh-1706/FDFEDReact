@@ -12,16 +12,8 @@ function AssignAdminModal({ college, onClose, onSave }) {
       setError('Name and email are required.');
       return;
     }
-    if (form.name.trim().length < 2 || !/^[A-Za-z][A-Za-z .'-]+$/.test(form.name.trim())) {
-      setError('Enter the admin\'s real name (letters, spaces, . \' - only).');
-      return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/.test(form.email.trim())) {
+    if (!/^\S+@\S+\.\S+$/.test(form.email.trim())) {
       setError('Enter a valid email address.');
-      return;
-    }
-    if (form.password && form.password.length < 3) {
-      setError('Password must be at least 3 characters.');
       return;
     }
     onSave(college.id, {
@@ -217,7 +209,7 @@ export default function CollegeAdmins({ colleges, platform, showToast, adminColl
             <div className="college-card-initial">{c.name.slice(0, 2).toUpperCase()}</div>
             <div className="college-card-name">{c.name}</div>
             <div className="college-card-sub" style={{ marginTop: 4 }}>
-              {c.admin ? `Admin: ${c.admin.name}` : ' No admin assigned'}
+              {c.admin ? `Admin: ${c.admin.name}` : '⚠️ No admin assigned'}
             </div>
             <div style={{ marginTop: 8 }}>
               <span className={`badge ${c.status === 'active' ? 'badge-green' : 'badge-red'}`}>
