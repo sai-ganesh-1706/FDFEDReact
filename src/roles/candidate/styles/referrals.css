@@ -1,0 +1,939 @@
+/* ===== Referrals Page Styles ===== */
+/* Inherits base layout, sidebar, header from style.css */
+
+/* ===== Referrals Content ===== */
+.cn-candidate .referrals {
+    padding: 0;
+}
+
+/* --- Stats Grid (3 cards) --- */
+.cn-candidate .referral-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+.cn-candidate .referral-stat-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 22px 24px;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.cn-candidate .referral-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.cn-candidate .referral-stat-card__number {
+    font-size: 1.8rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 6px;
+}
+
+.cn-candidate .referral-stat-card__number--approved {
+    color: #16A34A;
+}
+
+.cn-candidate .referral-stat-card__number--total {
+    color: var(--brand-primary);
+}
+
+.cn-candidate .referral-stat-card__number--pending {
+    color: #F59E0B;
+}
+
+.cn-candidate .referral-stat-card__label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* --- Alumni Referral Banner --- */
+.cn-candidate .referral-banner {
+    background: linear-gradient(135deg, #EEF2FF, #E0E7FF);
+    border: 1px solid #C7D2FE;
+    border-radius: var(--radius-lg);
+    padding: 22px 28px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.cn-candidate .referral-banner__content {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.cn-candidate .referral-banner__icon {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    color: var(--brand-primary);
+    margin-top: 2px;
+}
+
+.cn-candidate .referral-banner__text h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.cn-candidate .referral-banner__text p {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.cn-candidate .referral-banner__action {
+    flex-shrink: 0;
+}
+
+.cn-candidate .btn--referral {
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--brand-primary);
+    color: var(--text-light);
+    border: none;
+}
+
+.cn-candidate .btn--referral:hover {
+    background: var(--brand-secondary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.cn-candidate .btn--referral svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* --- Tabs --- */
+.cn-candidate .referral-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 24px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.cn-candidate .referral-tab {
+    padding: 10px 20px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    font-family: var(--font-sans);
+}
+
+.cn-candidate .referral-tab:hover {
+    color: var(--brand-primary);
+}
+
+.cn-candidate .referral-tab.active {
+    color: var(--brand-primary);
+    border-bottom-color: var(--brand-primary);
+}
+
+/* --- Tab Content --- */
+.cn-candidate .tab-content {
+    display: none;
+}
+
+.cn-candidate .tab-content.active {
+    display: block;
+}
+
+/* ==============================
+   My Referral Requests Tab
+   ============================== */
+
+.cn-candidate .referral-request-card {
+    background: var(--bg-card);
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-lg);
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+}
+
+.cn-candidate .referral-request-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+/* Request Header Row */
+.cn-candidate .request-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.cn-candidate .request-header:hover {
+    background: #FAFBFC;
+}
+
+.cn-candidate .request-header__left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.cn-candidate .request-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text-light);
+    flex-shrink: 0;
+}
+
+.cn-candidate .request-avatar--gold {
+    background: #D97706;
+}
+
+.cn-candidate .request-avatar--blue {
+    background: #3B82F6;
+}
+
+.cn-candidate .request-avatar--purple {
+    background: #7C3AED;
+}
+
+.cn-candidate .request-avatar--green {
+    background: #16A34A;
+}
+
+.cn-candidate .request-avatar--rose {
+    background: #E11D48;
+}
+
+.cn-candidate .request-info h4 {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+
+.cn-candidate .request-info p {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.cn-candidate .request-info .request-for {
+    margin-top: 3px;
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+}
+
+.cn-candidate .request-info .request-for strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.cn-candidate .request-info .request-date {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    margin-top: 2px;
+}
+
+.cn-candidate .request-header__right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.cn-candidate .request-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.cn-candidate .request-status--approved {
+    background: #DCFCE7;
+    color: #16A34A;
+}
+
+.cn-candidate .request-status--pending {
+    background: #FEF3C7;
+    color: #D97706;
+}
+
+.cn-candidate .request-status--rejected {
+    background: #FEE2E2;
+    color: #DC2626;
+}
+
+.cn-candidate .request-status svg {
+    width: 13px;
+    height: 13px;
+}
+
+.cn-candidate .request-toggle {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    transition: transform 0.3s ease;
+}
+
+.cn-candidate .request-toggle.open {
+    transform: rotate(180deg);
+}
+
+.cn-candidate .request-toggle svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Request Details (expandable) */
+.cn-candidate .request-details {
+    display: none;
+    padding: 0 22px 20px;
+    border-top: 1px solid #e2e8f0;
+    animation: slideDown 0.3s ease;
+}
+
+.cn-candidate .request-details.open {
+    display: block;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cn-candidate .message-block {
+    margin-top: 16px;
+}
+
+.cn-candidate .message-block__label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.cn-candidate .message-block__content {
+    background: #F9FAFB;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    font-size: 0.84rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.cn-candidate .message-block--response .message-block__label {
+    color: #16A34A;
+}
+
+.cn-candidate .message-block--response .message-block__content {
+    background: #F0FDF4;
+    border-color: #BBF7D0;
+    color: #15803D;
+}
+
+/* ==============================
+   Browse Alumni Tab
+   ============================== */
+
+.cn-candidate .alumni-search {
+    position: relative;
+    margin-bottom: 8px;
+}
+
+.cn-candidate .alumni-search__icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    color: #94a3b8;
+    pointer-events: none;
+}
+
+.cn-candidate .alumni-search__input {
+    width: 100%;
+    max-width: 380px;
+    padding: 10px 16px 10px 40px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: var(--radius-md);
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    background: var(--bg-card);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.cn-candidate .alumni-search__input::placeholder {
+    color: #94a3b8;
+}
+
+.cn-candidate .alumni-search__input:focus {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px rgba(57, 52, 160, 0.1);
+}
+
+.cn-candidate .alumni-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 18px;
+}
+
+.cn-candidate .alumni-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.cn-candidate .alumni-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #FAFAFF;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.cn-candidate .alumni-card:hover {
+    background: #F0F0FF;
+    box-shadow: var(--shadow-sm);
+}
+
+.cn-candidate .alumni-card__left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.cn-candidate .alumni-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-light);
+    flex-shrink: 0;
+}
+
+.cn-candidate .alumni-card__info h4 {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+
+.cn-candidate .alumni-card__info p {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+}
+
+.cn-candidate .btn--request {
+    padding: 8px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    font-family: var(--font-sans);
+}
+
+.cn-candidate .btn--request-active {
+    background: var(--brand-primary);
+    color: var(--text-light);
+}
+
+.cn-candidate .btn--request-active:hover {
+    background: var(--brand-secondary);
+    transform: translateY(-1px);
+}
+
+.cn-candidate .btn--request-active svg {
+    width: 14px;
+    height: 14px;
+}
+
+.cn-candidate .btn--requested {
+    background: #F3F4F6;
+    color: #94a3b8;
+    cursor: default;
+    border: 1px solid #e2e8f0;
+}
+
+.cn-candidate .btn--requested svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* ==============================
+   Request Referral Modal
+   ============================== */
+
+.cn-candidate .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: modalFadeIn 0.2s ease;
+}
+
+.cn-candidate .modal-overlay.active {
+    display: flex;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.cn-candidate .modal {
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    width: 100%;
+    max-width: 520px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    animation: modalSlideUp 0.3s ease;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+@keyframes modalSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cn-candidate .modal__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 24px 28px 0;
+}
+
+.cn-candidate .modal__header-text h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.cn-candidate .modal__header-text p {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+}
+
+.cn-candidate .modal__close {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    background: none;
+    border: none;
+    flex-shrink: 0;
+}
+
+.cn-candidate .modal__close:hover {
+    background: var(--bg-main);
+    color: var(--text-primary);
+}
+
+.cn-candidate .modal__close svg {
+    width: 20px;
+    height: 20px;
+}
+
+.cn-candidate .modal__body {
+    padding: 20px 28px 24px;
+}
+
+/* Alumni Info in Modal */
+.cn-candidate .modal__alumni-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #F5F3FF;
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    margin-bottom: 22px;
+}
+
+.cn-candidate .modal__alumni-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-light);
+    flex-shrink: 0;
+}
+
+.cn-candidate .modal__alumni-details h4 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+
+.cn-candidate .modal__alumni-details p {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.cn-candidate .modal__alumni-details p svg {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+}
+
+.cn-candidate .modal__alumni-details .applying-for {
+    color: var(--brand-primary);
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+.cn-candidate .modal__alumni-details .applying-for svg {
+    color: var(--brand-primary);
+}
+
+/* Form */
+.cn-candidate .modal__form-group {
+    margin-bottom: 8px;
+}
+
+.cn-candidate .modal__label {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.cn-candidate .modal__label .required {
+    color: #EF4444;
+    margin-left: 2px;
+}
+
+.cn-candidate .modal__textarea {
+    width: 100%;
+    min-height: 110px;
+    padding: 14px 16px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: var(--radius-md);
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    line-height: 1.5;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.cn-candidate .modal__textarea::placeholder {
+    color: #94a3b8;
+}
+
+.cn-candidate .modal__textarea:focus {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px rgba(57, 52, 160, 0.1);
+}
+
+.cn-candidate .modal__textarea-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 6px;
+    margin-bottom: 16px;
+}
+
+.cn-candidate .modal__textarea-hint {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    font-style: italic;
+}
+
+.cn-candidate .modal__textarea-count {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.cn-candidate .modal__textarea-count.warning {
+    color: #F59E0B;
+}
+
+.cn-candidate .modal__textarea-count.error {
+    color: #EF4444;
+}
+
+/* Tips Box */
+.cn-candidate .modal__tips {
+    background: #EEF2FF;
+    border: 1px solid #C7D2FE;
+    border-radius: var(--radius-md);
+    padding: 14px 18px;
+    margin-bottom: 22px;
+}
+
+.cn-candidate .modal__tips h5 {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--brand-primary);
+    margin-bottom: 8px;
+}
+
+.cn-candidate .modal__tips ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cn-candidate .modal__tips li {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    padding: 3px 0;
+    line-height: 1.5;
+}
+
+/* Modal Actions */
+.cn-candidate .modal__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 4px;
+}
+
+.cn-candidate .btn--cancel {
+    padding: 10px 22px;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s, background 0.2s;
+    font-family: var(--font-sans);
+}
+
+.cn-candidate .btn--cancel:hover {
+    color: var(--text-primary);
+    background: var(--bg-main);
+}
+
+.cn-candidate .btn--send {
+    padding: 10px 22px;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--brand-primary);
+    color: var(--text-light);
+    border: none;
+    font-family: var(--font-sans);
+}
+
+.cn-candidate .btn--send:hover {
+    background: var(--brand-secondary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.cn-candidate .btn--send:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.cn-candidate .btn--send svg {
+    width: 15px;
+    height: 15px;
+}
+
+/* ===== Validation Error ===== */
+.cn-candidate .modal__error {
+    font-size: 0.75rem;
+    color: #EF4444;
+    margin-top: 4px;
+    display: none;
+}
+
+.cn-candidate .modal__error.visible {
+    display: block;
+}
+
+/* ===== Toast Notification ===== */
+.cn-candidate .toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    padding: 14px 22px;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-light);
+    box-shadow: var(--shadow-lg);
+    z-index: 300;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.4s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cn-candidate .toast.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.cn-candidate .toast--success {
+    background: #16A34A;
+}
+
+.cn-candidate .toast--error {
+    background: #DC2626;
+}
+
+.cn-candidate .toast--info {
+    background: var(--brand-primary);
+}
+
+.cn-candidate .toast svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+/* ===== Empty State ===== */
+.cn-candidate .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #94a3b8;
+}
+
+.cn-candidate .empty-state svg {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 12px;
+    opacity: 0.4;
+}
+
+.cn-candidate .empty-state p {
+    font-size: 0.88rem;
+    font-weight: 500;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1200px) {
+    .cn-candidate .referral-stats {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .cn-candidate .referrals {
+        padding: 0;
+    }
+
+    .cn-candidate .referral-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .cn-candidate .referral-banner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cn-candidate .modal {
+        max-width: 100%;
+        margin: 10px;
+    }
+
+    .cn-candidate .request-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .cn-candidate .request-header__right {
+        align-self: flex-end;
+    }
+}
