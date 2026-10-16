@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Calendar, Video, Users, ExternalLink, Plus, Trash2, Mail } from 'lucide-react';
 import ScheduleModal from './ScheduleModal';
 
-export default function Assessments({ assessments, opportunities = [], onAddAssessment, onDeleteAssessment }) {
-  const [showScheduleModal, setShowScheduleModal] = useState(false);
+export default function Assessments({ assessments, opportunities = [], applications = [], onAddAssessment, onDeleteAssessment, preselectApplicationId, onModalClosed }) {
+  const [showScheduleModal, setShowScheduleModal] = useState(Boolean(preselectApplicationId));
 
   return (
     <div>
@@ -117,9 +117,11 @@ export default function Assessments({ assessments, opportunities = [], onAddAsse
 
       {showScheduleModal && (
         <ScheduleModal 
-          onClose={() => setShowScheduleModal(false)}
+          onClose={() => { setShowScheduleModal(false); onModalClosed?.(); }}
+          preselectApplicationId={preselectApplicationId}
           onAddAssessment={onAddAssessment}
           opportunities={opportunities}
+          applications={applications}
         />
       )}
     </div>
