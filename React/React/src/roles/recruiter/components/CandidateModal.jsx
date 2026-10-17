@@ -44,7 +44,7 @@ const ROUND_KEYS = [
   { key: 'hr',         label: '4. HR / Behavioral Interview' },
 ];
 
-// Options per round — 'Scheduled' removed from Resume Screening
+// Options per round
 const ROUND_OPTIONS = {
   resume:     ['Pending', 'Reviewing', 'Pass', 'Fail'],
   assessment: ['Pending', 'Pass', 'Fail'],
@@ -52,19 +52,51 @@ const ROUND_OPTIONS = {
   hr:         ['Pending', 'Pass', 'Fail'],
 };
 
+// Ordered pipeline — each round requires the previous to be 'Pass' to unlock
+const ROUND_ORDER = ['resume', 'assessment', 'technical', 'hr'];
+
+/**
+ * Returns true when a round is locked (previous round is not 'Pass').
+ * The first round (resume) is never locked.
+ */
+function isRoundLocked(roundKey, rounds = {}) {
+  const idx = ROUND_ORDER.indexOf(roundKey);
+  if (idx <= 0) return false; // resume is always editable
+  const prevKey = ROUND_ORDER[idx - 1];
+  return (rounds[prevKey] || 'Pending') !== 'Pass';
+}
+
 /**
  * Derives the pipeline status automatically from round results.
- * Applied → Resume → Assessment → Technical → HR → Offered / Rejected
+ *
+ * Status rules:
+ *   Resume Pending / Reviewing          → Applied
+ *   Resume Pass                         → Shortlisted   (wait — next round pending)
+ *   Assessment in progress (Pending)    → Assessment
+ *   Assessment Pass                     → Interview     (in technical / HR stage)
+ *   Technical or HR Pending / Pass      → Interview
+ *   Any round Fail                      → Rejected
+ *   HR Pass (all rounds passed)         → Offered
  */
 function deriveStatus(rounds = {}) {
   const { resume, assessment, technical, hr } = rounds;
 
+  // Any fail → Rejected immediately
+  if (resume === 'Fail' || assessment === 'Fail' || technical === 'Fail' || hr === 'Fail') return 'Rejected';
+
+  // All rounds passed → Offered
   if (hr === 'Pass') return 'Offered';
-  if (hr === 'Fail' || technical === 'Fail' || assessment === 'Fail' || resume === 'Fail') return 'Rejected';
-  if (technical === 'Pass') return 'Interview';       // waiting for HR
-  if (assessment === 'Pass') return 'Interview';      // in technical stage
-  if (resume === 'Pass') return 'Assessment';         // moved past screening
-  if (resume === 'Reviewing') return 'Shortlisted';   // under review
+
+  // HR or Technical in progress (assessment already passed → Interview stage)
+  if (assessment === 'Pass') return 'Interview';
+
+  // Resume passed → candidate moves to Assessment stage
+  if (resume === 'Pass') return 'Shortlisted';
+
+  // Resume being reviewed
+  if (resume === 'Reviewing') return 'Applied';
+
+  // Default
   return 'Applied';
 }
 
@@ -135,9 +167,25 @@ export default function CandidateModal({
 
   const handleRoundChange = (roundKey, val) => {
     const updated = { ...localRounds, [roundKey]: val };
+
+    // If a round is un-passed, reset all downstream rounds to Pending
+    // so they become locked and reflect the correct state.
+    if (val !== 'Pass') {
+      const idx = ROUND_ORDER.indexOf(roundKey);
+      ROUND_ORDER.slice(idx + 1).forEach((k) => {
+        updated[k] = 'Pending';
+      });
+    }
+
     setLocalRounds(updated);
 
-    // Save round result
+    // Save each changed round key
+    Object.entries(updated).forEach(([k, v]) => {
+      if (v !== (localRounds[k] || 'Pending')) {
+        onUpdateRound(candidate.id, k, v);
+      }
+    });
+    // Always save the primary changed round (in case value is the same as default)
     onUpdateRound(candidate.id, roundKey, val);
 
     // Auto-derive and propagate new status
@@ -346,17 +394,36 @@ export default function CandidateModal({
 
           {ROUND_KEYS.map((round) => {
             const currentResult = localRounds[round.key] || 'Pending';
+            const locked = isRoundLocked(round.key, localRounds);
             const opts = ROUND_OPTIONS[round.key];
+            const idx = ROUND_ORDER.indexOf(round.key);
+            const prevLabel = idx > 0 ? ROUND_KEYS[idx - 1].label : '';
             return (
-              <div key={round.key} className="round-row-card">
-                <span className="round-name">{round.label}</span>
+              <div
+                key={round.key}
+                className="round-row-card"
+                style={{ opacity: locked ? 0.55 : 1 }}
+                title={locked ? `Unlock by marking "${prevLabel}" as Pass first` : undefined}
+              >
+                <span className="round-name" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  {locked && <Lock size={13} color="#9CA3AF" />}
+                  {round.label}
+                  {locked && (
+                    <span style={{ fontSize: '11px', color: '#9CA3AF', fontStyle: 'italic', fontWeight: 400 }}>
+                      — locked
+                    </span>
+                  )}
+                </span>
                 <select
                   className="round-select"
                   value={currentResult}
+                  disabled={locked}
                   onChange={(e) => handleRoundChange(round.key, e.target.value)}
                   style={{
-                    color: currentResult === 'Pass' ? '#059669' : currentResult === 'Fail' ? '#DC2626' : '#2563EB',
-                    borderColor: currentResult === 'Pass' ? '#A7F3D0' : '#E5E7EB'
+                    color: locked ? '#9CA3AF' : currentResult === 'Pass' ? '#059669' : currentResult === 'Fail' ? '#DC2626' : '#2563EB',
+                    borderColor: locked ? '#E5E7EB' : currentResult === 'Pass' ? '#A7F3D0' : '#E5E7EB',
+                    background: locked ? '#F9FAFB' : undefined,
+                    cursor: locked ? 'not-allowed' : 'pointer',
                   }}
                 >
                   {opts.map((opt) => (
