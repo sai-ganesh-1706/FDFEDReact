@@ -1,0 +1,345 @@
+# Individual Contribution Report: CareerNest / PlaceConnect
+
+**Student / Contributor Name:** Shiva Mani Kumar Reddy Voorkonda  
+**Email:** shivamanikumarreddy.v24@iiits.in  
+**GitHub:** `shivavoorkonda`  
+**Git Branch:** `PlacementOfficer`  
+**Primary Focus Areas:**
+1. **Placement Officer (Placement Cell) Frontend Module** (Dashboard, Review Opportunities, Recruiter Verification, Candidate Filters, User Oversight, Statistics, Department Reports, Profile, Navigation, API Services & Styling)
+2. **Full-Stack Backend (NestJS)** (Complete REST API Server — Users, Applications, Assessments, Opportunities, Recruiters, Referrals, Notifications, Colleges, Super-Admin, Features, Announcements, Auth, Guards, Middleware & Filters)
+
+---
+
+## 1. Executive Summary
+
+As part of the **CareerNest / PlaceConnect** campus placement management platform, I was responsible for architecting and developing the **Placement Officer (Placement Cell) Frontend Module** and the **entire NestJS Backend API Server** that powers all roles across the platform.
+
+- **Placement Officer Frontend:** A comprehensive administrative interface enabling placement officers to manage their dashboard, review & approve/reject campus drive opportunities posted by recruiters, verify recruiter profiles, filter and oversee candidate student records, view placement statistics and department-wise reports, manage their own profile and credentials, and navigate the platform through a responsive sidebar and header system.
+- **Backend API Server (NestJS):** A production-grade, modular NestJS backend implementing RESTful APIs for all platform actors (Students, Alumni, Recruiters, Placement Officers, College Admins, Super Admins). This includes user management, application lifecycle, opportunity management, recruiter CRUD, referral workflows, notifications, assessments, college management, super-admin operations, announcements, contact form handling, feature-gated endpoints, session-based authentication, role-based access control (RBAC), custom middleware (logging, security, file uploads), and global exception filters.
+
+---
+
+## 2. Summary of Developed & Modified Files
+
+| # | File Path | Action | Description / Responsibility |
+|---|---|---|---|
+| **Placement Officer — Frontend Module** | | | |
+| 1 | `src/roles/placement-officer/PlacementApp.jsx` | **Created** | Root container & view router for the Placement Officer role, managing page transitions between all officer sub-modules. |
+| 2 | `src/roles/placement-officer/components/Dashboard.jsx` | **Created / Modified** | Main dashboard layout orchestrating the active page view, integrating sidebar and header, and managing officer session state. |
+| 3 | `src/roles/placement-officer/components/Header.jsx` | **Created / Modified** | Top navigation bar with breadcrumb titles, navigation shortcuts, search functionality, and notification indicators for all officer pages. |
+| 4 | `src/roles/placement-officer/components/Sidebar.jsx` | **Created / Modified** | Left sidebar navigation with responsive layout, page routing links for all placement modules, user profile badge, and sign-out trigger. |
+| 5 | `src/roles/placement-officer/components/SignOutModal.jsx` | **Created** | Confirmation modal for secure session termination and redirect to login. |
+| 6 | `src/roles/placement-officer/components/ReviewOpportunities.jsx` | **Created** | Opportunity review interface allowing officers to inspect, approve, or reject campus drive postings submitted by recruiters, with detail views and status management. |
+| 7 | `src/roles/placement-officer/components/Recruiters.jsx` | **Created** | Recruiter verification and management panel enabling officers to review recruiter profiles, verify credentials, and manage recruiter access to the platform. |
+| 8 | `src/roles/placement-officer/components/CandidatesFilter.jsx` | **Created** | Advanced candidate filtering interface with multi-criteria search, branch/department selection, and CGPA range filters for student records. |
+| 9 | `src/roles/placement-officer/components/UserOversight.jsx` | **Created** | Comprehensive user oversight dashboard (1,178+ lines) providing a centralized view of all platform users with role-based filtering, status tracking, and administrative actions. |
+| 10 | `src/roles/placement-officer/components/Statistics.jsx` | **Created** | Placement statistics visualization component rendering aggregate metrics, placement rates, company-wise distributions, and trend analysis. |
+| 11 | `src/roles/placement-officer/components/PlacementDashboard.jsx` | **Created** | Dedicated placement analytics dashboard with summary cards, placement progress indicators, and quick-action widgets. |
+| 12 | `src/roles/placement-officer/components/DeptReport.jsx` | **Created** | Department-wise placement report generator with branch-level analytics, placed/unplaced breakdowns, and comparative views. |
+| 13 | `src/roles/placement-officer/components/Profile.jsx` | **Created** | Full officer profile view and editor (735+ lines) for personal information, designation, contact details, password management, and profile picture. |
+| 14 | `src/roles/placement-officer/services/officerApi.js` | **Created / Modified** | Centralized API service layer (316+ lines) wrapping all backend endpoint calls for the placement officer role, including data fetching, mutations, and error handling. |
+| 15 | `src/roles/placement-officer/data/mockdata.js` | **Created** | Mock datasets for local development and testing of officer dashboard, opportunities, and candidate data. |
+| **Placement Officer — Stylesheets** | | | |
+| 16 | `src/roles/placement-officer/components/styles/p1.css` | **Created / Modified** | Primary stylesheet (1,019+ lines) covering header, sidebar, and dashboard base layouts. |
+| 17 | `src/roles/placement-officer/components/styles/p2.css` | **Created** | Stylesheet (686+ lines) for opportunity review and recruiter management components. |
+| 18 | `src/roles/placement-officer/styles/p3.css` | **Created** | Stylesheet (897+ lines) for profile page, form elements, and modal styling. |
+| 19 | `src/roles/placement-officer/components/styles/p4.css` | **Created** | Stylesheet (762+ lines) for candidate filter and user oversight views. |
+| 20 | `src/roles/placement-officer/components/styles/p5.css` | **Created** | Stylesheet (221+ lines) for statistics and department report components. |
+| 21 | `src/roles/placement-officer/components/styles/p6.css` | **Created** | Stylesheet for additional placement modules. |
+| 22 | `src/roles/placement-officer/components/styles/dashboard.css` | **Created** | Dashboard-specific layout styles and spacing. |
+| 23 | `src/roles/placement-officer/components/styles/layout-fixes.css` | **Created** | Cross-component layout fix overrides preventing style bleed and ensuring responsiveness. |
+| 24 | `src/roles/placement-officer/components/styles/statistics.css` | **Created** | Statistics chart and metric card styling. |
+| 25 | `src/roles/placement-officer/components/styles/user-oversight.css` | **Created** | User oversight table, filter panel, and action button styling. |
+| **Backend — NestJS API Server** | | | |
+| 26 | `backend/backend/src/main.ts` | **Created** | Application entry point — bootstraps NestJS, enables CORS, global pipes, and exception filters. |
+| 27 | `backend/backend/src/app.module.ts` | **Created** | Root module importing all feature modules, middleware configuration, and global providers. |
+| 28 | `backend/backend/src/app.controller.ts` | **Created** | Root health-check controller. |
+| 29 | `backend/backend/src/app.service.ts` | **Created** | Root application service. |
+| 30 | `backend/backend/src/users/users.controller.ts` | **Created / Modified** | User management endpoints (267+ lines) — CRUD for all roles, profile updates, password changes, and user search. |
+| 31 | `backend/backend/src/users/users.service.ts` | **Created** | User business logic service handling validation, transformation, and orchestration. |
+| 32 | `backend/backend/src/users/users.repository.ts` | **Created / Modified** | User data access layer (229+ lines) with MongoDB/database queries, aggregation pipelines, and filters. |
+| 33 | `backend/backend/src/users/users.module.ts` | **Created** | User module registration and dependency injection. |
+| 34 | `backend/backend/src/users/dto/create-user.dto.ts` | **Created** | User creation DTO with class-validator decorators (92+ lines) — role-specific field validation. |
+| 35 | `backend/backend/src/users/dto/update-user.dto.ts` | **Created** | User update DTO with partial validation (57+ lines). |
+| 36 | `backend/backend/src/applications/applications.controller.ts` | **Created** | Application lifecycle endpoints (115+ lines) — create, update, bulk status changes, and candidate queries. |
+| 37 | `backend/backend/src/applications/applications.service.ts` | **Created** | Application business logic (349+ lines) — status transitions, shortlisting, and placement tracking. |
+| 38 | `backend/backend/src/applications/applications.repository.ts` | **Created** | Application data access layer (206+ lines). |
+| 39 | `backend/backend/src/applications/applications.module.ts` | **Created** | Application module registration. |
+| 40 | `backend/backend/src/applications/dto/create-application.dto.ts` | **Created** | Application creation DTO with validation. |
+| 41 | `backend/backend/src/applications/dto/update-application.dto.ts` | **Created** | Application update DTO (51+ lines) supporting status transitions. |
+| 42 | `backend/backend/src/applications/dto/bulk-status.dto.ts` | **Created** | Bulk status update DTO for batch operations. |
+| 43 | `backend/backend/src/applications/dto/shortlist-candidates.dto.ts` | **Created** | Shortlisting DTO for candidate selection. |
+| 44 | `backend/backend/src/opportunities/opportunities.controller.ts` | **Created** | Opportunity management endpoints (140+ lines) — CRUD for campus drives, approval workflows. |
+| 45 | `backend/backend/src/opportunities/opportunities.service.ts` | **Created** | Opportunity business logic (122+ lines). |
+| 46 | `backend/backend/src/opportunities/opportunities.repository.ts` | **Created** | Opportunity data access layer (101+ lines). |
+| 47 | `backend/backend/src/opportunities/opportunities.module.ts` | **Created** | Opportunity module registration. |
+| 48 | `backend/backend/src/opportunities/dto/create-opportunity.dto.ts` | **Created** | Opportunity creation DTO (69+ lines) with comprehensive field validation. |
+| 49 | `backend/backend/src/opportunities/dto/update-opportunity.dto.ts` | **Created** | Opportunity update DTO. |
+| 50 | `backend/backend/src/recruiters/recruiters.controller.ts` | **Created** | Recruiter management endpoints (94+ lines) — profile CRUD, verification status. |
+| 51 | `backend/backend/src/recruiters/recruiters.service.ts` | **Created** | Recruiter business logic (128+ lines). |
+| 52 | `backend/backend/src/recruiters/recruiters.repository.ts` | **Created** | Recruiter data access layer (85+ lines). |
+| 53 | `backend/backend/src/recruiters/recruiters.module.ts` | **Created** | Recruiter module registration. |
+| 54 | `backend/backend/src/recruiters/dto/create-recruiter.dto.ts` | **Created** | Recruiter creation DTO (51+ lines). |
+| 55 | `backend/backend/src/recruiters/dto/update-recruiter.dto.ts` | **Created** | Recruiter update DTO. |
+| 56 | `backend/backend/src/referrals/referrals.controller.ts` | **Created** | Referral management endpoints (81+ lines) — create, approve, decline with feedback. |
+| 57 | `backend/backend/src/referrals/referrals.service.ts` | **Created** | Referral business logic (170+ lines) — status workflows and notification triggers. |
+| 58 | `backend/backend/src/referrals/referrals.repository.ts` | **Created** | Referral data access layer (185+ lines). |
+| 59 | `backend/backend/src/referrals/referrals.module.ts` | **Created** | Referral module registration. |
+| 60 | `backend/backend/src/referrals/dto/create-referral.dto.ts` | **Created** | Referral creation DTO (42+ lines). |
+| 61 | `backend/backend/src/referrals/dto/update-referral.dto.ts` | **Created** | Referral update DTO. |
+| 62 | `backend/backend/src/notifications/notifications.controller.ts` | **Created** | Notification endpoints (79+ lines) — send, fetch, mark-read, and bulk operations. |
+| 63 | `backend/backend/src/notifications/notifications.service.ts` | **Created** | Notification business logic (54+ lines). |
+| 64 | `backend/backend/src/notifications/notifications.repository.ts` | **Created** | Notification data access layer (92+ lines). |
+| 65 | `backend/backend/src/notifications/notifications.module.ts` | **Created** | Notification module registration. |
+| 66 | `backend/backend/src/notifications/dto/create-notification.dto.ts` | **Created** | Notification creation DTO (31+ lines). |
+| 67 | `backend/backend/src/notifications/dto/update-notification.dto.ts` | **Created** | Notification update DTO. |
+| 68 | `backend/backend/src/assessments/assessments.controller.ts` | **Created** | Assessment management endpoints (105+ lines) — create, schedule, evaluate. |
+| 69 | `backend/backend/src/assessments/assessments.service.ts` | **Created** | Assessment business logic (141+ lines). |
+| 70 | `backend/backend/src/assessments/assessments.repository.ts` | **Created** | Assessment data access layer (120+ lines). |
+| 71 | `backend/backend/src/assessments/assessments.module.ts` | **Created** | Assessment module registration. |
+| 72 | `backend/backend/src/assessments/dto/create-assessment.dto.ts` | **Created** | Assessment creation DTO (55+ lines). |
+| 73 | `backend/backend/src/assessments/dto/update-assessment.dto.ts` | **Created** | Assessment update DTO. |
+| 74 | `backend/backend/src/colleges/colleges.controller.ts` | **Created** | College management endpoints (83+ lines). |
+| 75 | `backend/backend/src/colleges/colleges.service.ts` | **Created** | College business logic (144+ lines). |
+| 76 | `backend/backend/src/colleges/colleges.repository.ts` | **Created** | College data access layer (261+ lines). |
+| 77 | `backend/backend/src/colleges/colleges.module.ts` | **Created** | College module registration. |
+| 78 | `backend/backend/src/colleges/dto/create-college.dto.ts` | **Created** | College creation DTO (40+ lines). |
+| 79 | `backend/backend/src/colleges/dto/update-college.dto.ts` | **Created** | College update DTO. |
+| 80 | `backend/backend/src/colleges/dto/college-status.dto.ts` | **Created** | College status DTO. |
+| 81 | `backend/backend/src/super-admin/super-admin.controller.ts` | **Created** | Super admin endpoints (219+ lines) — college admin management, platform-wide operations. |
+| 82 | `backend/backend/src/super-admin/super-admin.service.ts` | **Created** | Super admin business logic (233+ lines). |
+| 83 | `backend/backend/src/super-admin/super-admin.module.ts` | **Created** | Super admin module registration. |
+| 84 | `backend/backend/src/super-admin/super-admin.messages.repository.ts` | **Created** | Super admin messaging repository (32+ lines). |
+| 85 | `backend/backend/src/super-admin/dto/create-college-admin.dto.ts` | **Created** | College admin creation DTO. |
+| 86 | `backend/backend/src/super-admin/dto/update-college-admin.dto.ts` | **Created** | College admin update DTO. |
+| 87 | `backend/backend/src/features/features.controller.ts` | **Created** | Feature-gated endpoints (495+ lines) — role-specific feature access, officer tools, alumni tools. |
+| 88 | `backend/backend/src/features/features.repository.ts` | **Created** | Features data access layer (607+ lines) — the largest single repository file in the backend. |
+| 89 | `backend/backend/src/features/features.module.ts` | **Created** | Features module registration. |
+| 90 | `backend/backend/src/announcements/announcements.controller.ts` | **Created** | Announcement endpoints (81+ lines) — campus-wide broadcast management. |
+| 91 | `backend/backend/src/announcements/announcements.repository.ts` | **Created** | Announcement data access layer (42+ lines). |
+| 92 | `backend/backend/src/announcements/announcements.module.ts` | **Created** | Announcement module registration. |
+| 93 | `backend/backend/src/activity/activity.service.ts` | **Created** | Activity logging service (37+ lines) — audit trail for platform actions. |
+| 94 | `backend/backend/src/activity/activity.module.ts` | **Created** | Activity module registration. |
+| 95 | `backend/backend/src/contact/contact.controller.ts` | **Created** | Contact form endpoint (29+ lines). |
+| 96 | `backend/backend/src/contact/contact.module.ts` | **Created** | Contact module registration. |
+| **Backend — Auth, Guards & Middleware** | | | |
+| 97 | `backend/backend/src/common/auth/auth-session.service.ts` | **Created** | Session-based authentication service (31+ lines). |
+| 98 | `backend/backend/src/common/auth/auth.module.ts` | **Created** | Auth module registration. |
+| 99 | `backend/backend/src/common/guards/roles.guard.ts` | **Created** | Role-based access control (RBAC) guard (72+ lines) — enforces role permissions on protected routes. |
+| 100 | `backend/backend/src/common/decorators/roles.decorator.ts` | **Created** | `@Roles()` custom decorator for route-level role specification. |
+| 101 | `backend/backend/src/common/decorators/current-user.decorator.ts` | **Created** | `@CurrentUser()` parameter decorator for injecting authenticated user into handlers. |
+| 102 | `backend/backend/src/common/decorators/public.decorator.ts` | **Created** | `@Public()` decorator to bypass auth on specific routes. |
+| 103 | `backend/backend/src/common/filters/all-exceptions.filter.ts` | **Created** | Global exception filter (103+ lines) — structured error responses with logging. |
+| 104 | `backend/backend/src/common/middleware/logger.middleware.ts` | **Created** | HTTP request/response logging middleware (33+ lines). |
+| 105 | `backend/backend/src/common/middleware/security.middleware.ts` | **Created** | Security middleware (67+ lines) — header sanitization and request validation. |
+| 106 | `backend/backend/src/common/middleware/file-upload.middleware.ts` | **Created** | File upload handling middleware (65+ lines) — multipart form processing. |
+| 107 | `backend/backend/src/common/middleware/log-file.service.ts` | **Created** | Log file management service (72+ lines) — persistent log storage and rotation. |
+| **Backend — Configuration & Infrastructure** | | | |
+| 108 | `backend/backend/package.json` | **Created** | Project manifest with all NestJS and supporting dependencies. |
+| 109 | `backend/backend/package-lock.json` | **Created** | Locked dependency tree (10,060+ lines). |
+| 110 | `backend/backend/tsconfig.json` | **Created** | TypeScript compiler configuration. |
+| 111 | `backend/backend/tsconfig.build.json` | **Created** | Build-specific TypeScript configuration. |
+| 112 | `backend/backend/nest-cli.json` | **Created** | NestJS CLI configuration. |
+| 113 | `backend/backend/eslint.config.mjs` | **Created** | ESLint configuration for code quality enforcement. |
+| 114 | `backend/backend/.prettierrc` | **Created** | Prettier code formatting configuration. |
+| 115 | `backend/backend/.gitignore` | **Created** | Git ignore rules for the backend. |
+| 116 | `backend/backend/README.md` | **Created** | Backend documentation and setup guide. |
+| 117 | `backend/backend/docs/swagger.json` | **Created** | Auto-generated Swagger/OpenAPI specification (2,213+ lines). |
+| 118 | `backend/backend/test-middlewares.ps1` | **Created** | PowerShell test script (193+ lines) for middleware integration testing. |
+| 119 | `backend/backend/test/app.e2e-spec.ts` | **Created** | End-to-end test specification. |
+| 120 | `backend/backend/test/jest-e2e.json` | **Created** | Jest E2E testing configuration. |
+| **Cross-Module Bug Fixes** | | | |
+| 121 | `React/React/src/roles/alumni/pages/AlumniDirectory.jsx` | **Modified** | Fixed conditional rendering of tags to prevent runtime errors on missing data. |
+| 122 | `React/React/src/roles/alumni/styles/Alumni.css` | **Modified** | Added notification bell margin comment and spacing fix. |
+| 123 | `React/React/src/roles/recruiter/components/MyOpportunities.jsx` | **Modified** | Resolved CSS errors by removing conflicting style rules. |
+| 124 | `React/React/src/roles/alumni/pages/MentorshipHub.jsx` | **Deleted** | Removed deprecated MentorshipHub component (294 lines) as part of module cleanup. |
+
+---
+
+## 3. Detailed Breakdown of Contributions
+
+### A. Placement Officer (Placement Cell) Frontend Implementation
+
+The Placement Officer module provides a full-featured administrative dashboard for college placement cell officers to manage the end-to-end campus recruitment lifecycle.
+
+#### 1. Core Architecture & Router (`PlacementApp.jsx`, `Dashboard.jsx`)
+- **Root Container & View Routing:** Built the `PlacementApp.jsx` root component (60+ lines) that initializes the officer session, manages page state, and orchestrates rendering of all sub-modules.
+- **Dashboard Orchestration:** Developed the `Dashboard.jsx` layout component that integrates the sidebar, header, and active page content using lifted state, ensuring seamless navigation across all officer features.
+- **Session Persistence:** Implemented user session handling with `localStorage` synchronization so officer data persists across page refreshes.
+
+#### 2. Navigation System (`Header.jsx`, `Sidebar.jsx`, `SignOutModal.jsx`)
+- **Header Navigation Bar:** Built a comprehensive top navigation bar (366+ lines) with breadcrumb trails, page titles, search input, notification indicators, and quick-action shortcuts for all placement modules.
+- **Sidebar Menu:** Created a responsive sidebar (53+ lines initially, then modified) with hierarchical navigation links for: Dashboard, Review Opportunities, Recruiters, Candidates Filter, User Oversight, Statistics, Department Reports, Profile, and more.
+- **Sign-Out Modal:** Implemented a secure sign-out confirmation modal with session cleanup and redirect to login.
+
+#### 3. Review Opportunities (`ReviewOpportunities.jsx`)
+- **Opportunity Pipeline View:** Built an opportunity review interface (480+ lines) allowing officers to inspect all campus drive postings submitted by recruiters.
+- **Approval / Rejection Workflow:** Implemented approve and reject actions with status badge updates, enabling officers to control which drives go live on the platform.
+- **Detail Inspection:** Created expandable detail views showing company name, job role, package details, eligibility criteria, and deadline information.
+
+#### 4. Recruiter Verification (`Recruiters.jsx`)
+- **Recruiter Management Panel:** Developed a comprehensive recruiter management component (459+ lines) enabling officers to:
+  - View all registered recruiters with company information.
+  - Verify or reject recruiter profiles after credential review.
+  - Track verification status with visual badges.
+  - Search and filter recruiters by company, status, or name.
+
+#### 5. Candidate Filters & User Oversight (`CandidatesFilter.jsx`, `UserOversight.jsx`)
+- **Advanced Candidate Filtering:** Built a multi-criteria candidate search interface (224+ lines) with filters for branch/department, CGPA range, placement status, and text-based search.
+- **User Oversight Dashboard:** Developed the largest single component (1,178+ lines) providing:
+  - A centralized view of all platform users across roles.
+  - Role-based filtering (students, alumni, recruiters, officers).
+  - User status tracking and administrative action triggers.
+  - Paginated tables with sorting and search capabilities.
+
+#### 6. Statistics & Department Reports (`Statistics.jsx`, `PlacementDashboard.jsx`, `DeptReport.jsx`)
+- **Placement Statistics:** Created a statistics visualization component (340+ lines) rendering:
+  - Aggregate placement metrics (total placed, percentage, average package).
+  - Company-wise placement distribution.
+  - Trend analysis and comparative data.
+- **Placement Dashboard:** Built a focused analytics dashboard (151+ lines) with summary cards, placement progress bars, and quick-action widgets.
+- **Department Reports:** Developed department-wise reporting (111+ lines) with branch-level analytics showing placed/unplaced breakdowns and comparative metrics across departments (CSE, ECE, EEE, MECH, etc.).
+
+#### 7. Officer Profile Management (`Profile.jsx`)
+- **Comprehensive Profile Editor:** Built a full-featured profile management component (735+ lines) supporting:
+  - Personal information editing (name, designation, contact).
+  - Password update workflows with validation.
+  - Profile picture management.
+  - Social link management.
+
+#### 8. API Service Layer (`officerApi.js`)
+- **Centralized API Wrapper:** Created a comprehensive API service (316+ lines, later modified to 390+) wrapping all backend endpoint calls:
+  - Dashboard data fetching (`GET /features/officer/dashboard`).
+  - Opportunity management (`GET/PUT /opportunities`).
+  - Recruiter operations (`GET/PATCH /recruiters`).
+  - Candidate queries (`GET /users?role=student`).
+  - Statistics and report endpoints.
+  - Error handling with graceful fallbacks for network failures and 403 plan-gated errors.
+
+#### 9. Stylesheets (2,725+ lines across 10 files)
+- **p1.css** (1,019+ lines): Header, sidebar, and dashboard base layouts with responsive breakpoints.
+- **p2.css** (686+ lines): Opportunity review and recruiter management styling.
+- **p3.css** (897+ lines): Profile page, form elements, and modal styling.
+- **p4.css** (762+ lines): Candidate filter and user oversight layouts.
+- **p5.css** (221+ lines): Statistics charts and department report styling.
+- **p6.css**, **dashboard.css**, **layout-fixes.css**, **statistics.css**, **user-oversight.css**: Supporting stylesheets for specific component layouts and cross-component fix overrides.
+
+---
+
+### B. Full-Stack Backend — NestJS API Server
+
+The **entire backend** of CareerNest / PlaceConnect was designed and implemented as a modular NestJS application serving all frontend roles.
+
+#### 1. Application Bootstrap & Module Architecture (`main.ts`, `app.module.ts`)
+- **NestJS Bootstrap:** Configured the application entry point with CORS support, global validation pipes, exception filters, and middleware registration.
+- **Modular Architecture:** Designed the root `AppModule` importing 14+ feature modules with clean dependency injection and separation of concerns.
+
+#### 2. User Management (`users/`)
+- **CRUD Operations:** Full user lifecycle — create, read, update, delete — across all roles (student, alumni, recruiter, placement_officer, college_admin, super_admin).
+- **Profile Management:** Endpoints for profile updates, password changes, and skill management.
+- **Repository Layer:** Complex aggregation pipelines (229+ lines) for user queries, filtering, and search.
+- **DTO Validation:** Comprehensive DTOs (92+ lines for creation, 57+ lines for updates) with `class-validator` decorators enforcing role-specific field constraints.
+
+#### 3. Application Lifecycle (`applications/`)
+- **Application Management:** Complete CRUD (115+ controller lines, 349+ service lines) supporting the full application lifecycle: `Applied` → `Under Review` → `Shortlisted` → `Interview Scheduled` → `Selected` / `Rejected`.
+- **Bulk Operations:** Batch status update endpoints for processing multiple candidates simultaneously.
+- **Shortlisting Pipeline:** Dedicated shortlisting endpoints with candidate selection DTOs.
+
+#### 4. Opportunity Management (`opportunities/`)
+- **Drive Management:** CRUD endpoints (140+ controller lines) for campus drive postings with approval workflows.
+- **Rich Validation:** DTOs (69+ lines) validating company details, eligibility criteria, package information, and deadlines.
+
+#### 5. Recruiter Management (`recruiters/`)
+- **Recruiter CRUD:** Full profile management endpoints (94+ controller lines, 128+ service lines).
+- **Verification Workflow:** Status-based verification system allowing officers to approve or reject recruiter access.
+
+#### 6. Referral System (`referrals/`)
+- **Referral Lifecycle:** Complete referral management (81+ controller lines, 170+ service lines, 185+ repository lines) with create, approve, decline-with-feedback workflows.
+- **Notification Integration:** Automatic notification triggers on referral status changes.
+
+#### 7. Notification System (`notifications/`)
+- **Multi-Target Dispatch:** Endpoints for sending notifications to individuals, role groups, or all users.
+- **Read Status Tracking:** Mark-as-read and bulk mark-all-read operations.
+- **Polling Support:** Efficient query endpoints supporting the frontend's real-time polling mechanism.
+
+#### 8. Assessment System (`assessments/`)
+- **Assessment Management:** Full CRUD (105+ controller lines, 141+ service lines) for creating, scheduling, and evaluating technical assessments.
+- **Rich DTO Validation:** Comprehensive creation DTOs (55+ lines) for assessment configuration.
+
+#### 9. College Management (`colleges/`)
+- **College CRUD:** Administrative endpoints (83+ controller lines, 144+ service lines, 261+ repository lines) for managing registered colleges.
+- **Status Management:** College activation/deactivation with status DTOs.
+
+#### 10. Super Admin Module (`super-admin/`)
+- **Platform Administration:** Comprehensive admin endpoints (219+ controller lines, 233+ service lines) for:
+  - College admin CRUD with creation/update DTOs.
+  - Platform-wide user management.
+  - Messaging system (dedicated messages repository).
+
+#### 11. Features Engine (`features/`)
+- **Feature-Gated Endpoints:** The largest controller (495+ lines) and repository (607+ lines) in the backend, providing role-specific feature access:
+  - Officer tools: dashboard analytics, bulk notifications, placement tracking.
+  - Alumni tools: directory queries, mentorship, event management.
+  - Student tools: saved drives, application tracking.
+  - Recruiter tools: candidate filters, assessment management.
+
+#### 12. Announcements & Contact (`announcements/`, `contact/`)
+- **Broadcast System:** Campus-wide announcement management with create and query endpoints.
+- **Contact Form:** Public-facing contact form submission handler.
+
+#### 13. Authentication & Authorization (`common/auth/`, `common/guards/`, `common/decorators/`)
+- **Session-Based Auth:** Implemented `AuthSessionService` for managing authenticated sessions.
+- **RBAC Guard:** Built a `RolesGuard` (72+ lines) that intercepts requests and validates user roles against route-level `@Roles()` decorator requirements.
+- **Custom Decorators:** Created `@CurrentUser()`, `@Roles()`, and `@Public()` decorators for clean, declarative route protection.
+
+#### 14. Middleware & Exception Handling (`common/middleware/`, `common/filters/`)
+- **Logger Middleware:** HTTP request/response logging with timing information.
+- **Security Middleware:** Request header sanitization and validation (67+ lines).
+- **File Upload Middleware:** Multipart form data processing for profile pictures and documents (65+ lines).
+- **Log File Service:** Persistent log storage with rotation capabilities (72+ lines).
+- **Global Exception Filter:** Structured error responses (103+ lines) with environment-aware error detail exposure and comprehensive logging.
+
+#### 15. API Documentation & Testing
+- **Swagger/OpenAPI Spec:** Auto-generated API documentation (2,213+ lines) covering all endpoints.
+- **E2E Tests:** End-to-end test setup with Jest configuration.
+- **Middleware Integration Tests:** PowerShell test script (193+ lines) for validating middleware behavior.
+
+---
+
+## 4. Git Commit History (Evidence of Contribution)
+
+Below is the verified commit log demonstrating the progressive development of these features:
+
+| Commit Hash | Date | Commit Message | Files Impacted |
+|---|---|---|---|
+| `d9f6161` | Oct 17, 2026 | `Merge pull request #34 from sai-ganesh-1706/PlacementOfficer` | `MyOpportunities.jsx` |
+| `010ca6d` | Oct 17, 2026 | `CSS Error are Resolved` | `MyOpportunities.jsx` |
+| `729d95c` | Oct 17, 2026 | `Merge pull request #33 from sai-ganesh-1706/PlacementOfficer` | Alumni CSS & Directory fixes |
+| `bcb87cb` | Oct 17, 2026 | `Update Alumni.css with comment on notification bell margin` | `Alumni.css` |
+| `05518d5` | Oct 17, 2026 | `Update AlumniDirectory to conditionally render tags` | `AlumniDirectory.jsx` |
+| `b3ae3de` | Oct 17, 2026 | `Delete React/React/src/roles/alumni/pages/MentorshipHub.jsx` | `MentorshipHub.jsx` |
+| `790c93c` | Oct 17, 2026 | `Agent host session - baseline checkpoint` (Full Backend + Integrated Frontend) | 246 files (97 backend + 142 React + 7 config) |
+| `20d1473` | Oct 17, 2026 | `Micro Error are Resolved` | `AlumniDirectory.jsx`, `Alumni.css`, `Dashboard.jsx`, `officerApi.js`, `users.repository.ts` |
+| `7f0672d` | Oct 17, 2026 | `feat: add placement statistics, department reports, and profile page` | `DeptReport.jsx`, `PlacementDashboard.jsx`, `Profile.jsx`, `Statistics.jsx` |
+| `63488f2` | Oct 17, 2026 | `feat: add opportunity review, recruiter verification, and candidate filters` | `CandidatesFilter.jsx`, `Recruiters.jsx`, `ReviewOpportunities.jsx`, `UserOversight.jsx` |
+| `d6ca2ec` | Oct 17, 2026 | `feat: add dashboard layout, navigation, and signout modal` | `Dashboard.jsx`, `Header.jsx`, `Sidebar.jsx`, `SignOutModal.jsx` |
+| `b9acdb1` | Oct 15, 2026 | `style(placement): Added placement dashboard stylesheets and page layouts` | 10 CSS files (2,725+ lines) |
+| `9aba1cf` | Oct 14, 2026 | `feat(placement): Added placement officer API services and root component` | `PlacementApp.jsx`, `officerApi.js` |
+| `675b04b` | Oct 01, 2026 | `Merge pull request #2 from sai-ganesh-1706/PlacementOfficer` | Initial PR merge |
+| `505a55a` | Oct 01, 2026 | `feat: Added placement dashboard and related files` | `Dashboard.jsx`, `Header.jsx`, `Sidebar.jsx`, `dashboard.css`, `p1.css`, `mockdata.js` |
+
+---
+
+## 5. Technical Highlights & Best Practices
+
+- **Modular NestJS Architecture:** Clean separation of concerns with dedicated modules, controllers, services, repositories, and DTOs for each domain entity — following NestJS best practices for scalability and testability.
+- **Role-Based Access Control (RBAC):** Custom decorator + guard pattern (`@Roles()` + `RolesGuard`) providing declarative, route-level authorization across all endpoints.
+- **DTO Validation Pipeline:** Comprehensive input validation using `class-validator` and `class-transformer` ensuring data integrity at the API boundary before business logic execution.
+- **Global Exception Handling:** Centralized error handling via a custom `AllExceptionsFilter` providing consistent, structured error responses with environment-aware detail exposure.
+- **Layered Data Access:** Repository pattern isolating database queries from business logic, enabling easy migration between data sources and testability via mocking.
+- **API Documentation:** Auto-generated Swagger/OpenAPI specification (2,213+ lines) for all endpoints, enabling frontend developers and testers to explore the API interactively.
+- **Component-Driven Frontend:** Clean separation between presentation components, data services (`officerApi.js`), and mock data (`mockdata.js`) for the Placement Officer module.
+- **Responsive CSS Architecture:** Over 4,500+ lines of custom CSS across modular stylesheets with responsive breakpoints, consistent color palettes, and layout-fix overrides preventing cross-component style bleed.
+- **Cross-Module Bug Fixes:** Proactive identification and resolution of issues across other team members' modules (Alumni Directory tag rendering, Alumni CSS spacing, Recruiter CSS conflicts).
+- **Defensive Error Handling:** Graceful fallbacks for network latency, missing properties, plan-gated 403 errors, and empty datasets across both frontend and backend.
+
