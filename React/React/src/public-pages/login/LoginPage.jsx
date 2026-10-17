@@ -21,12 +21,12 @@ const ROLE_REDIRECT = {
    ========================================================= */
 
 const DEMO_ACCOUNTS = [
-  { role: "Candidate",         email: "c@gmail.com",           password: "123" },
-  { role: "Alumni",            email: "a@gmail.com",           password: "123" },
-  { role: "Recruiter",         email: "r@gmail.com",           password: "123" },
-  { role: "Placement Officer", email: "p@gmail.com",           password: "123" },
-  { role: "College Admin",     email: "ca@sricity.edu",        password: "123" },
-  { role: "Super Admin",       email: "admin@careernest.com",  password: "123" },
+  { role: "Candidate",         email: "c@gmail.com",              password: "123" },
+  { role: "Alumni",            email: "a@gmail.com",              password: "123" },
+  { role: "Recruiter",         email: "r@gmail.com",              password: "123" },
+  { role: "Placement Officer", email: "p@gmail.com",              password: "123" },
+  { role: "College Admin",     email: "ca@iiit.in",               password: "123" },
+  { role: "Super Admin",       email: "superadmin@platform.com",  password: "123" },
 ];
 
 /* =========================================================
@@ -59,6 +59,10 @@ function LoginPage() {
 
   /* =========================================================
      LOGIN
+     All logins go through the real backend so every session
+     gets a valid accessToken that ProtectedRoute can verify.
+     Demo accounts (c@gmail.com / 123, etc.) live in the
+     backend's in-memory store and work exactly like real ones.
      ========================================================= */
 
   const login = async () => {
@@ -73,69 +77,7 @@ function LoginPage() {
       return;
     }
 
-    /* -------------------------------------------------------
-       DEMO LOGIN — detect by email across all demo accounts
-       ------------------------------------------------------- */
-
-    const demoAccount = DEMO_ACCOUNTS.find(
-      (d) =>
-        d.email.toLowerCase() === cleanEmail.toLowerCase() &&
-        d.password === cleanPassword
-    );
-
-    if (demoAccount) {
-      setLoading(true);
-      setEmail("");
-      setPassword("");
-      setShowPassword(false);
-
-      // Map demo role label → backend role key
-      const roleLabelToKey = {
-        Candidate: "candidate",
-        Alumni: "alumni",
-        Recruiter: "recruiter",
-        "Placement Officer": "placement_officer",
-        "College Admin": "college_admin",
-        "Super Admin": "super_admin",
-      };
-
-      const backendRole = roleLabelToKey[demoAccount.role];
-
-      const demoUser = {
-        id: `demo-${backendRole}`,
-        name: `Demo ${demoAccount.role}`,
-        email: demoAccount.email,
-        role: backendRole,
-        collegeId: null,
-      };
-
-      localStorage.setItem("loggedInUser", JSON.stringify(demoUser));
-      localStorage.setItem("userRole", demoUser.role);
-      localStorage.setItem("userName", demoUser.name);
-      localStorage.setItem("userEmail", demoUser.email);
-      localStorage.setItem("userId", String(demoUser.id));
-      localStorage.setItem("collegeId", "null");
-
-      if (demoUser.role === "recruiter") {
-        localStorage.setItem("recruiterEmail", demoUser.email);
-        localStorage.setItem("recruiterName", demoUser.name);
-        localStorage.setItem("recruiterCompany", "");
-      }
-
-      const redirectUrl = ROLE_REDIRECT[demoUser.role];
-      displayMessage("Login successful! Redirecting…", "green");
-      setTimeout(() => { window.location.href = redirectUrl; }, 500);
-      return;
-    }
-
-    /* -------------------------------------------------------
-       REAL BACKEND LOGIN
-       ------------------------------------------------------- */
-
     setLoading(true);
-    setEmail("");
-    setPassword("");
-    setShowPassword(false);
 
     try {
       const response = await fetch(`${BASE_URL}/users/login`, {
@@ -147,15 +89,18 @@ function LoginPage() {
       if (response.ok) {
         const user = await response.json();
 
+        /* Persist full session — AuthContext.readSession() reads loggedInUser */
         localStorage.setItem("loggedInUser", JSON.stringify(user));
         localStorage.setItem("userRole", user.role);
-        localStorage.setItem("userName", user.name);
-        localStorage.setItem("userEmail", user.email);
+        localStorage.setItem("userName", user.name || "");
+        localStorage.setItem("userEmail", user.email || "");
         localStorage.setItem("userId", String(user.id));
         localStorage.setItem(
           "collegeId",
           user.collegeId != null ? String(user.collegeId) : "null"
         );
+        /* accessToken is critical — ProtectedRoute checks user?.accessToken */
+        localStorage.setItem("accessToken", user.accessToken || "");
 
         if (user.role === "recruiter") {
           localStorage.setItem("recruiterEmail", user.email);
@@ -172,19 +117,23 @@ function LoginPage() {
         }
 
         displayMessage("Login successful! Redirecting…", "green");
-        setTimeout(() => { window.location.href = redirectUrl; }, 800);
+
+        /* window.location.replace() triggers a full navigation so the new
+           route's AuthContext mounts with the localStorage we just wrote. */
+        setTimeout(() => { window.location.replace(redirectUrl); }, 600);
 
       } else {
-        let errorMessage = "Invalid email or password.";
+        let errorMsg = "Invalid email or password.";
         try {
           const errorData = await response.json();
           if (Array.isArray(errorData.message)) {
-            errorMessage = errorData.message.join(", ");
+            errorMsg = errorData.message.join(", ");
           } else if (errorData.message) {
-            errorMessage = errorData.message;
+            errorMsg = errorData.message;
           }
         } catch { /* use default */ }
-        displayMessage(errorMessage, "red");
+        displayMessage(errorMsg, "red");
+        setLoading(false);
       }
 
     } catch (error) {
@@ -193,7 +142,6 @@ function LoginPage() {
         "Cannot reach login server. Make sure the backend is running on port 3000.",
         "red"
       );
-    } finally {
       setLoading(false);
     }
   };
