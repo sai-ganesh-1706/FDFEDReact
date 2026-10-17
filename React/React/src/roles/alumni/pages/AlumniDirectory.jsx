@@ -259,8 +259,8 @@ export default function AlumniDirectory({ alumniData, onNavigate }) {
 
                     <div className="alumni-tags-dir">
                       <span className="tag tag-batch">Batch {a.batch}</span>
-                      <span className="tag tag-dept">{a.dept}</span>
-                      <span className="tag tag-loc">📍 {a.location}</span>
+                      {a.dept && <span className="tag tag-dept">{a.dept}</span>}
+                      {a.location && <span className="tag tag-loc">📍 {a.location}</span>}
                     </div>
 
                     {a.linkedin && (
