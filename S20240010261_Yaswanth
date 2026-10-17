@@ -1,0 +1,161 @@
+# Individual Contribution Report: CareerNest / PlaceConnect
+
+**Student / Contributor Name:** Yaswanth Vuppala  
+**Email:** yaswanth.v24@iiits.in  
+**Git Branch:** `Alumni`  
+**Primary Focus Areas:**
+1. **Alumni Actor Module** (Complete Actor Implementation, Pages, Modals, State Management, APIs, and Styling)
+2. **Bulk Notifications Module** (Placement Officer / Placement Cell)
+3. **Application Tracking System (ATS)** (Placement Officer / Placement Cell)
+
+---
+
+## 1. Executive Summary
+
+As part of the **CareerNest / PlaceConnect** campus placement management platform, I was responsible for architecting and developing the end-to-end **Alumni Actor Subsystem** as well as two mission-critical features within the **Placement Cell (Placement Officer)** role:
+- **Alumni Actor:** A complete role-based ecosystem allowing graduates to review student referral requests, view rich interactive candidate resumes, provide constructive decline feedback, browse the alumni network directory, manage mentorship sessions, register for alumni events, update their personal/professional profiles, and receive live notifications.
+- **Bulk Notifications (Placement Cell):** An institutional broadcast communication engine enabling placement officers to segment and dispatch immediate notifications to students, alumni, corporate recruiters, or all platform stakeholders with audit history tracking.
+- **Application Tracking System (Placement Cell):** A centralized Candidate Tracking System (ATS) allowing placement officers to search student records, monitor overall placement status, and inspect drill-down views of applied company opportunities, interview dates, and recruitment stages.
+
+---
+
+## 2. Summary of Developed & Modified Files
+
+| # | File Path | Action | Description / Responsibility |
+|---|---|---|---|
+| **Alumni Actor Module** | | | |
+| 1 | `src/roles/alumni/AlumniApp.jsx` | **Created** | Root container, view router (`dashboard`, `directory`, `profile`, `referrals`), lifted state management, session handling, and real-time polling. |
+| 2 | `src/roles/alumni/pages/AlumniDashboard.jsx` | **Created** | Alumni analytics dashboard with metrics, request count cards, pending referral feeds, and action shortcuts. |
+| 3 | `src/roles/alumni/pages/ReferralRequests.jsx` | **Created** | Comprehensive candidate referral review pipeline with candidate summary cards, status filters, and modal triggers. |
+| 4 | `src/roles/alumni/pages/AlumniProfile.jsx` | **Created** | Full profile view and editor for personal bio, company, graduating batch, social links (LinkedIn/GitHub/Portfolio), and skills. |
+| 5 | `src/roles/alumni/pages/AlumniDirectory.jsx` | **Created** | Alumni search and discovery portal with multi-criteria filtering by batch, academic department code, and text search. |
+| 6 | `src/roles/alumni/pages/MentorshipHub.jsx` | **Created** | Mentorship interaction hub to accept/decline incoming student mentorship requests and request sessions. |
+| 7 | `src/roles/alumni/pages/AlumniEvents.jsx` | **Created** | Alumni networking webinars, technical sessions, and campus events listing with one-click registration. |
+| 8 | `src/roles/alumni/components/ResumeModal.jsx` | **Created** | High-fidelity interactive resume viewer rendering candidate education, work experience, projects, skills, and achievements with print/download triggers. |
+| 9 | `src/roles/alumni/components/DeclineModal.jsx` | **Created** | Constructive feedback modal allowing alumni to provide detailed reasoning when declining student referral requests. |
+| 10 | `src/roles/alumni/components/AlumniNotifications.jsx` | **Created** | Header notification bell dropdown with unread badge count, auto-refresh polling (30s interval), and "Mark all as read" API call. |
+| 11 | `src/roles/alumni/components/Sidebar.jsx` | **Created** | Dedicated Alumni sidebar navigation with responsive layout, user profile badge, and sign-out trigger. |
+| 12 | `src/roles/alumni/components/SignOutModal.jsx` | **Created** | Confirmation modal for secure session termination and redirect to login. |
+| 13 | `src/roles/alumni/data/alumniData.js` | **Created** | Mock datasets for alumni profiles, candidate applications, referral requests, and initial metrics. |
+| 14 | `src/roles/alumni/data/featuresApi.js` | **Created** | API wrapper handling directory queries, mentorship actions, and event registrations with plan-gated error handlers. |
+| 15 | `src/roles/alumni/styles/Alumni.css` | **Created** | Extensive custom stylesheet (over 2,000+ lines) defining color palettes, cards, badges, grids, and responsive layouts. |
+| **Placement Cell Module** | | | |
+| 16 | `src/roles/placement-officer/components/BulkNotify.jsx` | **Created** | Mass broadcast announcement tool with target audience segmentation, form validation, dispatch status, and history log. |
+| 17 | `src/roles/placement-officer/components/AppTracking.jsx` | **Created** | Candidate Application Tracking System (ATS) with student search, aggregate placement status badges, and opportunity drill-downs. |
+| 18 | `src/roles/placement-officer/components/Sidebar.jsx` | **Modified** | Integrated sidebar links for `App Tracking` (`p6`) and `Bulk Notifications` (`bulk-notify`). |
+| 19 | `src/roles/placement-officer/components/Header.jsx` | **Modified** | Registered navigation items, shortcuts, and breadcrumb titles for the new placement modules. |
+| 20 | `src/roles/placement-officer/components/dashboard.css` | **Modified** | Safeguard styles preventing cross-component style bleed and enhancing responsiveness. |
+
+---
+
+## 3. Detailed Breakdown of Contributions
+
+### A. Alumni Actor Implementation
+
+The Alumni Actor subsystem bridges the gap between graduating students seeking industry job referrals and alumni working at top tech firms.
+
+#### 1. Core Architecture & Router (`AlumniApp.jsx`)
+- **Single Page Navigation Orchestration:** Built a clean internal view routing system supporting `dashboard`, `directory`, `profile`, and `referrals` views using persistent state (`readSavedPage` / `savePage`).
+- **Lifted State Pattern:** Lifted user profile and skills state to `AlumniApp` so edits persist seamlessly when switching between pages without losing unsaved changes.
+- **Real-Time Polling Engine:** Implemented an active polling timer (`setInterval` at 20-second intervals) that queries the `/referrals` endpoint when the tab is visible (`!document.hidden`), ensuring the alumnus immediately sees incoming student requests.
+- **Profile Synchronization:** Maintained synchronization between the server (`PUT /users/${session.id}`), React component state, and `localStorage` (`loggedInUser`) so changes reflect across open tabs.
+
+#### 2. Referral Requests & Candidate Review (`ReferralRequests.jsx`, `ResumeModal.jsx`, `DeclineModal.jsx`)
+- **Card-Based Application Pipeline:** Developed an expandable accordion interface detailing student background, CGPA, department, graduation year, target company, role, expected compensation, and candidate statement.
+- **Candidate Summary Intelligence:** Created contextual profile summaries for applicants (e.g., candidate highlights, competitive programming ranks, tech stack proficiencies) to help alumni quickly evaluate fit.
+- **Interactive Resume Modal:** Implemented an inline, component-based resume viewer (`ResumeModal.jsx`) displaying structured sections (Education, Experience, Key Projects, Skills, and Achievements) with print and download buttons, eliminating external PDF rendering issues.
+- **Constructive Decline Mechanism:** Designed `DeclineModal.jsx` to mandate feedback when rejecting an application, giving students actionable advice to improve their profiles.
+
+#### 3. Alumni Dashboard & Analytics (`AlumniDashboard.jsx`)
+- **Metric Cards:** Built dynamic statistic widgets displaying real-time counts for Pending, Approved, Total, and Declined requests with visual status indicators.
+- **Recent Activity Feed:** Curated an actionable stream of incoming candidate requests with instant approve/reject buttons and quick links to review resumes.
+
+#### 4. Alumni Profile & Skills Management (`AlumniProfile.jsx`)
+- **In-Place Profile Editing:** Enabled editing of role designation, company, location, and social links (LinkedIn, GitHub, Portfolio).
+- **Interactive Skills Tagging:** Provided an interactive skill tag manager allowing alumni to add and remove technical competencies.
+- **Security & Authentication:** Embedded password update workflows and modal integrations.
+
+#### 5. Alumni Directory, Mentorship & Events (`AlumniDirectory.jsx`, `MentorshipHub.jsx`, `AlumniEvents.jsx`, `featuresApi.js`)
+- **Directory Search & Department Filter:** Implemented search by alumni name, company, and location with short-code mapping for branches (CSE, ECE, EEE, MECH, CIV, IT, DS).
+- **Mentorship Hub:** Built request tracking and response workflows for mentorship guidance.
+- **Events Calendar & Registration:** Created an event showcase with dynamic registration tracking by current user ID.
+
+#### 6. Notification System (`AlumniNotifications.jsx`)
+- **Dropdown Notification Center:** Created a header bell icon with a real-time unread badge indicator.
+- **Auto-Refresh & Bulk Read:** Automated 30-second interval updates and added a "Mark all read" trigger calling `PATCH /notifications/read-all`.
+
+---
+
+### B. Bulk Notifications in Placement Cell (`BulkNotify.jsx`)
+
+The **Bulk Notifications** module allows placement officers to broadcast urgent updates, placement drive alerts, and interview schedules to specific segments of the institution.
+
+#### Key Features Developed:
+1. **Target Group Segmentation:**
+   - 👩‍🎓 Students
+   - 🎓 Alumni
+   - 💼 Recruiters
+   - 🌐 Everyone (Campus-Wide)
+2. **Form Validation & Input Safeguards:**
+   - Enforces non-empty Subject / Title (minimum 5 characters).
+   - Enforces comprehensive Message Body (minimum 10 characters).
+   - Real-time inline validation feedback preventing accidental empty broadcasts.
+3. **Dispatch Pipeline & API Integration:**
+   - Dispatches payloads via `POST /features/officer/notifications/bulk`.
+   - Displays real-time confirmation banners with delivery timestamps and total recipient counts (e.g., *"Sent to 142 recipients at 10:30 AM"*).
+4. **Historical Broadcast Log:**
+   - Fetches sent announcements via `GET /features/officer/notifications`.
+   - Chronologically sorts sent notifications (`sort((x, y) => sentAt)`).
+   - Displays target badges, message previews, and precise dispatch timestamps for auditing.
+
+---
+
+### C. Application Tracking in Placement Cell (`AppTracking.jsx`)
+
+The **Application Tracking System (ATS)** provides placement officers with end-to-end visibility over students and their recruitment pipelines across all visiting companies.
+
+#### Key Features Developed:
+1. **Candidate Roster & Instant Search:**
+   - Retrieves candidates via `useOfficerData()` hook.
+   - Live search filter matching against candidate name or college roll number.
+2. **Computed Placement Status Engine:**
+   - Implemented `placementStatus()` algorithm to categorize students based on their active applications:
+     - **Placed:** At least one application has status `Selected`.
+     - **In progress:** Candidate is `Shortlisted` or has an `Interview Scheduled`.
+     - **Applying:** Candidate has active applications under review.
+     - **No applications:** Candidate has not yet applied to any drive.
+3. **Candidate Summary Table:**
+   - Displays candidate avatar (initials generator), Name, Roll Number, Branch, Email address, and Placement Status badge.
+   - Smooth keyboard accessibility (`Enter` key trigger) and click navigation to view details.
+4. **Drill-Down Candidate Profile & Opportunity Drawer:**
+   - Header summary showing student contact info and overall placement progress.
+   - List of all opportunities applied by the student showing company icon initial, job role, company name, application submission date, and scheduled interview dates.
+   - Granular status badges: `Applied`, `Under Review`, `Shortlisted`, `Interview Scheduled`, `Selected`, and `Rejected`.
+
+---
+
+## 4. Git Commit History (Evidence of Contribution)
+
+Below is the verified commit log demonstrating the progressive development of these features:
+
+| Commit Hash | Date | Commit Message | Files Impacted |
+|---|---|---|---|
+| `d31c217` | Oct 17, 2026 | `feat: add BulkNotify component for sending notifications to target groups` | `AppTracking.jsx`, `BulkNotify.jsx` |
+| `bb727e8` | Oct 17, 2026 | `feat: update AlumniApp and Sidebar components for improved navigation and referral handling` | `AlumniApp.jsx`, `Sidebar.jsx`, `SignOutModal.jsx`, `ReferralRequests.jsx` |
+| `d8417c2` | Oct 14, 2026 | `feat: enhance referral requests page with candidate summaries and profile button` | `AlumniDirectory.jsx`, `AlumniProfile.jsx`, `ReferralRequests.jsx`, `Alumni.css` |
+| `01b29d6` | Oct 14, 2026 | `Add inline resume data and download/print functionality to ResumeModal` | `ResumeModal.jsx`, `Sidebar.jsx`, `SignOutModal.jsx` |
+| `a7e5e2` | Oct 14, 2026 | `Implement Alumni App with notifications and features API integration` | `AlumniApp.jsx`, `AlumniNotifications.jsx`, `alumniData.js`, `featuresApi.js` |
+| `0df44ac` | Oct 12, 2026 | `Add Alumni Profile and Referral Requests pages with mock data` | `alumniData.js`, `AlumniProfile.jsx`, `ReferralRequests.jsx` |
+| `10d9e46` | Oct 04, 2026 | `feat: Add DeclineModal, ResumeModal, AlumniDirectory, and AlumniEvents components` | `DeclineModal.jsx`, `ResumeModal.jsx`, `AlumniDirectory.jsx`, `AlumniEvents.jsx` |
+| `cb34ae8` | Oct 01, 2026 | `feat: Alumni DashBoard Page Added and the required Components .` | `AlumniApp.jsx`, `Sidebar.jsx`, `SignOutModal.jsx`, `AlumniDashboard.jsx`, `Alumni.css` |
+
+---
+
+## 5. Technical Highlights & Best Practices
+
+- **Component-Driven Architecture:** Clean separation of concerns between presentation components, containers, modals, and data services.
+- **Zero Heavy External Dependencies for Modals:** Custom-built accessible modals (`ResumeModal`, `DeclineModal`, `SignOutModal`) styled using native responsive CSS rather than heavy UI component libraries.
+- **Defensive State & Error Handling:** Graceful fallbacks for network latency, missing properties, plan-gated 403 errors, and empty datasets.
+- **Responsive & Accessible UI:** Designed with mobile-friendly breakpoints, keyboard accessibility (`onKeyDown` handlers), semantic HTML tags (`main`, `nav`, `article`, `table`), and color-coded status badges for high visual clarity.
+- **Cross-Module Consistency:** Adhered strictly to the CareerNest UI design system, color palette, icon set (Lucide icons & custom SVGs), and layout frames.
+
