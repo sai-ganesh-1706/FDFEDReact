@@ -167,8 +167,8 @@ export function fromOversightUser(u) {
 function build({ opps, apps, users, recruiters, assessments = [], announcements = [], inbox = [] }) {
   const students = users.filter((u) => u.role === 'candidate');
   const alumni = users.filter((u) => u.role === 'alumni');
-  const reviewable = opps.filter((o) => ['pending', 'approved', 'rejected', 'Published'].includes(o.status));
-  const published = opps.filter((o) => o.status === 'Published');
+  const reviewable = opps.filter((o) => ['pending', 'approved', 'rejected', 'published'].includes(normaliseOpportunityStatus(o.status)));
+  const published = opps.filter((o) => normaliseOpportunityStatus(o.status) === 'published');
   const countFor = (id) => apps.filter((a) => a.opportunityId === id).length;
   const offers = apps.filter((a) => OFFER_STATUSES.includes(a.status));
   const placedIds = new Set([...students.filter((s) => s.status === 'placed').map((s) => s.id), ...offers.map((a) => a.candidateId)]);
@@ -198,7 +198,7 @@ function build({ opps, apps, users, recruiters, assessments = [], announcements 
     if (a.type === 'Internship') internships[i] += 1; else fullTime[i] += 1;
   });
 
-  const pendingOpps = opps.filter((o) => o.status === 'pending');
+  const pendingOpps = opps.filter((o) => normaliseOpportunityStatus(o.status) === 'pending');
   const pendingRecruiters = recruiters.filter((r) => r.status === 'pending');
   const notifications = [
     ...pendingOpps.map((o, i) => ({
@@ -265,7 +265,7 @@ function build({ opps, apps, users, recruiters, assessments = [], announcements 
     submissions: reviewable
       .slice()
       .sort((a, b) => Date.parse(b.createdAt || '') - Date.parse(a.createdAt || '') || b.id - a.id)
-      .map((o) => toSubmission(o, countFor(o.id))),
+      .map((o) => ({ ...toSubmission(o, countFor(o.id)), status: normaliseOpportunityStatus(o.status) })),
     drives: published
       .slice()
       .sort((a, b) => Date.parse(b.createdAt || '') - Date.parse(a.createdAt || '') || b.id - a.id)
@@ -312,6 +312,23 @@ function build({ opps, apps, users, recruiters, assessments = [], announcements 
 
 let inflight = null;
 let lastLoad = 0;
+// The officer portal is a small single-page application, but several mounted
+// components (the header and the current page) read the same dashboard data.
+// Keep one live snapshot and notify every consumer after a mutation so an
+// approve/publish/reject action never leaves another part of the portal stale.
+let currentData = MOCK;
+const subscribers = new Set();
+
+function publish(data) {
+  currentData = data;
+  Object.assign(MOCK, data); // Compatibility for the two legacy report views.
+  subscribers.forEach((subscriber) => subscriber(data));
+}
+
+function normaliseOpportunityStatus(status) {
+  const value = String(status || '').toLowerCase();
+  return value === 'published' ? 'published' : value;
+}
 
 /** Load everything the officer screens need and publish it on MOCK. Calls within 2s share one fetch. */
 export function loadOfficerData({ force = false } = {}) {
@@ -335,7 +352,7 @@ export function loadOfficerData({ force = false } = {}) {
       announcements,
       inbox,
     });
-    Object.assign(MOCK, data);
+    publish(data);
     return data;
   });
   inflight.catch(() => { inflight = null; });
@@ -344,7 +361,7 @@ export function loadOfficerData({ force = false } = {}) {
 
 /** Hook: returns the loaded data (or empty values until it arrives) and a refresh function. */
 export function useOfficerData() {
-  const [state, setState] = useState({ data: MOCK, ready: false, error: '' });
+  const [state, setState] = useState({ data: currentData, ready: false, error: '' });
   const refresh = useCallback(async () => {
     try {
       const data = await loadOfficerData({ force: true });
@@ -357,10 +374,17 @@ export function useOfficerData() {
   }, []);
   useEffect(() => {
     let cancelled = false;
+    const receive = (data) => {
+      if (!cancelled) setState({ data, ready: true, error: '' });
+    };
+    subscribers.add(receive);
     loadOfficerData()
       .then((data) => { if (!cancelled) setState({ data, ready: true, error: '' }); })
       .catch(() => { if (!cancelled) setState((prev) => ({ ...prev, error: 'Could not load data from the server.' })); });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+      subscribers.delete(receive);
+    };
   }, []);
   return { ...state, refresh };
 }
