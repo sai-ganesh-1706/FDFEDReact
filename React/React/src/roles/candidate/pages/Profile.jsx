@@ -897,6 +897,7 @@ export default function Profile() {
                             margin: '0 auto 20px auto',
                         }}
                     >
+                        <Trash2 size={24} aria-hidden="true"/>
                         <i className="bx bx-trash" />
                     </div>
                     <h3 style={{ fontSize: 20, color: 'var(--text-primary)', marginBottom: 12 }}>Delete Record?</h3>
