@@ -244,18 +244,6 @@ export default function MyOpportunities({
                   />
                 </div>
 
-                <div className="form-group">
-                  <label>Status</label>
-                  <select 
-                    className="form-select"
-                    value={editingOpp.status}
-                    onChange={(e) => setEditingOpp({ ...editingOpp, status: e.target.value })}
-                  >
-                    <option value="Published">Published</option>
-                    <option value="Closed">Closed</option>
-                    <option value="Draft">Draft</option>
-                  </select>
-                </div>
               </div>
 
               <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
