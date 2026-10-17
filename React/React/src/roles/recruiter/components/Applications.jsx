@@ -175,7 +175,7 @@ export default function Applications({
               </div>
 
  <div className="app-card-right" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                {onSchedule && !['Rejected', 'Withdrawn', 'Offered'].includes(app.status) && (
+                {onSchedule && ['Shortlisted', 'Interview'].includes(app.status) && (
                   <button
                     className="btn-secondary-action"
                     style={{ padding: '6px 12px', fontSize: 12 }}
