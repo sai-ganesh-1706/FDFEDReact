@@ -4,6 +4,7 @@ import { useStore } from '../context/StoreContext.jsx';
 import { errorMessage } from '../../../services/api.js';
 import { useUI } from '../context/UIContext.jsx';
 import '../styles/opportunities.css';
+import { Trash2, Check } from 'lucide-react';
 
 
 function mapDept(dept) {
@@ -336,6 +337,7 @@ export default function Opportunities() {
                                         margin: '0 auto 16px auto',
                                     }}
                                 >
+                                    <Check size={36}/>
                                     <i className={`bx ${eligibilityInfo.isEligible ? 'bx-check' : 'bx-x'}`} />
                                 </div>
                                 <h3 style={{ fontSize: 20, color: 'var(--text-primary)', marginBottom: 8 }}>
@@ -636,6 +638,7 @@ export default function Opportunities() {
                             margin: '0 auto 24px auto',
                         }}
                     >
+                        <Check size={36}/>
                         <i className="bx bx-check" />
                     </div>
                     <h2 style={{ fontSize: 24, color: 'var(--text-primary)', marginBottom: 12 }}>Applied Successfully!</h2>
