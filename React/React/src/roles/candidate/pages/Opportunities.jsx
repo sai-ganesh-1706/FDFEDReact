@@ -817,16 +817,6 @@ function ActiveJobDetails({ job, store, onApply, onCheckEligibility, onAskQuery,
                         ))}
                 </div>
             </div>
-
-            <div style={{ textAlign: 'center', padding: '10px 0 30px 0' }}>
-                <button
-                    className="btn-secondary"
-                    onClick={onAskQuery}
-                    style={{ background: 'white', border: '1px solid #cbd5e1', color: '#475569', padding: '12px 24px', borderRadius: 'var(--radius-md)', fontWeight: 500, display: 'inline-flex', alignItems: 'center', gap: 8 }}
-                >
-                    <i className="bx bx-message-rounded-dots" /> Ask Query
-                </button>
-            </div>
         </>
     );
 }
