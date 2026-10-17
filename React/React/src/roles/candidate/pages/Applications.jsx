@@ -4,6 +4,7 @@ import { useStore } from '../context/StoreContext.jsx';
 import { errorMessage } from '../../../services/api.js';
 import { Avatar, Modal, ReferralPill, ScheduleItem, StatusPill, Stars, normReferralStatus } from '../components/shared.jsx';
 import '../styles/applications.css';
+import { BriefcaseBusiness } from 'lucide-react';
 
 const STAGES = ['Applied', 'Shortlisted', 'Assessment', 'Interview', 'Offered'];
 const FILTERS = ['All', 'Applied', 'Shortlisted', 'Assessment', 'Interview', 'Offered', 'Rejected', 'Withdrawn'];
@@ -317,7 +318,7 @@ export default function Applications() {
                             <div key={app.id} className={`app-row-card ${open ? 'expanded' : ''}`} ref={app.id === focusAppId ? focusRef : null}>
                                 <div className="app-row-header" onClick={() => setExpandedId(open ? null : app.id)}>
                                     <div className="app-row-left">
-                                        <div className="app-icon-box"><i className="bx bx-building-house" /></div>
+                                        <div className="app-icon-box"><BriefcaseBusiness size={24} strokeWidth={1.7} color="#4338ca" /><i className="bx bx-building-house" /></div>
                                         <div className="app-info">
                                             <h4>{app.title}</h4>
                                             <p>{app.company} · Applied {app.appliedDate}</p>
