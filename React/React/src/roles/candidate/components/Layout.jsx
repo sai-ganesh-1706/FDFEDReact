@@ -87,10 +87,10 @@ export default function Layout() {
             <aside className="sidebar">
                 <div className="brand">
                     <div className="brand-icon">
+                        <BriefcaseBusiness size={30} strokeWidth={1.8} color="#4338ca" />
                         <i className="bx bxs-graduation" />
                     </div>
                     <div className="brand-text">
-                        <BriefcaseBusiness size={30} strokeWidth={1.8} color="#4338ca" />
                         <h2>CareerNest</h2>
                         <p>College Placement Cell</p>
                     </div>
