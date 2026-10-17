@@ -93,6 +93,9 @@ function buildStore({ user, jobs, applications, notifications, savedIds, schedul
         .filter((s) => s.date >= today)
         .map((s) => ({
             id: `schedule-${s.id}`,
+            appId: s.applicationId ?? applications.find(
+              (a) => a.opportunityId === s.opportunityId
+            )?.id,
             title: s.title,
             company: s.company,
             role: s.jobTitle,

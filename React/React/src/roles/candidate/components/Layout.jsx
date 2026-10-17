@@ -5,6 +5,7 @@ import { Bell } from 'lucide-react';
 import SignOutModal from './SignOutModal.jsx';
 import { useStore } from '../context/StoreContext.jsx';
 import { useUI } from '../context/UIContext.jsx';
+import { BriefcaseBusiness } from 'lucide-react';
 
 const NAV_ITEMS = [
     { to: '/candidate', label: 'Dashboard', icon: 'bx-grid-alt', end: true, title: 'Dashboard' },
@@ -89,6 +90,7 @@ export default function Layout() {
                         <i className="bx bxs-graduation" />
                     </div>
                     <div className="brand-text">
+                        <BriefcaseBusiness size={30} strokeWidth={1.8} color="#4338ca" />
                         <h2>CareerNest</h2>
                         <p>College Placement Cell</p>
                     </div>
