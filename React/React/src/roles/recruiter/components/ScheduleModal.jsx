@@ -4,9 +4,10 @@ import { X, AlertCircle } from 'lucide-react';
 export default function ScheduleModal({ onClose, onAddAssessment, opportunities = [], applications = [], preselectApplicationId }) {
   const [title, setTitle] = useState('');
   // Who this round is for: one application ("app:12") or everyone who applied to a role ("opp:3")
-  const schedulable = applications.filter((a) => !['Rejected', 'Withdrawn'].includes(a.status));
+  const schedulable = applications.filter((a) => ['Shortlisted', 'Interview'].includes(a.status));
+  const isPreselectedValid = preselectApplicationId && schedulable.some((a) => a.id === Number(preselectApplicationId));
   const [target, setTarget] = useState(
-    preselectApplicationId ? `app:${preselectApplicationId}` : schedulable[0] ? `app:${schedulable[0].id}` : ''
+    isPreselectedValid ? `app:${preselectApplicationId}` : schedulable[0] ? `app:${schedulable[0].id}` : ''
   );
   const [date, setDate] = useState('');
   const [time, setTime] = useState('10:00');
@@ -159,14 +160,14 @@ export default function ScheduleModal({ onClose, onAddAssessment, opportunities 
                     <option key={a.id} value={`app:${a.id}`}>{a.name} — {a.role} ({a.status})</option>
                   ))}
                 </optgroup>
-                <optgroup label="Everyone who applied">
-                  {opportunities.filter((o) => applications.some((a) => a.opportunityId === o.id)).map((o) => (
-                    <option key={o.id} value={`opp:${o.id}`}>All applicants — {o.title}</option>
+                <optgroup label="Everyone who is shortlisted">
+                  {opportunities.filter((o) => applications.some((a) => a.opportunityId === o.id && a.status === 'Shortlisted')).map((o) => (
+                    <option key={o.id} value={`opp:${o.id}`}>All shortlisted — {o.title}</option>
                   ))}
                 </optgroup>
               </select>
             ) : (
-              <div className="field-error">No applications yet. Candidates appear here once they apply to your published opportunities.</div>
+              <div className="field-error">No eligible candidates available. Only Shortlisted and Interview candidates can be scheduled.</div>
             )}
             <span style={{ fontSize: '11px', color: '#9CA3AF', marginTop: '2px', display: 'block' }}>
               The candidate gets the date, time and link in their Applications page and notifications.
