@@ -4,10 +4,10 @@ import Header from './Header';
 import './styles/p1.css';
 import './styles/dashboard.css';
 import { useOfficerData } from '../services/officerApi';
-import { BadgeCheck, BriefcaseBusiness, Building2, CalendarClock, Clock3, Globe2, GraduationCap, Handshake, UsersRound } from 'lucide-react';
+import { BadgeCheck, BriefcaseBusiness, Building2, CalendarClock, Clock3, Globe2, GraduationCap, Handshake, RefreshCw, UsersRound } from 'lucide-react';
 
 export default function Dashboard({ onNavigate, activePage = 'p1' }) {
-  const { data, refresh } = useOfficerData();
+  const { data, refresh, ready, error } = useOfficerData();
   const { stats, stakeholders, drives, interviews, announcements = [] } = data;
   const submissions = (data.submissions || []).slice(0, 6);
   const [alertDismissed, setAlertDismissed] = useState(false);
@@ -103,10 +103,22 @@ export default function Dashboard({ onNavigate, activePage = 'p1' }) {
             <div className="panel">
               <div className="panel-header">
                 <h3>Recent Submissions</h3>
+                <button
+                  type="button"
+                  className="panel-link"
+                  onClick={() => refresh()}
+                  aria-label="Refresh recent submissions"
+                  title="Refresh recent submissions"
+                  style={{ border: 0, background: 'transparent', cursor: 'pointer', display: 'inline-flex', alignItems: 'center' }}
+                >
+                  <RefreshCw size={15} aria-hidden="true" />
+                </button>
                 <span className="panel-link" onClick={() => handleNav('p2')}>Review All →</span>
               </div>
               <div className="panel-body">
-                {submissions.length === 0 && <div className="row-sub">No recruiter submissions yet.</div>}
+                {!ready && <div className="row-sub">Loading recent opportunities…</div>}
+                {error && <div className="row-sub">{error}</div>}
+                {ready && !error && submissions.length === 0 && <div className="row-sub">No recruiter submissions yet.</div>}
                 {submissions.map((sub) => (
                   <div className="list-row" key={sub.id}>
                     <div>

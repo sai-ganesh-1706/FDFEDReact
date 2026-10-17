@@ -695,6 +695,9 @@
   display: flex;
   align-items: center;
   margin-left: auto;
+  /* The notification bell is fixed beside the profile avatar. Reserve its
+     footprint here so it never sits on top of the referral search input. */
+  margin-right: 62px;
 }
 
 .cn-alumni .search-icon {
@@ -2205,6 +2208,7 @@
   }
   .cn-alumni .topbar .search-container {
     min-width: 0;
+    margin-right: 0;
   }
   .cn-alumni .dash-content,
 .cn-alumni .cards,
