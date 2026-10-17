@@ -167,7 +167,13 @@ export default function Dashboard() {
                                             key={event.id}
                                             className="list-item"
                                             style={{ cursor: 'pointer' }}
-                                            onClick={() => navigate('/candidate/applications')}
+                                            onClick={() => {
+                                                if (event.appId) {
+                                                    navigate(`/candidate/applications?appId=${event.appId}`);
+                                                } else {
+                                                    navigate('/candidate/applications');
+                                                }
+                                            }}
                                         >
                                             <div className="item-details">
                                                 <h4>{event.title}</h4>
