@@ -292,9 +292,6 @@ export default function Profile() {
                                         : {}
                                 }
                             >
-                                <button className="edit-banner-btn" title="Edit Background" onClick={() => openImageOptions('bannerImage')}>
-                                    <Camera size={18} aria-hidden="true" />
-                                </button>
 
                                 <div
                                     className="profile-picture-container"
