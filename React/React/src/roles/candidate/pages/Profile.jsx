@@ -462,7 +462,7 @@ export default function Profile() {
                                         <div className="file-details">
                                             <h5>{data.uploadedResume?.name}</h5>
                                             <p>
-                                                {data.uploadedResume?.size} · Uploaded {data.uploadedResume?.date}
+                                                {data.uploadedResume?.size} - Uploaded {data.uploadedResume?.date}
                                             </p>
                                         </div>
                                     </div>
@@ -483,7 +483,7 @@ export default function Profile() {
                                                     <div className="file-details">
                                                         <h5 style={{ fontSize: 13 }}>{doc.name}</h5>
                                                         <p style={{ fontSize: 11 }}>
-                                                            {doc.type} · {doc.size}
+                                                            {doc.type} - {doc.size}
                                                         </p>
                                                     </div>
                                                 </div>

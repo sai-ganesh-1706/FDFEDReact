@@ -96,7 +96,7 @@ export function fromSubmissionEdit(form) {
 export function toTrackedApplication(a) {
   let status = a.status;
   if (OFFER_STATUSES.includes(status)) status = 'Selected';
-  else if (status === 'Assessment') status = 'Under Review';
+  else if (status === 'Shortlisted') status = 'Shortlisted';
   else if (status === 'Interview') status = 'Interview Scheduled';
   else if (status === 'Withdrawn') status = 'Rejected';
   return {
@@ -116,7 +116,7 @@ export function toTrackedApplication(a) {
 }
 
 export const fromTrackedStatus = (status) => ({
-  'Under Review': 'Assessment',
+  'Under Review': 'Shortlisted',
   'Interview Scheduled': 'Interview',
   Selected: 'Offered',
 }[status] || status);
@@ -296,8 +296,8 @@ function build({ opps, apps, users, recruiters, assessments = [], announcements 
       .map((a) => ({
         id: a.id,
         company: a.company || oppById.get(a.opportunityId)?.company || 'Company to be confirmed',
-        round: `${a.type}${a.candidates ? ` · ${a.candidates} candidate${a.candidates === 1 ? '' : 's'}` : ''}`,
-        time: [a.date, a.time].filter(Boolean).join(' · ') || 'To be scheduled',
+        round: `${a.type}${a.candidates ? ` - ${a.candidates} candidate${a.candidates === 1 ? '' : 's'}` : ''}`,
+        time: [a.date, a.time].filter(Boolean).join(' - ') || 'To be scheduled',
       })),
     recruiters,
     announcements: announcements.map((a) => ({

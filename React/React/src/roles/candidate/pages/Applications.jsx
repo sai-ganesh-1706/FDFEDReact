@@ -2,26 +2,18 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useStore } from '../context/StoreContext.jsx';
 import { errorMessage } from '../../../services/api.js';
-import { Avatar, Modal, ReferralPill, ScheduleItem, StatusPill, Stars, normReferralStatus } from '../components/shared.jsx';
+import { Avatar, Modal, ReferralPill, ScheduleItem, StatusPill, normReferralStatus } from '../components/shared.jsx';
 import '../styles/applications.css';
 import { BriefcaseBusiness } from 'lucide-react';
 
-const STAGES = ['Applied', 'Shortlisted', 'Assessment', 'Interview', 'Offered'];
-const FILTERS = ['All', 'Applied', 'Shortlisted', 'Assessment', 'Interview', 'Offered', 'Rejected', 'Withdrawn'];
+const STAGES = ['Applied', 'Shortlisted', 'Interview', 'Offered'];
+const FILTERS = ['All', 'Applied', 'Shortlisted', 'Interview', 'Offered', 'Rejected', 'Withdrawn'];
 const TERMINAL = ['Rejected', 'Withdrawn', 'Offered', 'Offer'];
 
 const ROUND_LABELS = {
-    resume: 'Resume screening',
-    assessment: 'Online assessment',
+    resume:    'Resume screening',
     technical: 'Technical interview',
-    hr: 'HR / behavioural interview',
-};
-const METRIC_LABELS = {
-    technicalSkills: 'Technical skills',
-    problemSolving: 'Problem solving',
-    communication: 'Communication',
-    confidence: 'Confidence',
-    overallPerformance: 'Overall performance',
+    hr:        'Interview',
 };
 
 // ── Ask an alumnus of the company for a referral ────────────────────────────────
@@ -59,7 +51,7 @@ function GetReferralModal({ app, requestedAlumniIds, onClose, onSent }) {
     return (
         <Modal
             title="Ask for a referral"
-            subtitle={`${app.title} · ${app.company}`}
+            subtitle={`${app.title} - ${app.company}`}
             onClose={onClose}
             footer={(
                 <>
@@ -85,7 +77,7 @@ function GetReferralModal({ app, requestedAlumniIds, onClose, onSent }) {
                             <Avatar name={a.name} color={a.avatarColor || '#3934A0'} />
                             <div>
                                 <strong>{a.name}</strong>
-                                <span>{a.headline || 'Alumnus'}{a.batch ? ` · Batch of ${a.batch}` : ''}</span>
+                                <span>{a.headline || 'Alumnus'}{a.batch ? ` - Batch of ${a.batch}` : ''}</span>
                             </div>
                         </button>
                     ))}
@@ -102,9 +94,8 @@ function AppDetails({ app, referrals, schedule, onGetReferral, onCancel }) {
     const timeline = (app.timeline?.length ? app.timeline : [{ stage: 'Applied', date: app.appliedDate, desc: 'Application submitted', status: 'completed' }]).slice().reverse();
     const stageIdx = app.currentStageIndex ?? Math.max(0, STAGES.indexOf(app.status));
     const failed = ['Rejected', 'Withdrawn'].includes(app.status);
-    const canCancel = ['Applied', 'Shortlisted', 'Assessment', 'Interview'].includes(app.status);
+    const canCancel = ['Applied', 'Shortlisted', 'Interview'].includes(app.status);
 
-    const hasEvaluation = app.evaluation && Object.values(app.evaluation).some((v) => v > 0);
     const rounds = Object.entries(app.rounds || {});
     const upcoming = schedule.filter((s) => s.applicationId === app.id || (s.opportunityId === app.opportunityId));
 
@@ -158,7 +149,7 @@ function AppDetails({ app, referrals, schedule, onGetReferral, onCancel }) {
                                 <Avatar name={r.alumniName} color={r.alumniAvatarColor || '#3934A0'} initials={r.alumniInitials} />
                                 <div style={{ flex: 1, minWidth: 160 }}>
                                     <strong style={{ fontSize: 14 }}>{r.alumniName}</strong>
-                                    <div className="cx-muted">{r.alumniCompany}{r.alumniBatch ? ` · ${r.alumniBatch}` : ''}</div>
+                                    <div className="cx-muted">{r.alumniCompany}{r.alumniBatch ? ` - ${r.alumniBatch}` : ''}</div>
                                 </div>
                                 <ReferralPill status={r.status} />
                             </div>
@@ -182,24 +173,7 @@ function AppDetails({ app, referrals, schedule, onGetReferral, onCancel }) {
                 </div>
             )}
 
-            {hasEvaluation && (
-                <div className="cx-panel cx-panel--warn">
-                    <div className="cx-panel__title">⭐ Recruiter ratings</div>
-                    {Object.entries(app.evaluation).filter(([, v]) => v > 0).map(([key, v]) => (
-                        <div className="cx-row" key={key}>
-                            <span>{METRIC_LABELS[key] || key}</span>
-                            <span><Stars value={v} /> <strong style={{ fontSize: 12, marginLeft: 4 }}>{v}/5</strong></span>
-                        </div>
-                    ))}
-                </div>
-            )}
 
-            {app.recruiterFeedback && (
-                <div className="cx-panel cx-panel--ok">
-                    <div className="cx-panel__title">💬 Recruiter feedback</div>
-                    <p className="cx-muted" style={{ color: 'var(--text-primary)' }}>{app.recruiterFeedback}</p>
-                </div>
-            )}
 
             <div className="activity-log-container">
                 <h5 className="activity-header">ACTIVITY LOG</h5>
@@ -321,7 +295,7 @@ export default function Applications() {
                                         <div className="app-icon-box"><BriefcaseBusiness size={24} strokeWidth={1.7} color="#4338ca" /><i className="bx bx-building-house" /></div>
                                         <div className="app-info">
                                             <h4>{app.title}</h4>
-                                            <p>{app.company} · Applied {app.appliedDate}</p>
+                                            <p>{app.company} - Applied {app.appliedDate}</p>
                                         </div>
                                     </div>
                                     <div className="app-row-right" style={{ gap: 10 }}>

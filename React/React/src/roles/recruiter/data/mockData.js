@@ -1,13 +1,13 @@
 // ═══════════════════════════════════════════════════════════════════════════════
 // CareerNest — Recruiter Mock Data
-// Character: Priya Kapoor · HR Manager · TechCorp Solutions
+// Character: Priya Kapoor - HR Manager - TechCorp Solutions
 //
 // CONNECTED STORY:
-//  1. Recruiter (Priya) posts "Software Engineer" → Placement Officer approves & publishes
+//  1. Recruiter (Priya) posts "Software Engineer" > Placement Officer approves & publishes
 //  2. Candidate (Shameer) sees it, applies, asks Alumni (Sneha Reddy, also @ TechCorp) for referral
-//  3. Sneha accepts → Shameer's application appears here with ⭐ Referred tag + Sneha's details
-//  4. Priya screens Shameer → moves him through rounds, sends feedback
-//  5. Priya schedules Technical Interview → link appears in Shameer's InterviewCalendar
+//  3. Sneha accepts > Shameer's application appears here with Referred tag + Sneha's details
+//  4. Priya screens Shameer > moves him through rounds, sends feedback
+//  5. Priya schedules Technical Interview > link appears in Shameer's InterviewCalendar
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export const defaultRecruiter = {
@@ -61,7 +61,7 @@ export const defaultOpportunities = [
     id: 3,
     title: "Data Analyst Intern",
     location: "Remote",
-    ctc: "₹35,000 / month",
+    ctc: "Rs.35,000 / month",
     openings: "5",
     cgpa: "7.5",
     type: "Internship",
@@ -288,7 +288,7 @@ export const defaultAssessments = [
   },
   {
     id: 3,
-    title: "HR Interview — Final Round",
+    title: "Interview — Final Round",
     role: "Software Engineer",
     date: "2026-10-22",
     time: "11:00 AM",
@@ -296,7 +296,7 @@ export const defaultAssessments = [
     candidates: 1,
     platform: "Zoom",
     link: "https://zoom.us/j/techcorp-hr-final",
-    type: "HR Interview",
+    type: "Interview",
     candidateEmail: "shameer@college.in",
     isDraft: true
   }

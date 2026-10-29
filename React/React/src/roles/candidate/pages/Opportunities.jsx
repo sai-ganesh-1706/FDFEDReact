@@ -463,7 +463,7 @@ export default function Opportunities() {
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 28 }}>
                                 <button className="btn-secondary" onClick={() => setTermsOpen(false)}>Cancel</button>
-                                <button className="btn-primary" onClick={() => setApplyStep(2)}>Next →</button>
+                                <button className="btn-primary" onClick={() => setApplyStep(2)}>Next  > </button>
                             </div>
                         </div>
                     )}
@@ -535,7 +535,7 @@ export default function Opportunities() {
 
                             <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, marginTop: 28 }}>
                                 <button className="btn-secondary" onClick={() => setApplyStep(1)}>← Back</button>
-                                <button className="btn-primary" disabled={!selectedResume} style={{ opacity: selectedResume ? 1 : 0.5 }} onClick={() => setApplyStep(3)}>Next →</button>
+                                <button className="btn-primary" disabled={!selectedResume} style={{ opacity: selectedResume ? 1 : 0.5 }} onClick={() => setApplyStep(3)}>Next  > </button>
                             </div>
                         </div>
                     )}
@@ -576,7 +576,7 @@ export default function Opportunities() {
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, marginTop: 28 }}>
                                 <button className="btn-secondary" onClick={() => setApplyStep(2)}>← Back</button>
-                                <button className="btn-primary" onClick={() => setApplyStep(4)}>Next →</button>
+                                <button className="btn-primary" onClick={() => setApplyStep(4)}>Next  > </button>
                             </div>
                         </div>
                     )}

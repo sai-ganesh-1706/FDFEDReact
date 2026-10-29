@@ -1,7 +1,7 @@
 // Small presentational pieces shared by the candidate pages so they all look the same.
 
 const STATUS_TONE = {
-    Applied: 'info', Shortlisted: 'warn', Assessment: 'warn', Interview: 'info',
+    Applied: 'info', Shortlisted: 'warn', Interview: 'info',
     Offered: 'ok', Offer: 'ok', Rejected: 'bad', Withdrawn: 'mute',
 };
 
@@ -68,9 +68,9 @@ export function ScheduleItem({ item }) {
             <div className="cx-event__date"><small>{month}</small>{day}</div>
             <div className="cx-event__body">
                 <h6>{item.title}</h6>
-                <p>{item.type} · {item.time} · {item.duration} · {item.platform}</p>
+                <p>{item.type} - {item.time} - {item.duration} - {item.platform}</p>
             </div>
-            <span className={`cx-pill cx-pill--${isInterview ? 'info' : 'warn'}`}>{isInterview ? 'Interview' : 'Assessment'}</span>
+            <span className="cx-pill cx-pill--info">Interview</span>
             {item.link && (
                 <a className="cx-btn cx-btn--primary cx-btn--sm" href={item.link} target="_blank" rel="noreferrer">
                     <i className="bx bx-link-external" /> {isInterview ? 'Join interview' : 'Open test'}

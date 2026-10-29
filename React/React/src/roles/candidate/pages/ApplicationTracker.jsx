@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useStore } from '../context/StoreContext.jsx';
 import '../styles/features.css';
 
-const STAGES_DEF = ['Applied', 'Shortlisted', 'Assessment', 'Interview', 'Offered'];
+const STAGES_DEF = ['Applied', 'Shortlisted', 'Interview', 'Offered'];
 const FILTERS = ['All', 'Active', 'Offer', 'Rejected', 'Withdrawn'];
 
 function statusChipFor(status) {

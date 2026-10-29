@@ -214,7 +214,7 @@ export default function ScheduleModal({ onClose, onAddAssessment, opportunities 
               >
                 <option value="Online Test">Online Test</option>
                 <option value="Technical Interview">Technical Interview</option>
-                <option value="HR Interview">HR Interview</option>
+                <option value="Interview">Interview</option>
               </select>
             </div>
             <div className="form-group">

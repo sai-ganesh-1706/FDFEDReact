@@ -16,24 +16,28 @@ export default function Applications({
   const [statusFilter, setStatusFilter] = useState('All');
   const [selectedCandidate, setSelectedCandidate] = useState(null);
 
-  const statuses = ['All', 'Applied', 'Shortlisted', 'Assessment', 'Interview', 'Offered', 'Rejected'];
+  const statuses = ['All', 'Applied', 'Shortlisted', 'Interview', 'Offered', 'Rejected'];
 
   // Extract unique roles from applications
   const uniqueRoles = ['All Roles', ...new Set(applications.map(a => a.role))];
 
-  // Filtering logic
-  const filtered = applications.filter((app) => {
-    const matchesSearch = 
+  // Filtering logic - base filters (everything except statusFilter)
+  const baseFiltered = applications.filter((app) => {
+    const matchesSearch =
       app.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       app.branch.toLowerCase().includes(searchTerm.toLowerCase()) ||
       app.role.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesReferred = !filterReferred || app.isReferred;
-    const matchesStatus = statusFilter === 'All' || app.status === statusFilter;
     const matchesRole = !selectedRoleFilter || selectedRoleFilter === 'All Roles' || app.role === selectedRoleFilter;
 
-    return matchesSearch && matchesReferred && matchesStatus && matchesRole;
+    return matchesSearch && matchesReferred && matchesRole;
   });
+
+  // Final filtered list - adds statusFilter on top of base filters
+  const filtered = baseFiltered.filter((app) =>
+    statusFilter === 'All' || app.status === statusFilter
+  );
 
   return (
     <div>
@@ -84,9 +88,9 @@ export default function Applications({
       {/* STATUS TABS */}
       <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '12px', marginBottom: '16px' }}>
         {statuses.map((st) => {
-          const count = st === 'All' 
-            ? applications.length 
-            : applications.filter(a => a.status === st).length;
+          const count = st === 'All'
+            ? baseFiltered.length
+            : baseFiltered.filter(a => a.status === st).length;
           const isActive = statusFilter === st;
           return (
             <button
@@ -131,10 +135,10 @@ export default function Applications({
                 <div className="app-card-content">
                   <h4>
                     <span>{app.name}</span>
-                    {app.isReferred && <span className="tag-referred-badge">⭐ Referred</span>}
+                    {app.isReferred && <span className="tag-referred-badge">Referred</span>}
                   </h4>
                   <p className="app-card-metadata">
-                    {app.branch} · CGPA: <strong>{app.cgpa}</strong> · Role: <strong>{app.role}</strong>
+                    {app.branch} &middot; CGPA: <strong>{app.cgpa}</strong> &middot; Role: <strong>{app.role}</strong>
                   </p>
                   {app.isReferred && app.referrerName && (
                     <div style={{
@@ -165,9 +169,9 @@ export default function Applications({
                         {app.referrerInitials || app.referrerName.split(' ').map(w => w[0]).join('').slice(0, 2)}
                       </div>
                       <span>
-                        Referred by <strong>{app.referrerName}</strong>{app.referrerDesignation ? ` · ${app.referrerDesignation}` : ''}
-                        {app.referrerCompany && <span> · {app.referrerCompany}</span>}
-                        {app.referrerBatch && <span> · {app.referrerBatch}</span>}
+                        Referred by <strong>{app.referrerName}</strong>{app.referrerDesignation ? ` - ${app.referrerDesignation}` : ''}
+                        {app.referrerCompany && <span> &middot; {app.referrerCompany}</span>}
+                        {app.referrerBatch && <span> &middot; {app.referrerBatch}</span>}
                       </span>
                     </div>
                   )}
@@ -190,7 +194,7 @@ export default function Applications({
                   onClick={() => setSelectedCandidate(app)}
                   style={{ cursor: 'pointer', border: 'none' }}
                 >
-                  {app.status} ▾
+                  {app.status}
                 </button>
               </div>
             </div>

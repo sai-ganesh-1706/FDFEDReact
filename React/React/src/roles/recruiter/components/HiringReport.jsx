@@ -4,15 +4,15 @@ import { BarChart3, TrendingUp, Users, Award, CheckCircle } from 'lucide-react';
 export default function HiringReport({ applications, opportunities }) {
   // Compute analytics
   const totalApps = applications.length;
-  const shortlisted = applications.filter(a => ['Shortlisted', 'Assessment', 'Interview', 'Offered'].includes(a.status)).length;
-  const assessmentRounds = applications.filter(a => ['Assessment', 'Interview', 'Offered'].includes(a.status)).length;
+  const shortlisted = applications.filter(a => ['Shortlisted', 'Interview', 'Offered'].includes(a.status)).length;
+  const interviewRounds = applications.filter(a => ['Interview', 'Offered'].includes(a.status)).length;
   const interviews = applications.filter(a => ['Interview', 'Offered'].includes(a.status)).length;
   const offers = applications.filter(a => a.status === 'Offered').length;
 
   const funnelStages = [
     { label: 'Applications Received', count: totalApps, percentage: 100 },
     { label: 'Resume Shortlisted', count: shortlisted, percentage: totalApps ? Math.round((shortlisted / totalApps) * 100) : 0 },
-    { label: 'Online Assessment', count: assessmentRounds, percentage: totalApps ? Math.round((assessmentRounds / totalApps) * 100) : 0 },
+    { label: 'Interview Stage', count: interviewRounds, percentage: totalApps ? Math.round((interviewRounds / totalApps) * 100) : 0 },
     { label: 'Technical Interviews', count: interviews, percentage: totalApps ? Math.round((interviews / totalApps) * 100) : 0 },
     { label: 'Job Offers Released', count: offers, percentage: totalApps ? Math.round((offers / totalApps) * 100) : 0 },
   ];
@@ -117,7 +117,7 @@ export default function HiringReport({ applications, opportunities }) {
               <div key={opp.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid #F3F4F6' }}>
                 <div>
                   <div style={{ fontWeight: 600, fontSize: '13px' }}>{opp.title}</div>
-                  <div style={{ fontSize: '11px', color: '#6B7280' }}>{opp.location} · {opp.openings} Openings</div>
+                  <div style={{ fontSize: '11px', color: '#6B7280' }}>{opp.location} - {opp.openings} Openings</div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <div style={{ fontWeight: 700, fontSize: '13px', color: '#0F8F63' }}>{opp.applications} Applicants</div>

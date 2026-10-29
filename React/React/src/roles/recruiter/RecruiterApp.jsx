@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+﻿import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
 import Dashboard from './components/Dashboard';
@@ -104,7 +104,7 @@ export default function RecruiterApp() {
     }, 3200);
   };
 
-  // Action Handlers — each one writes to the API and then refreshes from it.
+  // Action Handlers ΓÇö each one writes to the API and then refreshes from it.
   const run = async (action, successMessage, failureMessage) => {
     try {
       const result = await action();
@@ -165,7 +165,7 @@ export default function RecruiterApp() {
 
   const handleAddAssessment = (payload) => run(
     () => api.post('/assessments', payload),
-    `Scheduled "${payload.title}" — the candidate can see the link now.`,
+    `Scheduled "${payload.title}" ΓÇö the candidate can see the link now.`,
     'Could not schedule the assessment.'
   );
 

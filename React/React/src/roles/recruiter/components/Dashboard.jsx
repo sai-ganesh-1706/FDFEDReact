@@ -28,7 +28,7 @@ export default function Dashboard({
       <section className="welcome-banner">
         <div className="banner-text">
           <h2>Welcome, {firstName}!</h2>
-          <p>{recruiter.company} · Recruiter Dashboard</p>
+          <p>{recruiter.company} - Recruiter Dashboard</p>
         </div>
         <div className="banner-actions">
           <button 
@@ -104,7 +104,7 @@ export default function Dashboard({
                 <div className="job-info-left">
                   <div className="job-title">{opp.title}</div>
                   <div className="job-meta">
-                    {opp.applications} applicants · Deadline: {opp.deadline}
+                    {opp.applications} applicants - Deadline: {opp.deadline}
                   </div>
                 </div>
                 <span className="badge-status published">{opp.status}</span>
@@ -140,9 +140,9 @@ export default function Dashboard({
                     <div className="avatar-mini">{app.initials}</div>
                     <div>
                       <div className="app-name">
-                        {app.name} {app.isReferred && <span style={{ color: '#D97706', fontSize: '11px' }}>⭐ Referred</span>}
+                        {app.name} {app.isReferred && <span style={{ color: '#D97706', fontSize: '11px' }}>Referred</span>}
                       </div>
-                      <div className="app-sub">{app.branch} · CGPA: {app.cgpa}</div>
+                      <div className="app-sub">{app.branch} - CGPA: {app.cgpa}</div>
                     </div>
                   </div>
                   <span className={`badge-status ${statusClass}`}>{app.status}</span>

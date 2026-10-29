@@ -27,7 +27,7 @@ export default function Dashboard() {
                     <div className="banner-content">
                         <h2>Welcome back, {firstName}! 👋</h2>
                         <p>
-                            {currentUser.department} · CGPA: {currentUser.cgpa} · {currentUser.batch}
+                            {currentUser.department} - CGPA: {currentUser.cgpa} - {currentUser.batch}
                         </p>
                     </div>
                 </section>
@@ -93,7 +93,7 @@ export default function Dashboard() {
                                         <div className="item-details">
                                             <h4>{app.title}</h4>
                                             <p>
-                                                {app.company} · {app.type}
+                                                {app.company} - {app.type}
                                             </p>
                                         </div>
                                         <div className={`item-status ${statusClass}`}>
@@ -178,7 +178,7 @@ export default function Dashboard() {
                                             <div className="item-details">
                                                 <h4>{event.title}</h4>
                                                 <p>
-                                                    {event.company} · {event.role} · {event.time}
+                                                    {event.company} - {event.role} - {event.time}
                                                 </p>
                                                 {event.link && <a className="schedule-link" href={event.link} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>Open link ↗</a>}
                                             </div>

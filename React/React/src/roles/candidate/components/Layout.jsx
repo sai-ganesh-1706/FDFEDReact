@@ -171,7 +171,7 @@ export default function Layout() {
                                                 let targetRoute = '#';
                                                 if (t.includes('referral')) targetRoute = 'referrals';
                                                 else if (notif.type === 'general' && t.includes('opportunity')) targetRoute = 'opportunities';
-                                                else if (['status', 'offer', 'assessment'].includes(notif.type)) targetRoute = 'applications';
+                                                else if (['status', 'offer'].includes(notif.type)) targetRoute = 'applications';
                                                 return (
                                                     <div
                                                         key={idx}

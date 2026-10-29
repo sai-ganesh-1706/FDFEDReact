@@ -101,7 +101,7 @@ function buildStore({ user, jobs, applications, notifications, savedIds, schedul
             role: s.jobTitle,
             date: s.date,
             time: s.time,
-            type: /interview|discussion/i.test(s.type) ? 'Interview' : 'Assessment',
+            type: 'Interview',
             link: s.link,
         }));
     return {
