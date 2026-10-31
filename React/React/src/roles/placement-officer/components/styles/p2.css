@@ -398,7 +398,8 @@
     border-top: 0px solid #e5e7eb;
 }
 .cn-placement .opp-card.open .opp-details {
-    max-height: 600px;
+    max-height: none;
+    overflow: visible;
     padding: 0 24px 24px;
     border-top: 1px solid #e5e7eb;
 }
@@ -580,6 +581,9 @@
 .cn-placement .modal-overlay.active {
     opacity: 1;
     visibility: visible;
+}
+.cn-placement .modal-overlay.review-reject-overlay.active {
+    display: flex;
 }
 .cn-placement .modal {
     background: #fff;

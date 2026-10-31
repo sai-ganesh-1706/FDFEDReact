@@ -7,12 +7,16 @@ import './styles/statistics.css';
 import { useOfficerData } from '../services/officerApi';
 
 export default function Statistics({ onNavigate, activePage = 'p3' }) {
-  const { data, ready } = useOfficerData();
+  const { data, ready, refresh, error } = useOfficerData();
   const s = data.stats;
   const branches = data.branches;
   const trend = data.trend;
   const topCompanies = data.topCompanies || [];
   const monthlyTrend = data.monthlyTrend || [];
+  useEffect(() => {
+    const timer = setInterval(() => { if (!document.hidden) refresh(); }, 20000);
+    return () => clearInterval(timer);
+  }, [refresh]);
 
   const lineChartRef   = useRef(null);
   const barChartRef    = useRef(null);
@@ -34,8 +38,9 @@ export default function Statistics({ onNavigate, activePage = 'p3' }) {
     { value: s.companiesVisited,    label: 'Companies Visited',  color: '#F97316', bg: '#FFF7ED' },
     { value: s.totalApps,           label: 'Total Applications', color: '#3B82F6', bg: '#EFF6FF' },
     { value: `${s.avgPkg} LPA`,     label: 'Average Package',    color: '#22C55E', bg: '#F0FDF4' },
-    { value: s.offersAccepted,      label: 'Offers Accepted',    color: '#9810fa', bg: '#FAF5FF' },
-    { value: s.internships,         label: 'Internships',        color: '#F97316', bg: '#FFF7ED' },
+    { value: s.studentsPlaced,      label: 'Students Placed',    color: '#16a34a', bg: '#F0FDF4' },
+    { value: s.offersMade,          label: 'Offers Made',        color: '#9810fa', bg: '#FAF5FF' },
+    { value: s.internships,         label: 'Internship Applications', color: '#F97316', bg: '#FFF7ED' },
   ];
 
   /* ── Charts ─────────────────────────────────────────────────── */
@@ -46,7 +51,7 @@ export default function Statistics({ onNavigate, activePage = 'p3' }) {
       chartInstances.current = [];
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ready, activeTab]);
+  }, [ready, activeTab, data]);
 
   const initCharts = () => {
     chartInstances.current.forEach((c) => { try { c.destroy(); } catch (e) {} });
@@ -59,11 +64,11 @@ export default function Statistics({ onNavigate, activePage = 'p3' }) {
         data: {
           labels: trend.labels,
           datasets: [
-            { label: 'Full Time',    data: trend.fullTime,    borderColor: '#7c3aed', backgroundColor: 'rgba(124,58,237,0.08)', tension: 0.3, fill: true },
-            { label: 'Internships',  data: trend.internships, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.08)', tension: 0.3, fill: true },
+            { label: 'Full-time applications', data: trend.fullTime, hidden: !showFullTime, borderColor: '#7c3aed', backgroundColor: 'rgba(124,58,237,0.08)', tension: 0.3, fill: true },
+            { label: 'Internship applications', data: trend.internships, hidden: !showInternships, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.08)', tension: 0.3, fill: true },
           ],
         },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } },
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }, plugins: { legend: { display: false } } },
       });
       chartInstances.current.push(chart);
       setLineChart(chart);
@@ -80,7 +85,7 @@ export default function Statistics({ onNavigate, activePage = 'p3' }) {
             { label: 'Placed', data: branches.map((b) => b.placed), backgroundColor: branches.map((b) => b.color) },
           ],
         },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } },
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }, plugins: { legend: { position: 'bottom' } } },
       });
       chartInstances.current.push(bar);
     }
@@ -121,6 +126,9 @@ export default function Statistics({ onNavigate, activePage = 'p3' }) {
       <Header title="Statistics & Analytics" onNavigate={onNavigate} />
 
       <main className="main-content" id="mainContent">
+        {error && <p role="alert" style={{ color: '#b91c1c', marginBottom: 16 }}>{error}</p>}
+        {!ready && !error && <p role="status">Loading statistics from the backend…</p>}
+        <button type="button" onClick={() => refresh()} style={{ float: 'right', border: '1px solid #7c3aed', color: '#7c3aed', background: '#fff', borderRadius: 8, padding: '8px 14px', cursor: 'pointer' }}>Refresh Statistics</button>
 
         {/* ── Page Intro ─────────────────────────────────────────── */}
         <div style={{ marginBottom: '20px' }}>
@@ -184,7 +192,7 @@ export default function Statistics({ onNavigate, activePage = 'p3' }) {
             {/* Monthly Trend Chart */}
             <div className="chart-card full">
               <div className="chart-header">
-                <h3>Monthly Placements &amp; Internships Trend</h3>
+                <h3>Applications by Month</h3>
                 <div className="chart-toggles">
                   <button className={`chart-toggle${showFullTime ? ' active' : ''}`} onClick={() => toggleLine('fulltime')}>
                     <span className="toggle-dot purple-dot" /> Full Time
@@ -246,7 +254,7 @@ export default function Statistics({ onNavigate, activePage = 'p3' }) {
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ background: '#fafafa' }}>
-                    {['#', 'Company', 'Offers Made', 'Avg Package'].map((h) => (
+                    {['#', 'Company', 'Full-time Offers', 'Avg Offered Package'].map((h) => (
                       <th key={h} style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '.5px', color: '#94a3b8', fontWeight: 600, padding: '12px 18px', textAlign: 'left', borderBottom: '1px solid #f1f5f9' }}>{h}</th>
                     ))}
                   </tr>

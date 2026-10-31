@@ -77,14 +77,14 @@ export class OpportunitiesController {
   }
 
   @Put(':id')
-  @Roles('recruiter', 'placement_officer')
-  @ApiOperation({ summary: 'Update an opportunity (recruiter / placement_officer)' })
+  @Roles('recruiter')
+  @ApiOperation({ summary: 'Update an opportunity (recruiter only)' })
   @ApiParam({ name: 'id', type: Number })
   @ApiBody({ type: UpdateOpportunityDto })
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateOpportunityDto, @CurrentUser() user: RequestUser) {
     this.assertCanManage(id, user);
     // Only the placement cell moves an opportunity through review; a recruiter edit never changes its status.
-    if (user.role === 'recruiter') delete (dto as any).status;
+    delete (dto as any).status;
     return this.service.update(id, dto);
   }
 
@@ -102,6 +102,17 @@ export class OpportunitiesController {
     return this.service.approve(id, this.actor(user));
   }
 
+  @Patch(':id/undo-approval')
+  @Roles('placement_officer')
+  @ApiOperation({
+    summary: 'Return an approved, unpublished opportunity to pending review (placement_officer only)',
+    description: 'Available only after approval and before publication. The opportunity returns to pending review and is never visible to candidates.',
+  })
+  @ApiParam({ name: 'id', type: Number, description: 'Opportunity ID whose approval should be undone' })
+  undoApproval(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: RequestUser) {
+    return this.service.undoApproval(id, this.actor(user));
+  }
+
   @Patch(':id/publish')
   @Roles('placement_officer')
   @ApiOperation({
@@ -109,8 +120,7 @@ export class OpportunitiesController {
     description:
       'Makes an approved opportunity **live** so that candidates can view and apply. ' +
       'This is the final step in the review workflow: `pending → approved → Published`. ' +
-      'Only opportunities with status `approved` should be published, but the endpoint ' +
-      'accepts any status for flexibility.',
+      'Only opportunities with status `approved` can be published.',
   })
   @ApiParam({ name: 'id', type: Number, description: 'Opportunity ID to publish' })
   @ApiResponse({ status: 200, description: 'Opportunity status set to Published and is now live for candidates' })

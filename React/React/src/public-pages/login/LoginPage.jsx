@@ -21,9 +21,9 @@ const ROLE_REDIRECT = {
    ========================================================= */
 
 const DEMO_ACCOUNTS = [
-  { role: "Candidate",         email: "c@gmail.com",              password: "123" },
-  { role: "Alumni",            email: "a@gmail.com",              password: "123" },
-  { role: "Recruiter",         email: "r@gmail.com",              password: "123" },
+  { role: "Candidate",         email: "shameer.basha.shaik@iiits.in", password: "12345678" },
+  { role: "Alumni",            email: "a@gmail.com",              password: "12345678" },
+  { role: "Recruiter",         email: "r@gmail.com",              password: "12345678" },
   { role: "Placement Officer", email: "p@gmail.com",              password: "123" },
   { role: "College Admin",     email: "ca@iiit.in",               password: "123" },
   { role: "Super Admin",       email: "superadmin@platform.com",  password: "123" },
@@ -61,7 +61,7 @@ function LoginPage() {
      LOGIN
      All logins go through the real backend so every session
      gets a valid accessToken that ProtectedRoute can verify.
-     Demo accounts (c@gmail.com / 123, etc.) live in the
+     Demo accounts shown in the hint panel live in the
      backend's in-memory store and work exactly like real ones.
      ========================================================= */
 

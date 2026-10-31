@@ -1,0 +1,588 @@
+[
+  {
+    "id": 1001,
+    "title": "Machine Learning Engineer",
+    "company": "Google",
+    "location": "Hyderabad, Telangana",
+    "deadline": "2026-12-15",
+    "applications": 0,
+    "salary": "18 LPA",
+    "openings": 4,
+    "cgpa": 8,
+    "branches": [
+      "CSE",
+      "IT",
+      "ECE"
+    ],
+    "type": "Full-Time",
+    "status": "pending",
+    "tags": [
+      "Python",
+      "SQL",
+      "Machine Learning",
+      "TensorFlow"
+    ],
+    "description": "Build and evaluate machine learning models for search quality. Work with data pipelines, write reproducible experiments, and collaborate with engineers to deploy and monitor model performance.",
+    "rounds": "Resume Screening → Coding Assessment → Machine Learning Interview → HR",
+    "backlogs": "Not allowed",
+    "submittedBy": "Priya Kapoor (Demo)",
+    "recruiterId": 102,
+    "collegeId": 1,
+    "createdAt": "2026-10-31T09:00:00.000Z",
+    "reviewDemo": true
+  },
+  {
+    "id": 1002,
+    "title": "Software Engineering Intern",
+    "company": "Google",
+    "location": "Bengaluru, Karnataka",
+    "deadline": "2026-12-10",
+    "applications": 0,
+    "salary": "Rs.45000/month",
+    "openings": 8,
+    "cgpa": 7.5,
+    "branches": [
+      "CSE",
+      "IT",
+      "ECE"
+    ],
+    "type": "Internship",
+    "duration": "6 months",
+    "status": "pending",
+    "tags": [
+      "Java",
+      "Data Structures",
+      "Git",
+      "Unit Testing"
+    ],
+    "description": "Join a product engineering team to implement backend features, write automated tests, and review code with an assigned mentor. The internship includes a scoped project and regular technical feedback.",
+    "rounds": "Online Coding Test → Technical Interview → Team Discussion",
+    "backlogs": "Not allowed",
+    "submittedBy": "Priya Kapoor (Demo)",
+    "recruiterId": 102,
+    "collegeId": 1,
+    "createdAt": "2026-10-31T10:00:00.000Z",
+    "reviewDemo": true
+  },
+  {
+    "id": 1003,
+    "title": "Data Analytics Intern",
+    "company": "Google",
+    "location": "Pune, Maharashtra",
+    "deadline": "2026-12-05",
+    "applications": 0,
+    "salary": "Rs.30000/month",
+    "openings": 5,
+    "cgpa": 7,
+    "branches": [
+      "CSE",
+      "IT",
+      "EEE"
+    ],
+    "type": "Internship",
+    "duration": "3 months",
+    "status": "pending",
+    "tags": [
+      "SQL",
+      "Python",
+      "Excel",
+      "Data Visualization"
+    ],
+    "description": "Clean operational datasets, create weekly reporting dashboards, and investigate changes in product metrics. Present findings with clear assumptions and validated data to the analytics team.",
+    "rounds": "Resume Screening → SQL Assessment → Analytics Case Interview",
+    "backlogs": "Up to 1 active backlog allowed",
+    "submittedBy": "Priya Kapoor (Demo)",
+    "recruiterId": 102,
+    "collegeId": 1,
+    "createdAt": "2026-10-31T11:00:00.000Z",
+    "reviewDemo": true
+  },
+  {
+    "id": 1004,
+    "title": "Cloud Support Engineer",
+    "company": "Google",
+    "location": "Hyderabad, Telangana",
+    "deadline": "2026-12-20",
+    "applications": 0,
+    "salary": "12 LPA",
+    "openings": 6,
+    "cgpa": 7.5,
+    "branches": [
+      "CSE",
+      "IT",
+      "ECE"
+    ],
+    "type": "Full-Time",
+    "status": "approved",
+    "tags": [
+      "Linux",
+      "Networking",
+      "Python",
+      "Cloud Computing"
+    ],
+    "description": "Troubleshoot cloud infrastructure incidents, reproduce customer issues, and document practical resolutions. Collaborate with engineering teams to improve service reliability and support tooling.",
+    "rounds": "Aptitude Test → Linux and Networking Interview → HR",
+    "backlogs": "Not allowed",
+    "submittedBy": "Priya Kapoor (Demo)",
+    "recruiterId": 102,
+    "collegeId": 1,
+    "createdAt": "2026-10-30T10:00:00.000Z",
+    "reviewDemo": true
+  },
+  {
+    "id": 1005,
+    "title": "Frontend Developer",
+    "company": "Google",
+    "location": "Bengaluru, Karnataka",
+    "deadline": "2026-12-18",
+    "applications": 0,
+    "salary": "14 LPA",
+    "openings": 4,
+    "cgpa": 7.5,
+    "branches": [
+      "CSE",
+      "IT"
+    ],
+    "type": "Full-Time",
+    "status": "Published",
+    "tags": [
+      "React",
+      "JavaScript",
+      "CSS",
+      "Accessibility"
+    ],
+    "description": "Develop accessible and responsive interfaces for internal productivity tools. Integrate APIs, maintain component tests, and work with designers to improve usability and page performance.",
+    "rounds": "Frontend Coding Test → React Interview → Design Discussion → HR",
+    "backlogs": "Not allowed",
+    "submittedBy": "Priya Kapoor (Demo)",
+    "recruiterId": 102,
+    "collegeId": 1,
+    "createdAt": "2026-10-29T09:00:00.000Z",
+    "reviewDemo": true
+  },
+  {
+    "id": 1006,
+    "title": "Product Operations Intern",
+    "company": "Google",
+    "location": "Remote",
+    "deadline": "2026-12-01",
+    "applications": 0,
+    "salary": "Rs.25000/month",
+    "openings": 3,
+    "cgpa": 6.5,
+    "branches": [
+      "CSE",
+      "IT",
+      "ECE",
+      "EEE",
+      "MECH",
+      "CIVIL"
+    ],
+    "type": "Internship",
+    "duration": "3 months",
+    "status": "rejected",
+    "tags": [
+      "Excel",
+      "Documentation",
+      "Communication"
+    ],
+    "description": "Support product operations through release checklists, process documentation, and customer feedback summaries. Coordinate follow-ups with engineering and support teams.",
+    "rounds": "Resume Screening → Operations Case Study → HR",
+    "backlogs": "Allowed",
+    "rejectionRemark": "Please clarify the working hours and provide a named internship mentor before resubmitting this opportunity.",
+    "submittedBy": "Priya Kapoor (Demo)",
+    "recruiterId": 102,
+    "collegeId": 1,
+    "createdAt": "2026-10-28T09:00:00.000Z",
+    "reviewDemo": true
+  },
+  {
+    "id": 2001,
+    "recruiterId": 102,
+    "title": "Graduate Software Engineer",
+    "company": "Google",
+    "type": "Full-Time",
+    "salary": "22 LPA",
+    "branches": [
+      "Computer Science",
+      "IT",
+      "Electronics"
+    ],
+    "tags": [
+      "Python",
+      "Java",
+      "Data Structures"
+    ],
+    "location": "Hyderabad, Telangana",
+    "deadline": "2026-12-31",
+    "applications": 0,
+    "openings": 8,
+    "cgpa": 6.5,
+    "backlogs": "Up to 2 active backlogs allowed",
+    "status": "Published",
+    "collegeId": 1,
+    "submittedBy": "Priya Kapoor",
+    "createdAt": "2026-03-01T09:00:00.000Z",
+    "description": "Campus graduate recruitment for graduate software engineer. Work with an assigned team on practical projects, receive technical mentoring, and participate in structured reviews.",
+    "rounds": "Resume Screening → Assessment → Technical Interview → HR Interview",
+    "reviewDemo": true
+  },
+  {
+    "id": 2002,
+    "recruiterId": 3001,
+    "title": "Associate Software Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "salary": "12 LPA",
+    "branches": [
+      "Computer Science",
+      "IT"
+    ],
+    "tags": [
+      "React",
+      "Java",
+      "SQL"
+    ],
+    "location": "Hyderabad, Telangana",
+    "deadline": "2026-12-31",
+    "applications": 0,
+    "openings": 8,
+    "cgpa": 6.5,
+    "backlogs": "Up to 2 active backlogs allowed",
+    "status": "Published",
+    "collegeId": 1,
+    "submittedBy": "Meenal Kapoor",
+    "createdAt": "2026-03-01T09:00:00.000Z",
+    "description": "Campus graduate recruitment for associate software engineer. Work with an assigned team on practical projects, receive technical mentoring, and participate in structured reviews.",
+    "rounds": "Resume Screening → Assessment → Technical Interview → HR Interview",
+    "reviewDemo": true
+  },
+  {
+    "id": 2003,
+    "recruiterId": 3001,
+    "title": "Cloud Engineering Intern",
+    "company": "TechCorp Solutions",
+    "type": "Internship",
+    "salary": "Rs.30000/month",
+    "branches": [
+      "Computer Science",
+      "IT"
+    ],
+    "tags": [
+      "Linux",
+      "Docker",
+      "Python"
+    ],
+    "location": "Hyderabad, Telangana",
+    "deadline": "2026-12-31",
+    "applications": 0,
+    "openings": 10,
+    "cgpa": 6.5,
+    "backlogs": "Up to 2 active backlogs allowed",
+    "status": "Published",
+    "collegeId": 1,
+    "submittedBy": "Meenal Kapoor",
+    "createdAt": "2026-03-01T09:00:00.000Z",
+    "description": "Campus internship for cloud engineering intern. Work with an assigned team on practical projects, receive technical mentoring, and participate in structured reviews.",
+    "rounds": "Resume Screening → Assessment → Technical Interview → HR Interview",
+    "duration": "6 months",
+    "reviewDemo": true
+  },
+  {
+    "id": 2004,
+    "recruiterId": 3201,
+    "title": "Embedded Software Engineer",
+    "company": "Silicon Circuit Labs",
+    "type": "Full-Time",
+    "salary": "12 LPA",
+    "branches": [
+      "Electronics",
+      "EEE"
+    ],
+    "tags": [
+      "Embedded C",
+      "Microcontrollers",
+      "Python"
+    ],
+    "location": "Bengaluru, Karnataka",
+    "deadline": "2026-12-31",
+    "applications": 0,
+    "openings": 8,
+    "cgpa": 6.5,
+    "backlogs": "Up to 2 active backlogs allowed",
+    "status": "Published",
+    "collegeId": 1,
+    "submittedBy": "Neeraj Shah",
+    "createdAt": "2026-03-01T09:00:00.000Z",
+    "description": "Campus graduate recruitment for embedded software engineer. Work with an assigned team on practical projects, receive technical mentoring, and participate in structured reviews.",
+    "rounds": "Resume Screening → Assessment → Technical Interview → HR Interview",
+    "reviewDemo": true
+  },
+  {
+    "id": 2005,
+    "recruiterId": 3201,
+    "title": "Hardware Verification Intern",
+    "company": "Silicon Circuit Labs",
+    "type": "Internship",
+    "salary": "Rs.25000/month",
+    "branches": [
+      "Electronics"
+    ],
+    "tags": [
+      "Verilog",
+      "Digital Electronics",
+      "Circuit Analysis"
+    ],
+    "location": "Bengaluru, Karnataka",
+    "deadline": "2026-12-31",
+    "applications": 0,
+    "openings": 10,
+    "cgpa": 6.5,
+    "backlogs": "Up to 2 active backlogs allowed",
+    "status": "Published",
+    "collegeId": 1,
+    "submittedBy": "Neeraj Shah",
+    "createdAt": "2026-03-01T09:00:00.000Z",
+    "description": "Campus internship for hardware verification intern. Work with an assigned team on practical projects, receive technical mentoring, and participate in structured reviews.",
+    "rounds": "Resume Screening → Assessment → Technical Interview → HR Interview",
+    "duration": "6 months",
+    "reviewDemo": true
+  },
+  {
+    "id": 2006,
+    "recruiterId": 3202,
+    "title": "Graduate Electrical Engineer",
+    "company": "VoltGrid Energy",
+    "type": "Full-Time",
+    "salary": "8.5 LPA",
+    "branches": [
+      "EEE"
+    ],
+    "tags": [
+      "Power Systems",
+      "MATLAB",
+      "Electrical Machines"
+    ],
+    "location": "Chennai, Tamil Nadu",
+    "deadline": "2026-12-31",
+    "applications": 0,
+    "openings": 8,
+    "cgpa": 6.5,
+    "backlogs": "Up to 2 active backlogs allowed",
+    "status": "Published",
+    "collegeId": 1,
+    "submittedBy": "Rashmi Menon",
+    "createdAt": "2026-03-01T09:00:00.000Z",
+    "description": "Campus graduate recruitment for graduate electrical engineer. Work with an assigned team on practical projects, receive technical mentoring, and participate in structured reviews.",
+    "rounds": "Resume Screening → Assessment → Technical Interview → HR Interview",
+    "reviewDemo": true
+  },
+  {
+    "id": 2007,
+    "recruiterId": 3202,
+    "title": "Power Systems Intern",
+    "company": "VoltGrid Energy",
+    "type": "Internship",
+    "salary": "Rs.20000/month",
+    "branches": [
+      "EEE"
+    ],
+    "tags": [
+      "MATLAB",
+      "Power Electronics",
+      "Simulink"
+    ],
+    "location": "Chennai, Tamil Nadu",
+    "deadline": "2026-12-31",
+    "applications": 0,
+    "openings": 10,
+    "cgpa": 6.5,
+    "backlogs": "Up to 2 active backlogs allowed",
+    "status": "Published",
+    "collegeId": 1,
+    "submittedBy": "Rashmi Menon",
+    "createdAt": "2026-03-01T09:00:00.000Z",
+    "description": "Campus internship for power systems intern. Work with an assigned team on practical projects, receive technical mentoring, and participate in structured reviews.",
+    "rounds": "Resume Screening → Assessment → Technical Interview → HR Interview",
+    "duration": "6 months",
+    "reviewDemo": true
+  },
+  {
+    "id": 2008,
+    "recruiterId": 3203,
+    "title": "Graduate Mechanical Engineer",
+    "company": "MotionWorks Engineering",
+    "type": "Full-Time",
+    "salary": "9 LPA",
+    "branches": [
+      "Mechanical"
+    ],
+    "tags": [
+      "SolidWorks",
+      "Manufacturing",
+      "Thermodynamics"
+    ],
+    "location": "Pune, Maharashtra",
+    "deadline": "2026-12-31",
+    "applications": 0,
+    "openings": 8,
+    "cgpa": 6.5,
+    "backlogs": "Up to 2 active backlogs allowed",
+    "status": "Published",
+    "collegeId": 1,
+    "submittedBy": "Vikram Sethi",
+    "createdAt": "2026-03-01T09:00:00.000Z",
+    "description": "Campus graduate recruitment for graduate mechanical engineer. Work with an assigned team on practical projects, receive technical mentoring, and participate in structured reviews.",
+    "rounds": "Resume Screening → Assessment → Technical Interview → HR Interview",
+    "reviewDemo": true
+  },
+  {
+    "id": 2009,
+    "recruiterId": 3203,
+    "title": "Design Engineering Intern",
+    "company": "MotionWorks Engineering",
+    "type": "Internship",
+    "salary": "Rs.22000/month",
+    "branches": [
+      "Mechanical"
+    ],
+    "tags": [
+      "AutoCAD",
+      "CAD",
+      "Quality Control"
+    ],
+    "location": "Pune, Maharashtra",
+    "deadline": "2026-12-31",
+    "applications": 0,
+    "openings": 10,
+    "cgpa": 6.5,
+    "backlogs": "Up to 2 active backlogs allowed",
+    "status": "Published",
+    "collegeId": 1,
+    "submittedBy": "Vikram Sethi",
+    "createdAt": "2026-03-01T09:00:00.000Z",
+    "description": "Campus internship for design engineering intern. Work with an assigned team on practical projects, receive technical mentoring, and participate in structured reviews.",
+    "rounds": "Resume Screening → Assessment → Technical Interview → HR Interview",
+    "duration": "6 months",
+    "reviewDemo": true
+  },
+  {
+    "id": 2010,
+    "recruiterId": 3204,
+    "title": "Graduate Structural Engineer",
+    "company": "UrbanBuild Infrastructure",
+    "type": "Full-Time",
+    "salary": "7.5 LPA",
+    "branches": [
+      "Civil"
+    ],
+    "tags": [
+      "AutoCAD",
+      "Structural Analysis",
+      "STAAD Pro"
+    ],
+    "location": "Hyderabad, Telangana",
+    "deadline": "2026-12-31",
+    "applications": 0,
+    "openings": 8,
+    "cgpa": 6.5,
+    "backlogs": "Up to 2 active backlogs allowed",
+    "status": "Published",
+    "collegeId": 1,
+    "submittedBy": "Anjali Desai",
+    "createdAt": "2026-03-01T09:00:00.000Z",
+    "description": "Campus graduate recruitment for graduate structural engineer. Work with an assigned team on practical projects, receive technical mentoring, and participate in structured reviews.",
+    "rounds": "Resume Screening → Assessment → Technical Interview → HR Interview",
+    "reviewDemo": true
+  },
+  {
+    "id": 2011,
+    "recruiterId": 3204,
+    "title": "Project Planning Intern",
+    "company": "UrbanBuild Infrastructure",
+    "type": "Internship",
+    "salary": "Rs.18000/month",
+    "branches": [
+      "Civil"
+    ],
+    "tags": [
+      "Excel",
+      "Quantity Surveying",
+      "Project Planning"
+    ],
+    "location": "Hyderabad, Telangana",
+    "deadline": "2026-12-31",
+    "applications": 0,
+    "openings": 10,
+    "cgpa": 6.5,
+    "backlogs": "Up to 2 active backlogs allowed",
+    "status": "Published",
+    "collegeId": 1,
+    "submittedBy": "Anjali Desai",
+    "createdAt": "2026-03-01T09:00:00.000Z",
+    "description": "Campus internship for project planning intern. Work with an assigned team on practical projects, receive technical mentoring, and participate in structured reviews.",
+    "rounds": "Resume Screening → Assessment → Technical Interview → HR Interview",
+    "duration": "6 months",
+    "reviewDemo": true
+  },
+  {
+    "id": 2012,
+    "recruiterId": 3001,
+    "title": "Industrial Automation Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "salary": "11 LPA",
+    "branches": [
+      "Electronics",
+      "EEE",
+      "Mechanical"
+    ],
+    "tags": [
+      "Control Systems",
+      "Python",
+      "Instrumentation"
+    ],
+    "location": "Hyderabad, Telangana",
+    "deadline": "2026-12-31",
+    "applications": 0,
+    "openings": 8,
+    "cgpa": 6.5,
+    "backlogs": "Up to 2 active backlogs allowed",
+    "status": "Published",
+    "collegeId": 1,
+    "submittedBy": "Meenal Kapoor",
+    "createdAt": "2026-03-01T09:00:00.000Z",
+    "description": "Campus graduate recruitment for industrial automation engineer. Work with an assigned team on practical projects, receive technical mentoring, and participate in structured reviews.",
+    "rounds": "Resume Screening → Assessment → Technical Interview → HR Interview",
+    "reviewDemo": true
+  },
+  {
+    "id": 2013,
+    "recruiterId": 3001,
+    "title": "BIM Application Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "salary": "8 LPA",
+    "branches": [
+      "Civil"
+    ],
+    "tags": [
+      "Revit",
+      "AutoCAD",
+      "Python"
+    ],
+    "location": "Hyderabad, Telangana",
+    "deadline": "2026-12-31",
+    "applications": 0,
+    "openings": 8,
+    "cgpa": 6.5,
+    "backlogs": "Up to 2 active backlogs allowed",
+    "status": "Published",
+    "collegeId": 1,
+    "submittedBy": "Meenal Kapoor",
+    "createdAt": "2026-03-01T09:00:00.000Z",
+    "description": "Campus graduate recruitment for bim application engineer. Work with an assigned team on practical projects, receive technical mentoring, and participate in structured reviews.",
+    "rounds": "Resume Screening → Assessment → Technical Interview → HR Interview",
+    "reviewDemo": true
+  }
+]

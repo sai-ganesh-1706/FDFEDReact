@@ -19,6 +19,7 @@ import { ActivityService } from '../activity/activity.service';
 import { CollegesRepository } from '../colleges/colleges.repository';
 import { Public } from '../common/decorators/public.decorator';
 import { AuthSessionService } from '../common/auth/auth-session.service';
+import { ImportStudentsDto } from './dto/import-students.dto';
 
 /** Which roles each administrator may create / manage. */
 const MANAGEABLE: Record<string, string[]> = {
@@ -60,6 +61,13 @@ export class UsersController {
     if (!allowed.includes(target.role) || target.collegeId !== caller.collegeId) {
       throw new ForbiddenException('You are not allowed to change this account');
     }
+  }
+
+  @Get('oversight-policy')
+  @Roles('placement_officer')
+  oversightPolicy(@CurrentUser() caller: RequestUser) {
+    if (caller.role !== 'placement_officer' || !caller.collegeId) throw new ForbiddenException('A college placement officer is required');
+    return this.usersService.getOversightPolicy(caller.collegeId);
   }
 
   @Get()
@@ -111,6 +119,14 @@ export class UsersController {
       }));
   }
 
+  @Get('oversight')
+  @Roles('placement_officer')
+  @ApiOperation({ summary: 'Current candidate and alumni accounts for the placement officer’s college, sorted alphabetically' })
+  oversight(@CurrentUser() caller: RequestUser) {
+    if (caller.role !== 'placement_officer' || !caller.collegeId) throw new ForbiddenException('User Oversight requires a college placement officer');
+    return this.usersService.findOversight(caller.collegeId);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get a single user by ID' })
   @ApiParam({ name: 'id', type: Number })
@@ -150,6 +166,28 @@ export class UsersController {
   @ApiResponse({ status: 401, description: 'Current password incorrect' })
   changePassword(@Param('id', ParseIntPipe) id: number, @Body() body: ChangePasswordDto) {
     return this.usersService.changePassword(id, body.currentPassword, body.newPassword);
+  }
+
+  @Post('import-students')
+  @Roles('placement_officer')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Validate or import a student CSV into the signed-in placement officer’s college' })
+  importStudents(@Body() dto: ImportStudentsDto, @CurrentUser() caller: RequestUser) {
+    if (caller.role !== 'placement_officer' || !caller.collegeId) throw new ForbiddenException('Student imports require a college placement officer');
+    const result = this.usersService.importStudents(dto.csv, caller.collegeId, dto.dryRun !== false);
+    if (result.imported) this.activity.log({ action: 'Students Imported', detail: `${result.imported} students added by CSV`, actor: this.usersService.findRaw(caller.userId ?? 0)?.name ?? caller.role, actorRole: caller.role, collegeId: caller.collegeId, type: 'user' });
+    return result;
+  }
+
+  @Post('import-alumni')
+  @Roles('placement_officer')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Validate or import an alumni CSV into the signed-in placement officer’s college' })
+  importAlumni(@Body() dto: ImportStudentsDto, @CurrentUser() caller: RequestUser) {
+    if (caller.role !== 'placement_officer' || !caller.collegeId) throw new ForbiddenException('Alumni imports require a college placement officer');
+    const result = this.usersService.importAlumni(dto.csv, caller.collegeId, dto.dryRun !== false);
+    if (result.imported) this.activity.log({ action: 'Alumni Imported', detail: `${result.imported} alumni added by CSV`, actor: this.usersService.findRaw(caller.userId ?? 0)?.name ?? caller.role, actorRole: caller.role, collegeId: caller.collegeId, type: 'user' });
+    return result;
   }
 
   @Post()

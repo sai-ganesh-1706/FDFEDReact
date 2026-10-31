@@ -71,7 +71,7 @@ export default function CollegeAdminApp() {
   const applications = data.applicationsByCollege?.[collegeId] || [];
   const placedStudentIds = new Set(
     applications
-      .filter((application) => ['offered', 'offer'].includes(String(application.status).toLowerCase()))
+      .filter((application) => ['offered', 'offer'].includes(String(application.status).toLowerCase()) && /full/i.test(application.type))
       .map((application) => application.candidateId)
   );
   // Preserve legacy user-level placement records while the application status

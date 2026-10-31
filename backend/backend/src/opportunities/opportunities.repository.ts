@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 export interface Opportunity {
   id: number;
@@ -22,6 +24,9 @@ export interface Opportunity {
   collegeId?: number;
   createdAt?: string;
   rejectionRemark?: string;
+  duration?: string;
+  isDemo?: boolean;
+  reviewDemo?: boolean;
   avatar?: string;
   avatarBg?: string;
 }
@@ -29,8 +34,18 @@ export interface Opportunity {
 @Injectable()
 export class OpportunitiesRepository {
   constructor() {
+    // Preserve historical application and placement-report records on their
+    // own completed drive, separate from the pending ML submission.
+    this.opportunities.push({
+      id: 20, title: 'ML Engineer', company: 'AI Dynamics', location: 'Chennai, Tamil Nadu',
+      deadline: '2026-02-28', applications: 0, salary: '15 LPA', openings: 2,
+      cgpa: 7, branches: ['Any'], type: 'Full-Time', status: 'Closed',
+      description: 'Historical machine learning drive', collegeId: 1,
+      createdAt: '2025-09-01T00:00:00.000Z',
+    });
     // Seed opportunities all belong to the demo college.
     this.opportunities.forEach((o, index) => {
+      o.isDemo = true;
       o.collegeId ??= 1;
       // Older seed entries predate the timestamp field. Give them a stable
       // chronological order so dashboard lists behave like newly-created data.
@@ -40,6 +55,20 @@ export class OpportunitiesRepository {
         o.createdAt = createdAt.toISOString();
       }
     });
+    // JSON supplies initial demo records only. Every mutation after startup
+    // stays in this repository's memory and resets when the backend restarts.
+    const demoFile = join(process.cwd(), 'data', 'review-opportunities.demo.json');
+    const demos: unknown = JSON.parse(readFileSync(demoFile, 'utf8'));
+    if (!Array.isArray(demos) || demos.some((o) => !o || !Number.isInteger(o.id) || o.id < 21 || !o.reviewDemo)) {
+      throw new Error('Invalid review demo opportunities file');
+    }
+    const ids = new Set(this.opportunities.map((o) => o.id));
+    for (const demo of demos as Opportunity[]) {
+      if (ids.has(demo.id)) throw new Error(`Duplicate demo opportunity ID: ${demo.id}`);
+      ids.add(demo.id);
+      this.opportunities.push(demo);
+    }
+    this.nextId = Math.max(this.nextId, ...this.opportunities.map((o) => o.id + 1));
   }
 
   private opportunities: Opportunity[] = [
@@ -65,14 +94,14 @@ export class OpportunitiesRepository {
     { id: 19, title: 'Cloud Support Engineer', company: 'Google', location: 'Hyderabad, Telangana', deadline: '2026-12-20', applications: 0, salary: '24 LPA', openings: 6, cgpa: 7.5, branches: ['CSE', 'IT', 'ECE'], type: 'Full-Time', status: 'pending', tags: ['Linux', 'Networking', 'GCP', 'Troubleshooting'], description: 'Help enterprise customers design, deploy and debug workloads on Google Cloud. You will work directly with customer engineering teams and the product organisation.', rounds: 'Online Assessment → Technical Interview → Googleyness → HR', backlogs: 'Not allowed', avatar: 'G', avatarBg: '#EA4335', submittedBy: 'Priya Kapoor', recruiterId: 102 },
   ];
 
-  private nextId = 20;
+  private nextId = 21;
 
   findAll(): Opportunity[] {
-    return this.opportunities;
+    return this.opportunities.filter((o) => !o.isDemo);
   }
 
   findPublished(): Opportunity[] {
-    return this.opportunities.filter((o) => o.status === 'Published');
+    return this.findAll().filter((o) => o.status === 'Published');
   }
 
   findById(id: number): Opportunity | undefined {
@@ -80,15 +109,17 @@ export class OpportunitiesRepository {
   }
 
   create(data: Omit<Opportunity, 'id'>): Opportunity {
-    const opp: Opportunity = { ...data, id: this.nextId++, applications: data.applications ?? 0, createdAt: new Date().toISOString() };
+    const opp: Opportunity = { ...data, id: this.nextId, applications: data.applications ?? 0, createdAt: new Date().toISOString() };
     this.opportunities.push(opp);
+    this.nextId++;
     return opp;
   }
 
   update(id: number, data: Partial<Opportunity>): Opportunity | undefined {
     const idx = this.opportunities.findIndex((o) => o.id === id);
     if (idx === -1) return undefined;
-    this.opportunities[idx] = { ...this.opportunities[idx], ...data };
+    const updated = { ...this.opportunities[idx], ...data };
+    this.opportunities[idx] = updated;
     return this.opportunities[idx];
   }
 

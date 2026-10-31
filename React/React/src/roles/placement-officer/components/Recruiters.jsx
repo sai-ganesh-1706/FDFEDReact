@@ -8,7 +8,7 @@ import { useOfficerData } from '../services/officerApi';
 
 export default function Recruiters({ onNavigate, activePage = 'p4' }) {
   /* ── Recruiters come from the API; approvals write to it and reload ── */
-  const { data, refresh } = useOfficerData();
+  const { data, refresh, error: loadError } = useOfficerData();
   const recruiters = data.recruiters || [];
 
   const act = async (request) => {
@@ -71,7 +71,7 @@ export default function Recruiters({ onNavigate, activePage = 'p4' }) {
   };
 
   const approveRecruiter = async (idx) => {
-    const recruiter = recruiters[idx];
+    const recruiter = recruiters.find((r) => r.id === idx);
     if (!recruiter) return;
     try {
       const { data: result } = await api.patch(`/recruiters/${recruiter.id}/approve`);
@@ -91,7 +91,7 @@ export default function Recruiters({ onNavigate, activePage = 'p4' }) {
       return;
     }
     setDeclineError(false);
-    const recruiter = recruiters[idx];
+    const recruiter = recruiters.find((r) => r.id === idx);
     if (!recruiter) return;
     await act(() => api.patch(`/recruiters/${recruiter.id}/decline`, { remark: declineRemarks.trim() }));
     setOpenDeclineIdx(null);
@@ -112,6 +112,7 @@ export default function Recruiters({ onNavigate, activePage = 'p4' }) {
       <Header title="Recruiter Management" onNavigate={onNavigate} />
 
       <main className="main-content" id="mainContent">
+        {loadError && <p role="alert" style={{ color: '#b91c1c', marginBottom: 12 }}>{loadError}</p>}
         {/* Hero Card */}
         <div className="hero-card">
           <h1>Recruiter Management Center</h1>
@@ -195,21 +196,21 @@ export default function Recruiters({ onNavigate, activePage = 'p4' }) {
                 <th>Recruiter</th>
                 <th>Company</th>
                 <th>Role</th>
-                <th>Opportunities</th>
+                <th>Published Opportunities</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody id="recBody">
               {filtered.map((r) => {
-                const realIdx = recruiters.indexOf(r);
+                const realIdx = r.id;
                 const isPending = r.status === 'pending';
                 const isProfileOpen = openProfileIdx === realIdx;
                 const isVerifyOpen = openVerifyIdx === realIdx;
                 const isDeclineOpen = openDeclineIdx === realIdx;
 
                 return (
-                  <>
+                  <React.Fragment key={r.id}>
                   {false && <tr key={realIdx} className="rec-row" data-i={realIdx}>
                     <td style={{ fontWeight: 600 }}>{r.name}</td>
                     <td>{r.company}</td>
@@ -238,12 +239,11 @@ export default function Recruiters({ onNavigate, activePage = 'p4' }) {
                         <div className="rec-name">
                           <div className="rec-avatar">{r.name[0]}</div>
                           <span>{r.name}</span>
-                          {r.source === 'contact-form' && <span style={{ marginLeft: 8, fontSize: 10, fontWeight: 700, color: '#7c3aed', background: '#f3e8ff', padding: '2px 8px', borderRadius: 10 }}>Contact form</span>}
                         </div>
                       </td>
                       <td>{r.company}</td>
                       <td>{r.role}</td>
-                      <td>{r.opps} opportunity</td>
+                      <td>{r.opps} published {r.opps === 1 ? 'opportunity' : 'opportunities'}</td>
                       <td>
                         <span className={`badge-status badge-${r.status}`}>
                           {r.status.charAt(0).toUpperCase() + r.status.slice(1)}
@@ -457,7 +457,7 @@ export default function Recruiters({ onNavigate, activePage = 'p4' }) {
                       </tr>
                     )}
                   </React.Fragment>
-                  </>
+                  </React.Fragment>
                 );
               })}
             </tbody>

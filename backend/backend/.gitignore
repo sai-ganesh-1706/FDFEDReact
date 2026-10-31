@@ -47,6 +47,8 @@ lerna-debug.log*
 .tmp
 
 # Runtime data
+/data/opportunities.json
+/data/opportunities.json.*.tmp
 pids
 *.pid
 *.seed

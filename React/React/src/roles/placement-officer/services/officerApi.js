@@ -12,14 +12,14 @@ const BRANCH_COLORS = [
   { color: '#f0b100', colorClass: 'orange' },
   { color: '#ef4444', colorClass: 'red' },
   { color: '#f59e0b', colorClass: 'amber' },
+  { color: '#6366f1', colorClass: 'indigo' },
 ];
 const AVATAR_COLORS = ['#7C3AED', '#4f46e5', '#f59e0b', '#ec4899', '#10b981', '#3b82f6'];
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 const EMPTY = () => ({
   stats: {
     totalCandidates: 0, placementRate: 0, highestPkg: 0, companiesVisited: 0, totalApps: 0,
-    avgPkg: 0, offersAccepted: 0, internships: 0, pending: 0, published: 0, totalOpps: 0, totalApplicants: 0,
+    avgPkg: 0, studentsPlaced: 0, offersMade: 0, internships: 0, pending: 0, published: 0, totalOpps: 0, totalApplicants: 0,
   },
   stakeholders: { candidates: 0, recruiters: 0, activeDrives: 0, alumni: 0 },
   branches: [],
@@ -41,10 +41,6 @@ function resetMock() {
 }
 resetMock();
 
-const lpa = (salary) => {
-  const match = String(salary || '').match(/(\d+(?:\.\d+)?)\s*(?:-\s*\d+(?:\.\d+)?\s*)?LPA/i);
-  return match ? parseFloat(match[1]) : null;
-};
 const hash = (text = '') => [...text].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
 
 export const OFFER_STATUSES = ['Offer', 'Offered'];
@@ -60,6 +56,8 @@ export function toSubmission(o, applicantCount) {
     type: o.type === 'Internship' ? 'internship' : 'placement',
     location: o.location,
     pkg: o.salary,
+    openings: o.openings,
+    duration: o.duration || '',
     submitter: o.submittedBy || 'Recruiter',
     submitted: o.createdAt
       ? new Date(o.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
@@ -68,7 +66,7 @@ export function toSubmission(o, applicantCount) {
     desc: o.description || '',
     cgpa: o.cgpa,
     branches: (o.branches || []).join(', '),
-    backlogs: o.backlogs || 'Not allowed',
+    backlogs: o.backlogs || 'Not specified',
     skills: o.tags || [],
     rounds: o.rounds || '',
     applied: applicantCount,
@@ -164,41 +162,14 @@ export function fromOversightUser(u) {
   return { ...base, company: u.recCompany, headline: u.recDesignation, phone: u.recPhone, location: u.recLocation };
 }
 
-function build({ opps, apps, users, recruiters, assessments = [], announcements = [], inbox = [] }) {
+function build({ opps, apps, users, recruiters, placement, assessments = [], announcements = [], inbox = [] }) {
   const students = users.filter((u) => u.role === 'candidate');
   const alumni = users.filter((u) => u.role === 'alumni');
-  const reviewable = opps.filter((o) => ['pending', 'approved', 'rejected', 'published'].includes(normaliseOpportunityStatus(o.status)));
-  const published = opps.filter((o) => normaliseOpportunityStatus(o.status) === 'published');
+  const reviewable = opps.filter((o) => !o.isDemo && ['pending', 'approved', 'rejected', 'published'].includes(normaliseOpportunityStatus(o.status)));
+  const published = reviewable.filter((o) => normaliseOpportunityStatus(o.status) === 'published');
   const countFor = (id) => apps.filter((a) => a.opportunityId === id).length;
-  const offers = apps.filter((a) => OFFER_STATUSES.includes(a.status));
-  const placedIds = new Set([...students.filter((s) => s.status === 'placed').map((s) => s.id), ...offers.map((a) => a.candidateId)]);
-  const packages = published.map((o) => lpa(o.salary)).filter((v) => v != null);
 
-  const byDept = new Map();
-  students.forEach((s) => {
-    const key = s.department || 'Other';
-    const entry = byDept.get(key) || { name: key, total: 0, placed: 0 };
-    entry.total += 1;
-    if (placedIds.has(s.id)) entry.placed += 1;
-    byDept.set(key, entry);
-  });
-  const branches = [...byDept.values()].map((b, i) => ({ ...b, ...BRANCH_COLORS[i % BRANCH_COLORS.length] }));
-
-  const now = new Date();
-  const months = Array.from({ length: 8 }, (_, i) => new Date(now.getFullYear(), now.getMonth() - (7 - i), 1));
-  const bucket = (a) => {
-    const d = new Date(a.appliedDate);
-    return months.findIndex((m) => m.getFullYear() === d.getFullYear() && m.getMonth() === d.getMonth());
-  };
-  const fullTime = months.map(() => 0);
-  const internships = months.map(() => 0);
-  apps.forEach((a) => {
-    const i = bucket(a);
-    if (i < 0) return;
-    if (a.type === 'Internship') internships[i] += 1; else fullTime[i] += 1;
-  });
-
-  const pendingOpps = opps.filter((o) => normaliseOpportunityStatus(o.status) === 'pending');
+  const pendingOpps = reviewable.filter((o) => normaliseOpportunityStatus(o.status) === 'pending');
   const pendingRecruiters = recruiters.filter((r) => r.status === 'pending');
   const notifications = [
     ...pendingOpps.map((o, i) => ({
@@ -218,41 +189,24 @@ function build({ opps, apps, users, recruiters, assessments = [], announcements 
   ];
 
   const oppById = new Map(opps.map((o) => [o.id, o]));
-  const avg = (values) => (values.length ? Math.round((values.reduce((s, v) => s + v, 0) / values.length) * 10) / 10 : 0);
-
-  const offersByCompany = new Map();
-  offers.forEach((a) => {
-    const entry = offersByCompany.get(a.company) || { company: a.company, offers: 0, packages: [] };
-    entry.offers += 1;
-    const pkg = lpa(oppById.get(a.opportunityId)?.salary);
-    if (pkg != null) entry.packages.push(pkg);
-    offersByCompany.set(a.company, entry);
-  });
-  const topCompanies = [...offersByCompany.values()]
-    .sort((x, y) => y.offers - x.offers)
-    .map((c) => ({ company: c.company, offers: c.offers, avgPackage: avg(c.packages) }));
-
-  const monthlyTrend = months.map((m, i) => ({
-    month: MONTHS[m.getMonth()],
-    placements: offers.filter((a) => bucket(a) === i).length,
-  }));
 
   return {
-    topCompanies,
-    monthlyTrend,
+    topCompanies: placement.topCompanies,
+    monthlyTrend: placement.monthlyTrend,
     stats: {
-      totalCandidates: students.length,
-      placementRate: students.length ? Math.round((placedIds.size / students.length) * 100) : 0,
-      highestPkg: packages.length ? Math.max(...packages) : 0,
-      companiesVisited: new Set(published.map((o) => o.company)).size,
-      totalApps: apps.length,
-      avgPkg: packages.length ? Math.round(packages.reduce((s, v) => s + v, 0) / packages.length) : 0,
-      offersAccepted: offers.length,
-      internships: opps.filter((o) => o.type === 'Internship').length,
+      totalCandidates: placement.totalStudents,
+      placementRate: placement.placementRate,
+      highestPkg: placement.highestPackage,
+      companiesVisited: placement.companiesVisited,
+      totalApps: placement.totalApplications,
+      avgPkg: placement.avgPackage,
+      studentsPlaced: placement.totalPlaced,
+      offersMade: placement.totalOffers,
+      internships: placement.internshipApplications,
       pending: pendingOpps.length,
       published: published.length,
       totalOpps: reviewable.length,
-      totalApplicants: apps.length,
+      totalApplicants: placement.uniqueApplicants,
     },
     stakeholders: {
       candidates: students.length,
@@ -260,11 +214,15 @@ function build({ opps, apps, users, recruiters, assessments = [], announcements 
       activeDrives: published.length,
       alumni: alumni.length,
     },
-    branches,
-    trend: { labels: months.map((m) => MONTHS[m.getMonth()]), fullTime, internships },
+    branches: placement.byDept.map((b, i) => ({ name: b.dept, total: b.total, placed: b.placed, ...BRANCH_COLORS[i % BRANCH_COLORS.length] })),
+    trend: placement.applicationTrend,
     submissions: reviewable
       .slice()
-      .sort((a, b) => Date.parse(b.createdAt || '') - Date.parse(a.createdAt || '') || b.id - a.id)
+      .sort((a, b) => {
+        const priority = { pending: 0, approved: 1, published: 2, rejected: 3 };
+        const statusOrder = priority[normaliseOpportunityStatus(a.status)] - priority[normaliseOpportunityStatus(b.status)];
+        return statusOrder || (Date.parse(b.createdAt || '') || 0) - (Date.parse(a.createdAt || '') || 0) || b.id - a.id;
+      })
       .map((o) => ({ ...toSubmission(o, countFor(o.id)), status: normaliseOpportunityStatus(o.status) })),
     drives: published
       .slice()
@@ -311,7 +269,6 @@ function build({ opps, apps, users, recruiters, assessments = [], announcements 
 }
 
 let inflight = null;
-let lastLoad = 0;
 // The officer portal is a small single-page application, but several mounted
 // components (the header and the current page) read the same dashboard data.
 // Keep one live snapshot and notify every consumer after a mutation so an
@@ -330,32 +287,35 @@ function normaliseOpportunityStatus(status) {
   return value === 'published' ? 'published' : value;
 }
 
-/** Load everything the officer screens need and publish it on MOCK. Calls within 2s share one fetch. */
+/** Share concurrent reads, then discard the request so page changes fetch fresh data. */
 export function loadOfficerData({ force = false } = {}) {
-  if (!force && inflight && Date.now() - lastLoad < 2000) return inflight;
-  lastLoad = Date.now();
+  if (!force && inflight) return inflight;
   inflight = Promise.all([
     api.get('/opportunities'),
     api.get('/applications'),
-    api.get('/users'),
+    api.get('/users/oversight'),
     api.get('/recruiters'),
     api.get('/assessments'),
+    api.get('/features/officer/placement-dashboard'),
     api.get('/announcements').then((r) => r.data).catch(() => []),
     api.get('/notifications').then((r) => r.data).catch(() => []),
-  ]).then(([opps, apps, users, recruiters, assessments, announcements, inbox]) => {
+  ]).then(([opps, apps, users, recruiters, assessments, placement, announcements, inbox]) => {
     const data = build({
       opps: opps.data,
       apps: apps.data,
       users: users.data,
       recruiters: recruiters.data,
       assessments: assessments.data,
+      placement: placement.data,
       announcements,
       inbox,
     });
     publish(data);
     return data;
   });
-  inflight.catch(() => { inflight = null; });
+  const request = inflight;
+  const clear = () => { if (inflight === request) inflight = null; };
+  request.then(clear, clear);
   return inflight;
 }
 
@@ -378,11 +338,14 @@ export function useOfficerData() {
       if (!cancelled) setState({ data, ready: true, error: '' });
     };
     subscribers.add(receive);
+    const onFocus = () => { loadOfficerData({ force: true }).catch(() => {}); };
+    window.addEventListener('focus', onFocus);
     loadOfficerData()
       .then((data) => { if (!cancelled) setState({ data, ready: true, error: '' }); })
       .catch(() => { if (!cancelled) setState((prev) => ({ ...prev, error: 'Could not load data from the server.' })); });
     return () => {
       cancelled = true;
+      window.removeEventListener('focus', onFocus);
       subscribers.delete(receive);
     };
   }, []);

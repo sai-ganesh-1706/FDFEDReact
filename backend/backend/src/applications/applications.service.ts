@@ -43,7 +43,7 @@ export class ApplicationsService {
       ...app,
       status,
       currentStageIndex: idx,
-      email: app.email ?? user?.email,
+      email: user?.email ?? app.email,
       phone: app.phone ?? user?.phone,
     };
     if (ref) {

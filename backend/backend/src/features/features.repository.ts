@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from '../users/users.repository';
+import { ApplicationsRepository } from '../applications/applications.repository';
+import { OpportunitiesRepository } from '../opportunities/opportunities.repository';
 
 /** ── Interfaces ─────────────────────────────────────────────────── */
 
@@ -117,6 +119,13 @@ export interface PlacementDashboardData {
   byDept: DeptStat[];
   topCompanies: CompanyStat[];
   monthlyTrend: MonthTrend[];
+  totalApplications?: number;
+  uniqueApplicants?: number;
+  totalOffers?: number;
+  internshipApplications?: number;
+  internshipOpportunities?: number;
+  companiesVisited?: number;
+  applicationTrend?: { labels: string[]; fullTime: number[]; internships: number[] };
 }
 
 export interface DeptStat {
@@ -142,7 +151,11 @@ export interface MonthTrend {
 
 @Injectable()
 export class FeaturesRepository {
-  constructor(private readonly usersRepo: UsersRepository) {}
+  constructor(
+    private readonly usersRepo: UsersRepository,
+    private readonly applicationsRepo: ApplicationsRepository,
+    private readonly opportunitiesRepo: OpportunitiesRepository,
+  ) {}
 
   /* ── Drives catalogue (shared across all colleges, filtered by collegeId) ── */
   private drives: DriveSearchResult[] = [
@@ -536,7 +549,63 @@ export class FeaturesRepository {
   /* ═══ Placement Dashboard ═══════════════════════════════════════════ */
 
   getPlacementDashboard(collegeId: number): PlacementDashboardData | null {
-    return this.placementDashboards.find(d => d.collegeId === collegeId) || null;
+    const students = this.usersRepo.findByRoleAndCollege('candidate', collegeId);
+    const studentIds = new Set(students.map((u) => u.id));
+    const applications = this.applicationsRepo.findByCollege(collegeId).filter((a) => studentIds.has(a.candidateId));
+    const allOffers = applications.filter((a) => ['Offer', 'Offered'].includes(a.status));
+    const offers = allOffers.filter((a) => /full/i.test(a.type));
+    const opportunities = this.opportunitiesRepo.findAll().filter((o) => (o.collegeId ?? 1) === collegeId && o.status === 'Published');
+    const placed = new Set([...students.filter((u) => u.status === 'placed').map((u) => u.id), ...offers.map((a) => a.candidateId)]);
+    const packageOf = (id: number) => {
+      const salary = this.opportunitiesRepo.findById(id)?.salary || '';
+      const match = salary.match(/(\d+(?:\.\d+)?)\s*LPA/i);
+      return match ? Number(match[1]) : 0;
+    };
+    const average = (values: number[]) => values.length ? Math.round(values.reduce((a, b) => a + b, 0) / values.length * 10) / 10 : 0;
+    const packages = offers.map((a) => packageOf(a.opportunityId)).filter((p) => p > 0);
+    const departments = [...new Set(students.map((u) => u.department || 'Other'))];
+    const companies = [...new Set(offers.map((a) => a.company))];
+    const months = Array.from({ length: 8 }, (_, i) => {
+      const now = new Date();
+      return new Date(now.getFullYear(), now.getMonth() - 7 + i, 1);
+    });
+    const offeredDate = (app: typeof offers[number]) => {
+      const stage = [...app.timeline].reverse().find((t) => ['Offer', 'Offered'].includes(t.stage));
+      return new Date(stage?.date || app.appliedDate);
+    };
+    const firstOffer = new Map<number, Date>();
+    for (const offer of offers) {
+      const date = offeredDate(offer);
+      if (!firstOffer.has(offer.candidateId) || date < firstOffer.get(offer.candidateId)!) firstOffer.set(offer.candidateId, date);
+    }
+    const sameMonth = (date: Date, month: Date) => date.getFullYear() === month.getFullYear() && date.getMonth() === month.getMonth();
+    return {
+      collegeId, totalStudents: students.length, totalPlaced: placed.size,
+      placementRate: students.length ? Math.round(placed.size / students.length * 1000) / 10 : 0,
+      avgPackage: average(packages), highestPackage: packages.length ? Math.max(...packages) : 0,
+      totalApplications: applications.length,
+      uniqueApplicants: new Set(applications.map((a) => a.candidateId)).size,
+      totalOffers: allOffers.length,
+      internshipApplications: applications.filter((a) => /intern/i.test(a.type)).length,
+      internshipOpportunities: opportunities.filter((o) => /intern/i.test(o.type)).length,
+      companiesVisited: new Set(opportunities.map((o) => o.company)).size,
+      applicationTrend: {
+        labels: months.map((month) => month.toLocaleString('en-US', { month: 'short' })),
+        fullTime: months.map((month) => applications.filter((a) => /full/i.test(a.type) && sameMonth(new Date(a.appliedDate), month)).length),
+        internships: months.map((month) => applications.filter((a) => /intern/i.test(a.type) && sameMonth(new Date(a.appliedDate), month)).length),
+      },
+      byDept: departments.map((dept) => {
+        const members = students.filter((u) => (u.department || 'Other') === dept);
+        const ids = new Set(members.map((u) => u.id));
+        const totalPlaced = members.filter((u) => placed.has(u.id)).length;
+        return { dept, total: members.length, placed: totalPlaced, rate: Math.round(totalPlaced / members.length * 100), avgPackage: average(offers.filter((a) => ids.has(a.candidateId)).map((a) => packageOf(a.opportunityId)).filter((p) => p > 0)) };
+      }),
+      topCompanies: companies.map((company) => {
+        const records = offers.filter((a) => a.company === company);
+        return { company, offers: records.length, avgPackage: average(records.map((a) => packageOf(a.opportunityId)).filter((p) => p > 0)) };
+      }).sort((a, b) => b.offers - a.offers),
+      monthlyTrend: months.map((month) => ({ month: month.toLocaleString('en-US', { month: 'short' }), placements: [...firstOffer.values()].filter((date) => sameMonth(date, month)).length })),
+    };
   }
 
   /* ═══ Alumni Directory ══════════════════════════════════════════════ */

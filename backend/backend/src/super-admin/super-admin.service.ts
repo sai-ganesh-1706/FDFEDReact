@@ -49,7 +49,7 @@ export class SuperAdminService {
       totalAlumni: users.filter(u => u.role === 'alumni').length,
       totalPlacementOfficers: users.filter(u => u.role === 'placement_officer').length,
       totalCollegeAdmins: users.filter(u => u.role === 'college_admin').length,
-      totalPlaced: apps.filter(a => ['Offer', 'Offered'].includes(a.status)).length,
+      totalPlaced: new Set(apps.filter(a => ['Offer', 'Offered'].includes(a.status) && /full/i.test(a.type)).map(a => a.candidateId)).size,
     };
   }
 
@@ -142,7 +142,7 @@ export class SuperAdminService {
           placementOfficers: users.filter(u => u.role === 'placement_officer' && u.collegeId === college.id).length,
           alumni: users.filter(u => u.role === 'alumni' && u.collegeId === college.id).length,
           recruiters: users.filter(u => u.role === 'recruiter' && u.collegeId === college.id).length,
-          placed: apps.filter(a => a.collegeId === college.id && ['Offer', 'Offered'].includes(a.status)).length,
+          placed: new Set(apps.filter(a => a.collegeId === college.id && ['Offer', 'Offered'].includes(a.status) && /full/i.test(a.type)).map(a => a.candidateId)).size,
         },
       };
     });
@@ -165,7 +165,7 @@ export class SuperAdminService {
         placementOfficers: users.filter(u => u.role === 'placement_officer' && u.collegeId === collegeId).length,
         alumni: users.filter(u => u.role === 'alumni' && u.collegeId === collegeId).length,
         recruiters: users.filter(u => u.role === 'recruiter' && u.collegeId === collegeId).length,
-        placed: apps.filter(a => a.collegeId === collegeId && ['Offer', 'Offered'].includes(a.status)).length,
+        placed: new Set(apps.filter(a => a.collegeId === collegeId && ['Offer', 'Offered'].includes(a.status) && /full/i.test(a.type)).map(a => a.candidateId)).size,
       },
     };
   }

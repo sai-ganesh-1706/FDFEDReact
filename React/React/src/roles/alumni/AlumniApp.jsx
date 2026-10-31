@@ -113,6 +113,7 @@ export default function AlumniApp() {
       await api.put(`/users/${session.id}`, {
         name: info.name || undefined,
         company: info.company || undefined,
+        batch: info.batch || undefined,
         headline: info.role || undefined,
         location: info.location || undefined,
         socialLinks: { linkedin: info.linkedin, github: info.github, portfolio: info.portfolio },

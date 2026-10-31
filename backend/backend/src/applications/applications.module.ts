@@ -11,8 +11,8 @@ import { ReferralsModule } from '../referrals/referrals.module';
 @Module({
   imports: [OpportunitiesModule, forwardRef(() => AssessmentsModule), NotificationsModule, UsersModule, ReferralsModule],
   controllers: [ApplicationsController],
-  providers: [ApplicationsService, ApplicationsRepository],
-  exports: [ApplicationsService, ApplicationsRepository],
+  providers: [ApplicationsService],
+  exports: [ApplicationsService, OpportunitiesModule],
 })
 export class ApplicationsModule {}
 

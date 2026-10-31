@@ -6,6 +6,7 @@ import { UpdateRecruiterDto } from './dto/update-recruiter.dto';
 import { UsersRepository } from '../users/users.repository';
 import { CollegesRepository } from '../colleges/colleges.repository';
 import { ActivityService } from '../activity/activity.service';
+import { OpportunitiesRepository } from '../opportunities/opportunities.repository';
 
 export interface Credentials { email: string; password: string; }
 
@@ -22,17 +23,30 @@ export class RecruitersService {
     private readonly usersRepo: UsersRepository,
     private readonly colleges: CollegesRepository,
     private readonly activity: ActivityService,
+    private readonly opportunities: OpportunitiesRepository,
   ) {}
+
+  private enrich(recruiter: Recruiter): Recruiter {
+    const userId = recruiter.userId ?? this.usersRepo.findByEmail(recruiter.email)?.id;
+    const opps = this.opportunities.findAll().filter((o) =>
+      o.status === 'Published' && o.recruiterId === userId && userId != null &&
+      (o.collegeId ?? 1) === (recruiter.collegeId ?? 1),
+    ).length;
+    return { ...recruiter, userId, opps };
+  }
 
   findAll(collegeId?: number | null): Recruiter[] {
     const all = this.repo.findAll();
-    return collegeId ? all.filter((r) => (r.collegeId ?? 1) === collegeId) : all;
+    return (collegeId ? all.filter((r) => (r.collegeId ?? 1) === collegeId) : all)
+      .map((r) => this.enrich(r))
+      .sort((a, b) => Number(b.status === 'pending') - Number(a.status === 'pending') ||
+        (Date.parse(b.submittedAt || '') || 0) - (Date.parse(a.submittedAt || '') || 0) || b.id - a.id);
   }
 
   findOne(id: number): Recruiter {
     const r = this.repo.findById(id);
     if (!r) throw new NotFoundException(`Recruiter with id ${id} not found`);
-    return r;
+    return this.enrich(r);
   }
 
   findByStatus(status: string, collegeId?: number | null): Recruiter[] {
@@ -88,11 +102,12 @@ export class RecruitersService {
   /** Verify the recruiter and create their login. The generated password is shown once to the officer. */
   approve(id: number, actorName = 'Placement officer'): { recruiter: Recruiter; credentials: Credentials } {
     const r = this.findOne(id);
+    if (r.status !== 'pending') throw new ConflictException('Only pending requests can be approved');
     const existing = this.usersRepo.findByEmail(r.email);
     if (existing && existing.role !== 'recruiter') {
       throw new ConflictException(`This email already belongs to a ${existing.role.replace('_', ' ')} account`);
     }
-    const password = generatePassword();
+    const password = r.isDemo ? '12345678' : generatePassword();
     let user = existing;
     if (user) user = this.usersRepo.update(user.id, { password, status: 'active', company: r.company })!;
     else {

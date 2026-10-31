@@ -20,6 +20,7 @@ export const toOpportunity = (o) => ({
   status: o.status,
   rejectionRemark: o.rejectionRemark,
   description: o.description || '',
+  duration: o.duration || '',
 });
 
 export const fromOpportunity = (o, extra = {}) => ({
@@ -33,6 +34,7 @@ export const fromOpportunity = (o, extra = {}) => ({
   type: o.type,
   tags: o.skills,
   description: o.description,
+  ...(o.duration ? { duration: o.duration } : {}),
   ...extra,
 });
 

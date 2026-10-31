@@ -2,6 +2,11 @@ import { IsString, IsNumber, IsArray, IsOptional, IsIn, IsDateString, Min, Max }
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateOpportunityDto {
+  @ApiPropertyOptional({ example: '3 months' })
+  @IsOptional()
+  @IsString()
+  duration?: string;
+
   @ApiProperty({ example: 'Software Engineer' })
   @IsString()
   title: string;

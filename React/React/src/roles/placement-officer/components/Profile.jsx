@@ -461,7 +461,7 @@ export default function Profile({ onNavigate, activePage = 'profile' }) {
   const stats = officerData.stats;
   const actItems = [
     { label: 'Drives Managed',       value: stats.published,                                              color: '#7c3aed' },
-    { label: 'Students Placed',      value: stats.offersAccepted,                                         color: '#10b981' },
+    { label: 'Students Placed',      value: stats.studentsPlaced,                                         color: '#10b981' },
     { label: 'Recruiters Onboarded', value: (officerData.recruiters || []).filter(r => r.status === 'active').length, color: '#3b82f6' },
     { label: 'Total Applications',   value: stats.totalApps,                                              color: '#f59e0b' },
     { label: 'Placement Rate',       value: `${stats.placementRate}%`,                                    color: '#ec4899' },

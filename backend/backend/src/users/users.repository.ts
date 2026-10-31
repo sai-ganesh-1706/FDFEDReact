@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 export interface User {
   id: number;
   name: string;
   email: string;
   role: string;
+  oversightVisible?: boolean;
   collegeId?: number | null;
   password?: string;          // default '123' for newly created users
   department?: string;
@@ -33,7 +36,19 @@ export interface User {
 export class UsersRepository {
   /** Set on construction so request guards can check account status without extra DI wiring. */
   static current: UsersRepository | null = null;
-  constructor() { UsersRepository.current = this; }
+  constructor() {
+    UsersRepository.current = this;
+    // Legacy fixtures support historical workflows. The small JSON demo set
+    // and new runtime accounts populate the current User Oversight directory.
+    this.users.filter((u) => ['candidate', 'alumni'].includes(u.role)).forEach((u) => { u.oversightVisible = false; });
+    const demos: User[] = JSON.parse(readFileSync(join(process.cwd(), 'data', 'users.demo.json'), 'utf8'));
+    for (const demo of demos) {
+      const existing = this.findByEmail(demo.email);
+      if (existing) this.update(existing.id, { ...demo, id: existing.id, oversightVisible: true });
+      else this.users.push({ ...demo, oversightVisible: true });
+    }
+    this.nextId = Math.max(this.nextId, ...this.users.map((u) => u.id + 1));
+  }
 
   private users: User[] = [
     {
@@ -180,7 +195,9 @@ export class UsersRepository {
   private nextId = 236;
 
   findAll(): User[] {
-    return this.users;
+    // Every current directory and dashboard uses the same population.
+    // Archived fixtures remain addressable by ID for historical records.
+    return this.users.filter((u) => u.oversightVisible !== false);
   }
 
   findByEmail(email: string): User | undefined {
@@ -192,15 +209,15 @@ export class UsersRepository {
   }
 
   findByRole(role: string): User[] {
-    return this.users.filter(u => u.role === role);
+    return this.findAll().filter(u => u.role === role);
   }
 
   findByCollegeId(collegeId: number): User[] {
-    return this.users.filter(u => u.collegeId === collegeId);
+    return this.findAll().filter(u => u.collegeId === collegeId);
   }
 
   findByRoleAndCollege(role: string, collegeId: number): User[] {
-    return this.users.filter(u => u.role === role && u.collegeId === collegeId);
+    return this.findAll().filter(u => u.role === role && u.collegeId === collegeId);
   }
 
   create(data: Omit<User, 'id'>): User {
@@ -208,6 +225,7 @@ export class UsersRepository {
       id: this.nextId++,
       password: '123',   // default password for all new users
       ...data,
+      oversightVisible: true,
     };
     this.users.push(user);
     return user;

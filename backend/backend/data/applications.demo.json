@@ -1,0 +1,4637 @@
+[
+  {
+    "id": 5001,
+    "opportunityId": 2001,
+    "candidateId": 3101,
+    "candidateName": "Aarav Menon",
+    "branch": "Computer Science",
+    "cgpa": 9.1,
+    "email": "aarav.menon@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Software Engineer",
+    "company": "Google",
+    "type": "Full-Time",
+    "status": "Offered",
+    "appliedDate": "2026-05-01",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "AM",
+    "resumeFile": "aarav_menon_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-05-01",
+        "desc": "Applied stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-05-04",
+        "desc": "Shortlisted stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-05-07",
+        "desc": "Assessment stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-05-11",
+        "desc": "Interview stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-05-15",
+        "desc": "Selected by Google after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5002,
+    "opportunityId": 2003,
+    "candidateId": 3101,
+    "candidateName": "Aarav Menon",
+    "branch": "Computer Science",
+    "cgpa": 9.1,
+    "email": "aarav.menon@iiits.in",
+    "collegeId": 1,
+    "title": "Cloud Engineering Intern",
+    "company": "TechCorp Solutions",
+    "type": "Internship",
+    "status": "Rejected",
+    "appliedDate": "2026-04-30",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "AM",
+    "resumeFile": "aarav_menon_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-04-30",
+        "desc": "Applied stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-05-03",
+        "desc": "Shortlisted stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-05-06",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5003,
+    "opportunityId": 2002,
+    "candidateId": 3101,
+    "candidateName": "Aarav Menon",
+    "branch": "Computer Science",
+    "cgpa": 9.1,
+    "email": "aarav.menon@iiits.in",
+    "collegeId": 1,
+    "title": "Associate Software Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-04-29",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "AM",
+    "resumeFile": "aarav_menon_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-04-29",
+        "desc": "Applied stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-05-02",
+        "desc": "Shortlisted stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-05-05",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5004,
+    "opportunityId": 2001,
+    "candidateId": 3102,
+    "candidateName": "Ananya Iyer",
+    "branch": "Computer Science",
+    "cgpa": 8.8,
+    "email": "ananya.iyer@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Software Engineer",
+    "company": "Google",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-05-27",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "AI",
+    "resumeFile": "ananya_iyer_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-05-27",
+        "desc": "Applied stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-05-30",
+        "desc": "Shortlisted stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-06-02",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5005,
+    "opportunityId": 2003,
+    "candidateId": 3102,
+    "candidateName": "Ananya Iyer",
+    "branch": "Computer Science",
+    "cgpa": 8.8,
+    "email": "ananya.iyer@iiits.in",
+    "collegeId": 1,
+    "title": "Cloud Engineering Intern",
+    "company": "TechCorp Solutions",
+    "type": "Internship",
+    "status": "Rejected",
+    "appliedDate": "2026-05-26",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "AI",
+    "resumeFile": "ananya_iyer_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-05-26",
+        "desc": "Applied stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-05-29",
+        "desc": "Shortlisted stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-06-01",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5006,
+    "opportunityId": 2002,
+    "candidateId": 3102,
+    "candidateName": "Ananya Iyer",
+    "branch": "Computer Science",
+    "cgpa": 8.8,
+    "email": "ananya.iyer@iiits.in",
+    "collegeId": 1,
+    "title": "Associate Software Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Offered",
+    "appliedDate": "2026-05-25",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "AI",
+    "resumeFile": "ananya_iyer_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-05-25",
+        "desc": "Applied stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-05-28",
+        "desc": "Shortlisted stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-05-31",
+        "desc": "Assessment stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-06-04",
+        "desc": "Interview stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-06-10",
+        "desc": "Selected by TechCorp Solutions after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5007,
+    "opportunityId": 2001,
+    "candidateId": 100,
+    "candidateName": "Shameer Basha Shaik",
+    "branch": "Computer Science",
+    "cgpa": 8.7,
+    "email": "shameer.basha.shaik@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Software Engineer",
+    "company": "Google",
+    "type": "Full-Time",
+    "status": "Offered",
+    "appliedDate": "2026-06-08",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "SB",
+    "resumeFile": "shameer_basha_shaik_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-06-08",
+        "desc": "Applied stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-06-11",
+        "desc": "Shortlisted stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-06-14",
+        "desc": "Assessment stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-06-18",
+        "desc": "Interview stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-06-22",
+        "desc": "Selected by Google after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5008,
+    "opportunityId": 2003,
+    "candidateId": 100,
+    "candidateName": "Shameer Basha Shaik",
+    "branch": "Computer Science",
+    "cgpa": 8.7,
+    "email": "shameer.basha.shaik@iiits.in",
+    "collegeId": 1,
+    "title": "Cloud Engineering Intern",
+    "company": "TechCorp Solutions",
+    "type": "Internship",
+    "status": "Rejected",
+    "appliedDate": "2026-06-07",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "SB",
+    "resumeFile": "shameer_basha_shaik_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-06-07",
+        "desc": "Applied stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-06-10",
+        "desc": "Shortlisted stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-06-13",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5009,
+    "opportunityId": 2002,
+    "candidateId": 100,
+    "candidateName": "Shameer Basha Shaik",
+    "branch": "Computer Science",
+    "cgpa": 8.7,
+    "email": "shameer.basha.shaik@iiits.in",
+    "collegeId": 1,
+    "title": "Associate Software Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-06-06",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "SB",
+    "resumeFile": "shameer_basha_shaik_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-06-06",
+        "desc": "Applied stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-06-09",
+        "desc": "Shortlisted stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-06-12",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5010,
+    "opportunityId": 2001,
+    "candidateId": 3002,
+    "candidateName": "Aditi Sharma",
+    "branch": "Computer Science",
+    "cgpa": 8.4,
+    "email": "aditi.sharma@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Software Engineer",
+    "company": "Google",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-06-23",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "AS",
+    "resumeFile": "aditi_sharma_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-06-23",
+        "desc": "Applied stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-06-26",
+        "desc": "Shortlisted stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-06-29",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5011,
+    "opportunityId": 2003,
+    "candidateId": 3002,
+    "candidateName": "Aditi Sharma",
+    "branch": "Computer Science",
+    "cgpa": 8.4,
+    "email": "aditi.sharma@iiits.in",
+    "collegeId": 1,
+    "title": "Cloud Engineering Intern",
+    "company": "TechCorp Solutions",
+    "type": "Internship",
+    "status": "Rejected",
+    "appliedDate": "2026-06-22",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "AS",
+    "resumeFile": "aditi_sharma_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-06-22",
+        "desc": "Applied stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-06-25",
+        "desc": "Shortlisted stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-06-28",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5012,
+    "opportunityId": 2002,
+    "candidateId": 3002,
+    "candidateName": "Aditi Sharma",
+    "branch": "Computer Science",
+    "cgpa": 8.4,
+    "email": "aditi.sharma@iiits.in",
+    "collegeId": 1,
+    "title": "Associate Software Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Offered",
+    "appliedDate": "2026-06-21",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "AS",
+    "resumeFile": "aditi_sharma_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-06-21",
+        "desc": "Applied stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-06-24",
+        "desc": "Shortlisted stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-06-27",
+        "desc": "Assessment stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-07-01",
+        "desc": "Interview stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-07-07",
+        "desc": "Selected by TechCorp Solutions after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5013,
+    "opportunityId": 2001,
+    "candidateId": 3104,
+    "candidateName": "Ishita Banerjee",
+    "branch": "Computer Science",
+    "cgpa": 8.3,
+    "email": "ishita.banerjee@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Software Engineer",
+    "company": "Google",
+    "type": "Full-Time",
+    "status": "Interview",
+    "appliedDate": "2026-08-03",
+    "hasReferral": false,
+    "currentStageIndex": 3,
+    "initials": "IB",
+    "resumeFile": "ishita_banerjee_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Scheduled",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-08-03",
+        "desc": "Applied stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-08-06",
+        "desc": "Shortlisted stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-08-09",
+        "desc": "Assessment stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-08-13",
+        "desc": "Interview stage for Graduate Software Engineer",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5014,
+    "opportunityId": 2003,
+    "candidateId": 3104,
+    "candidateName": "Ishita Banerjee",
+    "branch": "Computer Science",
+    "cgpa": 8.3,
+    "email": "ishita.banerjee@iiits.in",
+    "collegeId": 1,
+    "title": "Cloud Engineering Intern",
+    "company": "TechCorp Solutions",
+    "type": "Internship",
+    "status": "Offered",
+    "appliedDate": "2026-09-04",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "IB",
+    "resumeFile": "ishita_banerjee_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-09-04",
+        "desc": "Applied stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-09-07",
+        "desc": "Shortlisted stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-09-10",
+        "desc": "Assessment stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-09-14",
+        "desc": "Interview stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-09-18",
+        "desc": "Selected by TechCorp Solutions after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5015,
+    "opportunityId": 2002,
+    "candidateId": 3104,
+    "candidateName": "Ishita Banerjee",
+    "branch": "Computer Science",
+    "cgpa": 8.3,
+    "email": "ishita.banerjee@iiits.in",
+    "collegeId": 1,
+    "title": "Associate Software Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-10-05",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "IB",
+    "resumeFile": "ishita_banerjee_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-10-05",
+        "desc": "Applied stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-10-08",
+        "desc": "Shortlisted stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-10-11",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5016,
+    "opportunityId": 2001,
+    "candidateId": 3103,
+    "candidateName": "Dev Patel",
+    "branch": "Computer Science",
+    "cgpa": 7.9,
+    "email": "dev.patel@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Software Engineer",
+    "company": "Google",
+    "type": "Full-Time",
+    "status": "Assessment",
+    "appliedDate": "2026-09-05",
+    "hasReferral": false,
+    "currentStageIndex": 2,
+    "initials": "DP",
+    "resumeFile": "dev_patel_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Scheduled",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-09-05",
+        "desc": "Applied stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-09-08",
+        "desc": "Shortlisted stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-09-11",
+        "desc": "Assessment stage for Graduate Software Engineer",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5017,
+    "opportunityId": 2003,
+    "candidateId": 3103,
+    "candidateName": "Dev Patel",
+    "branch": "Computer Science",
+    "cgpa": 7.9,
+    "email": "dev.patel@iiits.in",
+    "collegeId": 1,
+    "title": "Cloud Engineering Intern",
+    "company": "TechCorp Solutions",
+    "type": "Internship",
+    "status": "Shortlisted",
+    "appliedDate": "2026-10-06",
+    "hasReferral": false,
+    "currentStageIndex": 1,
+    "initials": "DP",
+    "resumeFile": "dev_patel_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-10-06",
+        "desc": "Applied stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-10-09",
+        "desc": "Shortlisted stage for Cloud Engineering Intern",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5018,
+    "opportunityId": 2002,
+    "candidateId": 3103,
+    "candidateName": "Dev Patel",
+    "branch": "Computer Science",
+    "cgpa": 7.9,
+    "email": "dev.patel@iiits.in",
+    "collegeId": 1,
+    "title": "Associate Software Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Applied",
+    "appliedDate": "2026-04-07",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "DP",
+    "resumeFile": "dev_patel_resume.pdf",
+    "rounds": {
+      "resume": "Pending",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-04-07",
+        "desc": "Applied stage for Associate Software Engineer",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5019,
+    "opportunityId": 2001,
+    "candidateId": 3105,
+    "candidateName": "Rohan Deshmukh",
+    "branch": "Computer Science",
+    "cgpa": 7.2,
+    "email": "rohan.deshmukh@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Software Engineer",
+    "company": "Google",
+    "type": "Full-Time",
+    "status": "Interview",
+    "appliedDate": "2026-10-07",
+    "hasReferral": false,
+    "currentStageIndex": 3,
+    "initials": "RD",
+    "resumeFile": "rohan_deshmukh_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Scheduled",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-10-07",
+        "desc": "Applied stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-10-10",
+        "desc": "Shortlisted stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-10-13",
+        "desc": "Assessment stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-10-17",
+        "desc": "Interview stage for Graduate Software Engineer",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5020,
+    "opportunityId": 2003,
+    "candidateId": 3105,
+    "candidateName": "Rohan Deshmukh",
+    "branch": "Computer Science",
+    "cgpa": 7.2,
+    "email": "rohan.deshmukh@iiits.in",
+    "collegeId": 1,
+    "title": "Cloud Engineering Intern",
+    "company": "TechCorp Solutions",
+    "type": "Internship",
+    "status": "Shortlisted",
+    "appliedDate": "2026-04-08",
+    "hasReferral": false,
+    "currentStageIndex": 1,
+    "initials": "RD",
+    "resumeFile": "rohan_deshmukh_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-04-08",
+        "desc": "Applied stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-04-11",
+        "desc": "Shortlisted stage for Cloud Engineering Intern",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5021,
+    "opportunityId": 2002,
+    "candidateId": 3105,
+    "candidateName": "Rohan Deshmukh",
+    "branch": "Computer Science",
+    "cgpa": 7.2,
+    "email": "rohan.deshmukh@iiits.in",
+    "collegeId": 1,
+    "title": "Associate Software Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-05-02",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "RD",
+    "resumeFile": "rohan_deshmukh_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-05-02",
+        "desc": "Applied stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-05-05",
+        "desc": "Shortlisted stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-05-08",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5022,
+    "opportunityId": 2002,
+    "candidateId": 3108,
+    "candidateName": "Kavya Krishnan",
+    "branch": "IT",
+    "cgpa": 9.2,
+    "email": "kavya.krishnan@iiits.in",
+    "collegeId": 1,
+    "title": "Associate Software Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Offered",
+    "appliedDate": "2026-06-30",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "KK",
+    "resumeFile": "kavya_krishnan_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-06-30",
+        "desc": "Applied stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-07-03",
+        "desc": "Shortlisted stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-07-06",
+        "desc": "Assessment stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-07-10",
+        "desc": "Interview stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-07-14",
+        "desc": "Selected by TechCorp Solutions after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5023,
+    "opportunityId": 2003,
+    "candidateId": 3108,
+    "candidateName": "Kavya Krishnan",
+    "branch": "IT",
+    "cgpa": 9.2,
+    "email": "kavya.krishnan@iiits.in",
+    "collegeId": 1,
+    "title": "Cloud Engineering Intern",
+    "company": "TechCorp Solutions",
+    "type": "Internship",
+    "status": "Rejected",
+    "appliedDate": "2026-06-29",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "KK",
+    "resumeFile": "kavya_krishnan_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-06-29",
+        "desc": "Applied stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-07-02",
+        "desc": "Shortlisted stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-07-05",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5024,
+    "opportunityId": 2001,
+    "candidateId": 3108,
+    "candidateName": "Kavya Krishnan",
+    "branch": "IT",
+    "cgpa": 9.2,
+    "email": "kavya.krishnan@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Software Engineer",
+    "company": "Google",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-06-28",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "KK",
+    "resumeFile": "kavya_krishnan_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-06-28",
+        "desc": "Applied stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-07-01",
+        "desc": "Shortlisted stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-07-04",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5025,
+    "opportunityId": 2002,
+    "candidateId": 3106,
+    "candidateName": "Bhavana Reddy",
+    "branch": "IT",
+    "cgpa": 8.7,
+    "email": "bhavana.reddy@iiits.in",
+    "collegeId": 1,
+    "title": "Associate Software Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-07-10",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "BR",
+    "resumeFile": "bhavana_reddy_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-07-10",
+        "desc": "Applied stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-07-13",
+        "desc": "Shortlisted stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-07-16",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5026,
+    "opportunityId": 2003,
+    "candidateId": 3106,
+    "candidateName": "Bhavana Reddy",
+    "branch": "IT",
+    "cgpa": 8.7,
+    "email": "bhavana.reddy@iiits.in",
+    "collegeId": 1,
+    "title": "Cloud Engineering Intern",
+    "company": "TechCorp Solutions",
+    "type": "Internship",
+    "status": "Rejected",
+    "appliedDate": "2026-07-09",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "BR",
+    "resumeFile": "bhavana_reddy_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-07-09",
+        "desc": "Applied stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-07-12",
+        "desc": "Shortlisted stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-07-15",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5027,
+    "opportunityId": 2001,
+    "candidateId": 3106,
+    "candidateName": "Bhavana Reddy",
+    "branch": "IT",
+    "cgpa": 8.7,
+    "email": "bhavana.reddy@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Software Engineer",
+    "company": "Google",
+    "type": "Full-Time",
+    "status": "Offered",
+    "appliedDate": "2026-07-08",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "BR",
+    "resumeFile": "bhavana_reddy_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-07-08",
+        "desc": "Applied stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-07-11",
+        "desc": "Shortlisted stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-07-14",
+        "desc": "Assessment stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-07-18",
+        "desc": "Interview stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-07-24",
+        "desc": "Selected by Google after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5028,
+    "opportunityId": 2002,
+    "candidateId": 3110,
+    "candidateName": "Zoya Ahmed",
+    "branch": "IT",
+    "cgpa": 8.4,
+    "email": "zoya.ahmed@iiits.in",
+    "collegeId": 1,
+    "title": "Associate Software Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Offered",
+    "appliedDate": "2026-07-22",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "ZA",
+    "resumeFile": "zoya_ahmed_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-07-22",
+        "desc": "Applied stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-07-25",
+        "desc": "Shortlisted stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-07-28",
+        "desc": "Assessment stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-08-01",
+        "desc": "Interview stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-08-05",
+        "desc": "Selected by TechCorp Solutions after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5029,
+    "opportunityId": 2003,
+    "candidateId": 3110,
+    "candidateName": "Zoya Ahmed",
+    "branch": "IT",
+    "cgpa": 8.4,
+    "email": "zoya.ahmed@iiits.in",
+    "collegeId": 1,
+    "title": "Cloud Engineering Intern",
+    "company": "TechCorp Solutions",
+    "type": "Internship",
+    "status": "Rejected",
+    "appliedDate": "2026-07-21",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "ZA",
+    "resumeFile": "zoya_ahmed_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-07-21",
+        "desc": "Applied stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-07-24",
+        "desc": "Shortlisted stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-07-27",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5030,
+    "opportunityId": 2001,
+    "candidateId": 3110,
+    "candidateName": "Zoya Ahmed",
+    "branch": "IT",
+    "cgpa": 8.4,
+    "email": "zoya.ahmed@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Software Engineer",
+    "company": "Google",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-07-20",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "ZA",
+    "resumeFile": "zoya_ahmed_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-07-20",
+        "desc": "Applied stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-07-23",
+        "desc": "Shortlisted stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-07-26",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5031,
+    "opportunityId": 2002,
+    "candidateId": 3107,
+    "candidateName": "Harsh Shah",
+    "branch": "IT",
+    "cgpa": 8.1,
+    "email": "harsh.shah@iiits.in",
+    "collegeId": 1,
+    "title": "Associate Software Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Interview",
+    "appliedDate": "2026-07-08",
+    "hasReferral": false,
+    "currentStageIndex": 3,
+    "initials": "HS",
+    "resumeFile": "harsh_shah_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Scheduled",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-07-08",
+        "desc": "Applied stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-07-11",
+        "desc": "Shortlisted stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-07-14",
+        "desc": "Assessment stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-07-18",
+        "desc": "Interview stage for Associate Software Engineer",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5032,
+    "opportunityId": 2003,
+    "candidateId": 3107,
+    "candidateName": "Harsh Shah",
+    "branch": "IT",
+    "cgpa": 8.1,
+    "email": "harsh.shah@iiits.in",
+    "collegeId": 1,
+    "title": "Cloud Engineering Intern",
+    "company": "TechCorp Solutions",
+    "type": "Internship",
+    "status": "Offered",
+    "appliedDate": "2026-08-02",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "HS",
+    "resumeFile": "harsh_shah_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-08-02",
+        "desc": "Applied stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-08-05",
+        "desc": "Shortlisted stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-08-08",
+        "desc": "Assessment stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-08-12",
+        "desc": "Interview stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-08-16",
+        "desc": "Selected by TechCorp Solutions after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5033,
+    "opportunityId": 2001,
+    "candidateId": 3107,
+    "candidateName": "Harsh Shah",
+    "branch": "IT",
+    "cgpa": 8.1,
+    "email": "harsh.shah@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Software Engineer",
+    "company": "Google",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-09-03",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "HS",
+    "resumeFile": "harsh_shah_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-09-03",
+        "desc": "Applied stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-09-06",
+        "desc": "Shortlisted stage for Graduate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-09-09",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5034,
+    "opportunityId": 2002,
+    "candidateId": 3109,
+    "candidateName": "Nikhil Verma",
+    "branch": "IT",
+    "cgpa": 7.5,
+    "email": "nikhil.verma@iiits.in",
+    "collegeId": 1,
+    "title": "Associate Software Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Assessment",
+    "appliedDate": "2026-08-03",
+    "hasReferral": false,
+    "currentStageIndex": 2,
+    "initials": "NV",
+    "resumeFile": "nikhil_verma_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Scheduled",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-08-03",
+        "desc": "Applied stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-08-06",
+        "desc": "Shortlisted stage for Associate Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-08-09",
+        "desc": "Assessment stage for Associate Software Engineer",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5035,
+    "opportunityId": 2003,
+    "candidateId": 3109,
+    "candidateName": "Nikhil Verma",
+    "branch": "IT",
+    "cgpa": 7.5,
+    "email": "nikhil.verma@iiits.in",
+    "collegeId": 1,
+    "title": "Cloud Engineering Intern",
+    "company": "TechCorp Solutions",
+    "type": "Internship",
+    "status": "Shortlisted",
+    "appliedDate": "2026-09-04",
+    "hasReferral": false,
+    "currentStageIndex": 1,
+    "initials": "NV",
+    "resumeFile": "nikhil_verma_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-09-04",
+        "desc": "Applied stage for Cloud Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-09-07",
+        "desc": "Shortlisted stage for Cloud Engineering Intern",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5036,
+    "opportunityId": 2001,
+    "candidateId": 3109,
+    "candidateName": "Nikhil Verma",
+    "branch": "IT",
+    "cgpa": 7.5,
+    "email": "nikhil.verma@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Software Engineer",
+    "company": "Google",
+    "type": "Full-Time",
+    "status": "Applied",
+    "appliedDate": "2026-10-05",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "NV",
+    "resumeFile": "nikhil_verma_resume.pdf",
+    "rounds": {
+      "resume": "Pending",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-10-05",
+        "desc": "Applied stage for Graduate Software Engineer",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5037,
+    "opportunityId": 2004,
+    "candidateId": 3112,
+    "candidateName": "Diya Srinivasan",
+    "branch": "Electronics",
+    "cgpa": 9.3,
+    "email": "diya.srinivasan@iiits.in",
+    "collegeId": 1,
+    "title": "Embedded Software Engineer",
+    "company": "Silicon Circuit Labs",
+    "type": "Full-Time",
+    "status": "Offered",
+    "appliedDate": "2026-07-29",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "DS",
+    "resumeFile": "diya_srinivasan_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-07-29",
+        "desc": "Applied stage for Embedded Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-08-01",
+        "desc": "Shortlisted stage for Embedded Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-08-04",
+        "desc": "Assessment stage for Embedded Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-08-08",
+        "desc": "Interview stage for Embedded Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-08-12",
+        "desc": "Selected by Silicon Circuit Labs after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5038,
+    "opportunityId": 2005,
+    "candidateId": 3112,
+    "candidateName": "Diya Srinivasan",
+    "branch": "Electronics",
+    "cgpa": 9.3,
+    "email": "diya.srinivasan@iiits.in",
+    "collegeId": 1,
+    "title": "Hardware Verification Intern",
+    "company": "Silicon Circuit Labs",
+    "type": "Internship",
+    "status": "Rejected",
+    "appliedDate": "2026-07-28",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "DS",
+    "resumeFile": "diya_srinivasan_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-07-28",
+        "desc": "Applied stage for Hardware Verification Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-07-31",
+        "desc": "Shortlisted stage for Hardware Verification Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-08-03",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5039,
+    "opportunityId": 2012,
+    "candidateId": 3112,
+    "candidateName": "Diya Srinivasan",
+    "branch": "Electronics",
+    "cgpa": 9.3,
+    "email": "diya.srinivasan@iiits.in",
+    "collegeId": 1,
+    "title": "Industrial Automation Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-07-27",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "DS",
+    "resumeFile": "diya_srinivasan_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-07-27",
+        "desc": "Applied stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-07-30",
+        "desc": "Shortlisted stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-08-02",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5040,
+    "opportunityId": 2004,
+    "candidateId": 3111,
+    "candidateName": "Aditya Nair",
+    "branch": "Electronics",
+    "cgpa": 8.6,
+    "email": "aditya.nair@iiits.in",
+    "collegeId": 1,
+    "title": "Embedded Software Engineer",
+    "company": "Silicon Circuit Labs",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-08-05",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "AN",
+    "resumeFile": "aditya_nair_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-08-05",
+        "desc": "Applied stage for Embedded Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-08-08",
+        "desc": "Shortlisted stage for Embedded Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-08-11",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5041,
+    "opportunityId": 2005,
+    "candidateId": 3111,
+    "candidateName": "Aditya Nair",
+    "branch": "Electronics",
+    "cgpa": 8.6,
+    "email": "aditya.nair@iiits.in",
+    "collegeId": 1,
+    "title": "Hardware Verification Intern",
+    "company": "Silicon Circuit Labs",
+    "type": "Internship",
+    "status": "Rejected",
+    "appliedDate": "2026-08-04",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "AN",
+    "resumeFile": "aditya_nair_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-08-04",
+        "desc": "Applied stage for Hardware Verification Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-08-07",
+        "desc": "Shortlisted stage for Hardware Verification Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-08-10",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5042,
+    "opportunityId": 2012,
+    "candidateId": 3111,
+    "candidateName": "Aditya Nair",
+    "branch": "Electronics",
+    "cgpa": 8.6,
+    "email": "aditya.nair@iiits.in",
+    "collegeId": 1,
+    "title": "Industrial Automation Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Offered",
+    "appliedDate": "2026-08-03",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "AN",
+    "resumeFile": "aditya_nair_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-08-03",
+        "desc": "Applied stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-08-06",
+        "desc": "Shortlisted stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-08-09",
+        "desc": "Assessment stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-08-13",
+        "desc": "Interview stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-08-19",
+        "desc": "Selected by TechCorp Solutions after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5043,
+    "opportunityId": 2004,
+    "candidateId": 3114,
+    "candidateName": "Neha Bhat",
+    "branch": "Electronics",
+    "cgpa": 8.2,
+    "email": "neha.bhat@iiits.in",
+    "collegeId": 1,
+    "title": "Embedded Software Engineer",
+    "company": "Silicon Circuit Labs",
+    "type": "Full-Time",
+    "status": "Offered",
+    "appliedDate": "2026-08-12",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "NB",
+    "resumeFile": "neha_bhat_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-08-12",
+        "desc": "Applied stage for Embedded Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-08-15",
+        "desc": "Shortlisted stage for Embedded Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-08-18",
+        "desc": "Assessment stage for Embedded Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-08-22",
+        "desc": "Interview stage for Embedded Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-08-26",
+        "desc": "Selected by Silicon Circuit Labs after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5044,
+    "opportunityId": 2005,
+    "candidateId": 3114,
+    "candidateName": "Neha Bhat",
+    "branch": "Electronics",
+    "cgpa": 8.2,
+    "email": "neha.bhat@iiits.in",
+    "collegeId": 1,
+    "title": "Hardware Verification Intern",
+    "company": "Silicon Circuit Labs",
+    "type": "Internship",
+    "status": "Rejected",
+    "appliedDate": "2026-08-11",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "NB",
+    "resumeFile": "neha_bhat_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-08-11",
+        "desc": "Applied stage for Hardware Verification Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-08-14",
+        "desc": "Shortlisted stage for Hardware Verification Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-08-17",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5045,
+    "opportunityId": 2012,
+    "candidateId": 3114,
+    "candidateName": "Neha Bhat",
+    "branch": "Electronics",
+    "cgpa": 8.2,
+    "email": "neha.bhat@iiits.in",
+    "collegeId": 1,
+    "title": "Industrial Automation Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-08-10",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "NB",
+    "resumeFile": "neha_bhat_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-08-10",
+        "desc": "Applied stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-08-13",
+        "desc": "Shortlisted stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-08-16",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5046,
+    "opportunityId": 2004,
+    "candidateId": 3004,
+    "candidateName": "Arjun Rao",
+    "branch": "Electronics",
+    "cgpa": 8.1,
+    "email": "arjun.rao@iiits.in",
+    "collegeId": 1,
+    "title": "Embedded Software Engineer",
+    "company": "Silicon Circuit Labs",
+    "type": "Full-Time",
+    "status": "Assessment",
+    "appliedDate": "2026-05-04",
+    "hasReferral": false,
+    "currentStageIndex": 2,
+    "initials": "AR",
+    "resumeFile": "arjun_rao_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Scheduled",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-05-04",
+        "desc": "Applied stage for Embedded Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-05-07",
+        "desc": "Shortlisted stage for Embedded Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-05-10",
+        "desc": "Assessment stage for Embedded Software Engineer",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5047,
+    "opportunityId": 2005,
+    "candidateId": 3004,
+    "candidateName": "Arjun Rao",
+    "branch": "Electronics",
+    "cgpa": 8.1,
+    "email": "arjun.rao@iiits.in",
+    "collegeId": 1,
+    "title": "Hardware Verification Intern",
+    "company": "Silicon Circuit Labs",
+    "type": "Internship",
+    "status": "Shortlisted",
+    "appliedDate": "2026-06-05",
+    "hasReferral": false,
+    "currentStageIndex": 1,
+    "initials": "AR",
+    "resumeFile": "arjun_rao_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-06-05",
+        "desc": "Applied stage for Hardware Verification Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-06-08",
+        "desc": "Shortlisted stage for Hardware Verification Intern",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5048,
+    "opportunityId": 2012,
+    "candidateId": 3004,
+    "candidateName": "Arjun Rao",
+    "branch": "Electronics",
+    "cgpa": 8.1,
+    "email": "arjun.rao@iiits.in",
+    "collegeId": 1,
+    "title": "Industrial Automation Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Applied",
+    "appliedDate": "2026-07-06",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "AR",
+    "resumeFile": "arjun_rao_resume.pdf",
+    "rounds": {
+      "resume": "Pending",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-07-06",
+        "desc": "Applied stage for Industrial Automation Engineer",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5049,
+    "opportunityId": 2004,
+    "candidateId": 3113,
+    "candidateName": "Farhan Khan",
+    "branch": "Electronics",
+    "cgpa": 7.8,
+    "email": "farhan.khan@iiits.in",
+    "collegeId": 1,
+    "title": "Embedded Software Engineer",
+    "company": "Silicon Circuit Labs",
+    "type": "Full-Time",
+    "status": "Interview",
+    "appliedDate": "2026-06-06",
+    "hasReferral": false,
+    "currentStageIndex": 3,
+    "initials": "FK",
+    "resumeFile": "farhan_khan_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Scheduled",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-06-06",
+        "desc": "Applied stage for Embedded Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-06-09",
+        "desc": "Shortlisted stage for Embedded Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-06-12",
+        "desc": "Assessment stage for Embedded Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-06-16",
+        "desc": "Interview stage for Embedded Software Engineer",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5050,
+    "opportunityId": 2005,
+    "candidateId": 3113,
+    "candidateName": "Farhan Khan",
+    "branch": "Electronics",
+    "cgpa": 7.8,
+    "email": "farhan.khan@iiits.in",
+    "collegeId": 1,
+    "title": "Hardware Verification Intern",
+    "company": "Silicon Circuit Labs",
+    "type": "Internship",
+    "status": "Offered",
+    "appliedDate": "2026-07-07",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "FK",
+    "resumeFile": "farhan_khan_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-07-07",
+        "desc": "Applied stage for Hardware Verification Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-07-10",
+        "desc": "Shortlisted stage for Hardware Verification Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-07-13",
+        "desc": "Assessment stage for Hardware Verification Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-07-17",
+        "desc": "Interview stage for Hardware Verification Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-07-21",
+        "desc": "Selected by Silicon Circuit Labs after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5051,
+    "opportunityId": 2012,
+    "candidateId": 3113,
+    "candidateName": "Farhan Khan",
+    "branch": "Electronics",
+    "cgpa": 7.8,
+    "email": "farhan.khan@iiits.in",
+    "collegeId": 1,
+    "title": "Industrial Automation Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-08-08",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "FK",
+    "resumeFile": "farhan_khan_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-08-08",
+        "desc": "Applied stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-08-11",
+        "desc": "Shortlisted stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-08-14",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5052,
+    "opportunityId": 2004,
+    "candidateId": 3115,
+    "candidateName": "Varun Chandra",
+    "branch": "Electronics",
+    "cgpa": 6.9,
+    "email": "varun.chandra@iiits.in",
+    "collegeId": 1,
+    "title": "Embedded Software Engineer",
+    "company": "Silicon Circuit Labs",
+    "type": "Full-Time",
+    "status": "Assessment",
+    "appliedDate": "2026-07-08",
+    "hasReferral": false,
+    "currentStageIndex": 2,
+    "initials": "VC",
+    "resumeFile": "varun_chandra_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Scheduled",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-07-08",
+        "desc": "Applied stage for Embedded Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-07-11",
+        "desc": "Shortlisted stage for Embedded Software Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-07-14",
+        "desc": "Assessment stage for Embedded Software Engineer",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5053,
+    "opportunityId": 2005,
+    "candidateId": 3115,
+    "candidateName": "Varun Chandra",
+    "branch": "Electronics",
+    "cgpa": 6.9,
+    "email": "varun.chandra@iiits.in",
+    "collegeId": 1,
+    "title": "Hardware Verification Intern",
+    "company": "Silicon Circuit Labs",
+    "type": "Internship",
+    "status": "Shortlisted",
+    "appliedDate": "2026-08-02",
+    "hasReferral": false,
+    "currentStageIndex": 1,
+    "initials": "VC",
+    "resumeFile": "varun_chandra_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-08-02",
+        "desc": "Applied stage for Hardware Verification Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-08-05",
+        "desc": "Shortlisted stage for Hardware Verification Intern",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5054,
+    "opportunityId": 2012,
+    "candidateId": 3115,
+    "candidateName": "Varun Chandra",
+    "branch": "Electronics",
+    "cgpa": 6.9,
+    "email": "varun.chandra@iiits.in",
+    "collegeId": 1,
+    "title": "Industrial Automation Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Applied",
+    "appliedDate": "2026-09-03",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "VC",
+    "resumeFile": "varun_chandra_resume.pdf",
+    "rounds": {
+      "resume": "Pending",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-09-03",
+        "desc": "Applied stage for Industrial Automation Engineer",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5055,
+    "opportunityId": 2006,
+    "candidateId": 3120,
+    "candidateName": "Tanvi Agarwal",
+    "branch": "EEE",
+    "cgpa": 9,
+    "email": "tanvi.agarwal@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Electrical Engineer",
+    "company": "VoltGrid Energy",
+    "type": "Full-Time",
+    "status": "Offered",
+    "appliedDate": "2026-08-20",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "TA",
+    "resumeFile": "tanvi_agarwal_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-08-20",
+        "desc": "Applied stage for Graduate Electrical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-08-23",
+        "desc": "Shortlisted stage for Graduate Electrical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-08-26",
+        "desc": "Assessment stage for Graduate Electrical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-08-30",
+        "desc": "Interview stage for Graduate Electrical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-09-03",
+        "desc": "Selected by VoltGrid Energy after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5056,
+    "opportunityId": 2007,
+    "candidateId": 3120,
+    "candidateName": "Tanvi Agarwal",
+    "branch": "EEE",
+    "cgpa": 9,
+    "email": "tanvi.agarwal@iiits.in",
+    "collegeId": 1,
+    "title": "Power Systems Intern",
+    "company": "VoltGrid Energy",
+    "type": "Internship",
+    "status": "Rejected",
+    "appliedDate": "2026-08-19",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "TA",
+    "resumeFile": "tanvi_agarwal_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-08-19",
+        "desc": "Applied stage for Power Systems Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-08-22",
+        "desc": "Shortlisted stage for Power Systems Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-08-25",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5057,
+    "opportunityId": 2012,
+    "candidateId": 3120,
+    "candidateName": "Tanvi Agarwal",
+    "branch": "EEE",
+    "cgpa": 9,
+    "email": "tanvi.agarwal@iiits.in",
+    "collegeId": 1,
+    "title": "Industrial Automation Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-08-18",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "TA",
+    "resumeFile": "tanvi_agarwal_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-08-18",
+        "desc": "Applied stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-08-21",
+        "desc": "Shortlisted stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-08-24",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5058,
+    "opportunityId": 2006,
+    "candidateId": 3116,
+    "candidateName": "Akshaya Pillai",
+    "branch": "EEE",
+    "cgpa": 8.9,
+    "email": "akshaya.pillai@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Electrical Engineer",
+    "company": "VoltGrid Energy",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-08-27",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "AP",
+    "resumeFile": "akshaya_pillai_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-08-27",
+        "desc": "Applied stage for Graduate Electrical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-08-30",
+        "desc": "Shortlisted stage for Graduate Electrical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-09-02",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5059,
+    "opportunityId": 2007,
+    "candidateId": 3116,
+    "candidateName": "Akshaya Pillai",
+    "branch": "EEE",
+    "cgpa": 8.9,
+    "email": "akshaya.pillai@iiits.in",
+    "collegeId": 1,
+    "title": "Power Systems Intern",
+    "company": "VoltGrid Energy",
+    "type": "Internship",
+    "status": "Rejected",
+    "appliedDate": "2026-08-26",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "AP",
+    "resumeFile": "akshaya_pillai_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-08-26",
+        "desc": "Applied stage for Power Systems Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-08-29",
+        "desc": "Shortlisted stage for Power Systems Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-09-01",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5060,
+    "opportunityId": 2012,
+    "candidateId": 3116,
+    "candidateName": "Akshaya Pillai",
+    "branch": "EEE",
+    "cgpa": 8.9,
+    "email": "akshaya.pillai@iiits.in",
+    "collegeId": 1,
+    "title": "Industrial Automation Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Offered",
+    "appliedDate": "2026-08-25",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "AP",
+    "resumeFile": "akshaya_pillai_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-08-25",
+        "desc": "Applied stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-08-28",
+        "desc": "Shortlisted stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-08-31",
+        "desc": "Assessment stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-09-04",
+        "desc": "Interview stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-09-10",
+        "desc": "Selected by TechCorp Solutions after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5061,
+    "opportunityId": 2006,
+    "candidateId": 3118,
+    "candidateName": "Pooja Kulkarni",
+    "branch": "EEE",
+    "cgpa": 8.5,
+    "email": "pooja.kulkarni@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Electrical Engineer",
+    "company": "VoltGrid Energy",
+    "type": "Full-Time",
+    "status": "Offered",
+    "appliedDate": "2026-09-03",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "PK",
+    "resumeFile": "pooja_kulkarni_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-09-03",
+        "desc": "Applied stage for Graduate Electrical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-09-06",
+        "desc": "Shortlisted stage for Graduate Electrical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-09-09",
+        "desc": "Assessment stage for Graduate Electrical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-09-13",
+        "desc": "Interview stage for Graduate Electrical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-09-17",
+        "desc": "Selected by VoltGrid Energy after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5062,
+    "opportunityId": 2007,
+    "candidateId": 3118,
+    "candidateName": "Pooja Kulkarni",
+    "branch": "EEE",
+    "cgpa": 8.5,
+    "email": "pooja.kulkarni@iiits.in",
+    "collegeId": 1,
+    "title": "Power Systems Intern",
+    "company": "VoltGrid Energy",
+    "type": "Internship",
+    "status": "Rejected",
+    "appliedDate": "2026-09-02",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "PK",
+    "resumeFile": "pooja_kulkarni_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-09-02",
+        "desc": "Applied stage for Power Systems Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-09-05",
+        "desc": "Shortlisted stage for Power Systems Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-09-08",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5063,
+    "opportunityId": 2012,
+    "candidateId": 3118,
+    "candidateName": "Pooja Kulkarni",
+    "branch": "EEE",
+    "cgpa": 8.5,
+    "email": "pooja.kulkarni@iiits.in",
+    "collegeId": 1,
+    "title": "Industrial Automation Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-09-01",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "PK",
+    "resumeFile": "pooja_kulkarni_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-09-01",
+        "desc": "Applied stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-09-04",
+        "desc": "Shortlisted stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-09-07",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5064,
+    "opportunityId": 2006,
+    "candidateId": 3117,
+    "candidateName": "Chirag Joshi",
+    "branch": "EEE",
+    "cgpa": 7.6,
+    "email": "chirag.joshi@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Electrical Engineer",
+    "company": "VoltGrid Energy",
+    "type": "Full-Time",
+    "status": "Assessment",
+    "appliedDate": "2026-04-02",
+    "hasReferral": false,
+    "currentStageIndex": 2,
+    "initials": "CJ",
+    "resumeFile": "chirag_joshi_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Scheduled",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-04-02",
+        "desc": "Applied stage for Graduate Electrical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-04-05",
+        "desc": "Shortlisted stage for Graduate Electrical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-04-08",
+        "desc": "Assessment stage for Graduate Electrical Engineer",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5065,
+    "opportunityId": 2007,
+    "candidateId": 3117,
+    "candidateName": "Chirag Joshi",
+    "branch": "EEE",
+    "cgpa": 7.6,
+    "email": "chirag.joshi@iiits.in",
+    "collegeId": 1,
+    "title": "Power Systems Intern",
+    "company": "VoltGrid Energy",
+    "type": "Internship",
+    "status": "Shortlisted",
+    "appliedDate": "2026-05-03",
+    "hasReferral": false,
+    "currentStageIndex": 1,
+    "initials": "CJ",
+    "resumeFile": "chirag_joshi_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-05-03",
+        "desc": "Applied stage for Power Systems Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-05-06",
+        "desc": "Shortlisted stage for Power Systems Intern",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5066,
+    "opportunityId": 2012,
+    "candidateId": 3117,
+    "candidateName": "Chirag Joshi",
+    "branch": "EEE",
+    "cgpa": 7.6,
+    "email": "chirag.joshi@iiits.in",
+    "collegeId": 1,
+    "title": "Industrial Automation Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Applied",
+    "appliedDate": "2026-06-04",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "CJ",
+    "resumeFile": "chirag_joshi_resume.pdf",
+    "rounds": {
+      "resume": "Pending",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-06-04",
+        "desc": "Applied stage for Industrial Automation Engineer",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5067,
+    "opportunityId": 2006,
+    "candidateId": 3119,
+    "candidateName": "Sahil Mehta",
+    "branch": "EEE",
+    "cgpa": 7.1,
+    "email": "sahil.mehta@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Electrical Engineer",
+    "company": "VoltGrid Energy",
+    "type": "Full-Time",
+    "status": "Interview",
+    "appliedDate": "2026-05-04",
+    "hasReferral": false,
+    "currentStageIndex": 3,
+    "initials": "SM",
+    "resumeFile": "sahil_mehta_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Scheduled",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-05-04",
+        "desc": "Applied stage for Graduate Electrical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-05-07",
+        "desc": "Shortlisted stage for Graduate Electrical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-05-10",
+        "desc": "Assessment stage for Graduate Electrical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-05-14",
+        "desc": "Interview stage for Graduate Electrical Engineer",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5068,
+    "opportunityId": 2007,
+    "candidateId": 3119,
+    "candidateName": "Sahil Mehta",
+    "branch": "EEE",
+    "cgpa": 7.1,
+    "email": "sahil.mehta@iiits.in",
+    "collegeId": 1,
+    "title": "Power Systems Intern",
+    "company": "VoltGrid Energy",
+    "type": "Internship",
+    "status": "Offered",
+    "appliedDate": "2026-06-05",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "SM",
+    "resumeFile": "sahil_mehta_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-06-05",
+        "desc": "Applied stage for Power Systems Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-06-08",
+        "desc": "Shortlisted stage for Power Systems Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-06-11",
+        "desc": "Assessment stage for Power Systems Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-06-15",
+        "desc": "Interview stage for Power Systems Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-06-19",
+        "desc": "Selected by VoltGrid Energy after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5069,
+    "opportunityId": 2012,
+    "candidateId": 3119,
+    "candidateName": "Sahil Mehta",
+    "branch": "EEE",
+    "cgpa": 7.1,
+    "email": "sahil.mehta@iiits.in",
+    "collegeId": 1,
+    "title": "Industrial Automation Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-07-06",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "SM",
+    "resumeFile": "sahil_mehta_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-07-06",
+        "desc": "Applied stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-07-09",
+        "desc": "Shortlisted stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-07-12",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5070,
+    "opportunityId": 2008,
+    "candidateId": 3122,
+    "candidateName": "Janani Ravi",
+    "branch": "Mechanical",
+    "cgpa": 9.1,
+    "email": "janani.ravi@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Mechanical Engineer",
+    "company": "MotionWorks Engineering",
+    "type": "Full-Time",
+    "status": "Offered",
+    "appliedDate": "2026-09-08",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "JR",
+    "resumeFile": "janani_ravi_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-09-08",
+        "desc": "Applied stage for Graduate Mechanical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-09-11",
+        "desc": "Shortlisted stage for Graduate Mechanical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-09-14",
+        "desc": "Assessment stage for Graduate Mechanical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-09-18",
+        "desc": "Interview stage for Graduate Mechanical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-09-22",
+        "desc": "Selected by MotionWorks Engineering after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5071,
+    "opportunityId": 2009,
+    "candidateId": 3122,
+    "candidateName": "Janani Ravi",
+    "branch": "Mechanical",
+    "cgpa": 9.1,
+    "email": "janani.ravi@iiits.in",
+    "collegeId": 1,
+    "title": "Design Engineering Intern",
+    "company": "MotionWorks Engineering",
+    "type": "Internship",
+    "status": "Rejected",
+    "appliedDate": "2026-09-07",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "JR",
+    "resumeFile": "janani_ravi_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-09-07",
+        "desc": "Applied stage for Design Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-09-10",
+        "desc": "Shortlisted stage for Design Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-09-13",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5072,
+    "opportunityId": 2012,
+    "candidateId": 3122,
+    "candidateName": "Janani Ravi",
+    "branch": "Mechanical",
+    "cgpa": 9.1,
+    "email": "janani.ravi@iiits.in",
+    "collegeId": 1,
+    "title": "Industrial Automation Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-09-06",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "JR",
+    "resumeFile": "janani_ravi_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-09-06",
+        "desc": "Applied stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-09-09",
+        "desc": "Shortlisted stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-09-12",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5073,
+    "opportunityId": 2008,
+    "candidateId": 3124,
+    "candidateName": "Ritika Das",
+    "branch": "Mechanical",
+    "cgpa": 8.6,
+    "email": "ritika.das@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Mechanical Engineer",
+    "company": "MotionWorks Engineering",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-09-15",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "RD",
+    "resumeFile": "ritika_das_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-09-15",
+        "desc": "Applied stage for Graduate Mechanical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-09-18",
+        "desc": "Shortlisted stage for Graduate Mechanical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-09-21",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5074,
+    "opportunityId": 2009,
+    "candidateId": 3124,
+    "candidateName": "Ritika Das",
+    "branch": "Mechanical",
+    "cgpa": 8.6,
+    "email": "ritika.das@iiits.in",
+    "collegeId": 1,
+    "title": "Design Engineering Intern",
+    "company": "MotionWorks Engineering",
+    "type": "Internship",
+    "status": "Rejected",
+    "appliedDate": "2026-09-14",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "RD",
+    "resumeFile": "ritika_das_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-09-14",
+        "desc": "Applied stage for Design Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-09-17",
+        "desc": "Shortlisted stage for Design Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-09-20",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5075,
+    "opportunityId": 2012,
+    "candidateId": 3124,
+    "candidateName": "Ritika Das",
+    "branch": "Mechanical",
+    "cgpa": 8.6,
+    "email": "ritika.das@iiits.in",
+    "collegeId": 1,
+    "title": "Industrial Automation Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Offered",
+    "appliedDate": "2026-09-13",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "RD",
+    "resumeFile": "ritika_das_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-09-13",
+        "desc": "Applied stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-09-16",
+        "desc": "Shortlisted stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-09-19",
+        "desc": "Assessment stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-09-23",
+        "desc": "Interview stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-09-29",
+        "desc": "Selected by TechCorp Solutions after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5076,
+    "opportunityId": 2008,
+    "candidateId": 3121,
+    "candidateName": "Abhinav Sethi",
+    "branch": "Mechanical",
+    "cgpa": 8.3,
+    "email": "abhinav.sethi@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Mechanical Engineer",
+    "company": "MotionWorks Engineering",
+    "type": "Full-Time",
+    "status": "Assessment",
+    "appliedDate": "2026-08-03",
+    "hasReferral": false,
+    "currentStageIndex": 2,
+    "initials": "AS",
+    "resumeFile": "abhinav_sethi_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Scheduled",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-08-03",
+        "desc": "Applied stage for Graduate Mechanical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-08-06",
+        "desc": "Shortlisted stage for Graduate Mechanical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-08-09",
+        "desc": "Assessment stage for Graduate Mechanical Engineer",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5077,
+    "opportunityId": 2009,
+    "candidateId": 3121,
+    "candidateName": "Abhinav Sethi",
+    "branch": "Mechanical",
+    "cgpa": 8.3,
+    "email": "abhinav.sethi@iiits.in",
+    "collegeId": 1,
+    "title": "Design Engineering Intern",
+    "company": "MotionWorks Engineering",
+    "type": "Internship",
+    "status": "Offered",
+    "appliedDate": "2026-09-04",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "AS",
+    "resumeFile": "abhinav_sethi_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-09-04",
+        "desc": "Applied stage for Design Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-09-07",
+        "desc": "Shortlisted stage for Design Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-09-10",
+        "desc": "Assessment stage for Design Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-09-14",
+        "desc": "Interview stage for Design Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-09-18",
+        "desc": "Selected by MotionWorks Engineering after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5078,
+    "opportunityId": 2012,
+    "candidateId": 3121,
+    "candidateName": "Abhinav Sethi",
+    "branch": "Mechanical",
+    "cgpa": 8.3,
+    "email": "abhinav.sethi@iiits.in",
+    "collegeId": 1,
+    "title": "Industrial Automation Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Applied",
+    "appliedDate": "2026-10-05",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "AS",
+    "resumeFile": "abhinav_sethi_resume.pdf",
+    "rounds": {
+      "resume": "Pending",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-10-05",
+        "desc": "Applied stage for Industrial Automation Engineer",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5079,
+    "opportunityId": 2008,
+    "candidateId": 3123,
+    "candidateName": "Manav Gupta",
+    "branch": "Mechanical",
+    "cgpa": 7.4,
+    "email": "manav.gupta@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Mechanical Engineer",
+    "company": "MotionWorks Engineering",
+    "type": "Full-Time",
+    "status": "Interview",
+    "appliedDate": "2026-09-05",
+    "hasReferral": false,
+    "currentStageIndex": 3,
+    "initials": "MG",
+    "resumeFile": "manav_gupta_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Scheduled",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-09-05",
+        "desc": "Applied stage for Graduate Mechanical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-09-08",
+        "desc": "Shortlisted stage for Graduate Mechanical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-09-11",
+        "desc": "Assessment stage for Graduate Mechanical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-09-15",
+        "desc": "Interview stage for Graduate Mechanical Engineer",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5080,
+    "opportunityId": 2009,
+    "candidateId": 3123,
+    "candidateName": "Manav Gupta",
+    "branch": "Mechanical",
+    "cgpa": 7.4,
+    "email": "manav.gupta@iiits.in",
+    "collegeId": 1,
+    "title": "Design Engineering Intern",
+    "company": "MotionWorks Engineering",
+    "type": "Internship",
+    "status": "Shortlisted",
+    "appliedDate": "2026-10-06",
+    "hasReferral": false,
+    "currentStageIndex": 1,
+    "initials": "MG",
+    "resumeFile": "manav_gupta_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-10-06",
+        "desc": "Applied stage for Design Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-10-09",
+        "desc": "Shortlisted stage for Design Engineering Intern",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5081,
+    "opportunityId": 2012,
+    "candidateId": 3123,
+    "candidateName": "Manav Gupta",
+    "branch": "Mechanical",
+    "cgpa": 7.4,
+    "email": "manav.gupta@iiits.in",
+    "collegeId": 1,
+    "title": "Industrial Automation Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-04-07",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "MG",
+    "resumeFile": "manav_gupta_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-04-07",
+        "desc": "Applied stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-04-10",
+        "desc": "Shortlisted stage for Industrial Automation Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-04-13",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5082,
+    "opportunityId": 2008,
+    "candidateId": 3125,
+    "candidateName": "Yash Malhotra",
+    "branch": "Mechanical",
+    "cgpa": 6.8,
+    "email": "yash.malhotra@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Mechanical Engineer",
+    "company": "MotionWorks Engineering",
+    "type": "Full-Time",
+    "status": "Assessment",
+    "appliedDate": "2026-10-07",
+    "hasReferral": false,
+    "currentStageIndex": 2,
+    "initials": "YM",
+    "resumeFile": "yash_malhotra_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Scheduled",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-10-07",
+        "desc": "Applied stage for Graduate Mechanical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-10-10",
+        "desc": "Shortlisted stage for Graduate Mechanical Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-10-13",
+        "desc": "Assessment stage for Graduate Mechanical Engineer",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5083,
+    "opportunityId": 2009,
+    "candidateId": 3125,
+    "candidateName": "Yash Malhotra",
+    "branch": "Mechanical",
+    "cgpa": 6.8,
+    "email": "yash.malhotra@iiits.in",
+    "collegeId": 1,
+    "title": "Design Engineering Intern",
+    "company": "MotionWorks Engineering",
+    "type": "Internship",
+    "status": "Shortlisted",
+    "appliedDate": "2026-04-08",
+    "hasReferral": false,
+    "currentStageIndex": 1,
+    "initials": "YM",
+    "resumeFile": "yash_malhotra_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-04-08",
+        "desc": "Applied stage for Design Engineering Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-04-11",
+        "desc": "Shortlisted stage for Design Engineering Intern",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5084,
+    "opportunityId": 2012,
+    "candidateId": 3125,
+    "candidateName": "Yash Malhotra",
+    "branch": "Mechanical",
+    "cgpa": 6.8,
+    "email": "yash.malhotra@iiits.in",
+    "collegeId": 1,
+    "title": "Industrial Automation Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Applied",
+    "appliedDate": "2026-05-02",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "YM",
+    "resumeFile": "yash_malhotra_resume.pdf",
+    "rounds": {
+      "resume": "Pending",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-05-02",
+        "desc": "Applied stage for Industrial Automation Engineer",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5085,
+    "opportunityId": 2010,
+    "candidateId": 3128,
+    "candidateName": "Madhumitha Suresh",
+    "branch": "Civil",
+    "cgpa": 9.2,
+    "email": "madhumitha.suresh@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Structural Engineer",
+    "company": "UrbanBuild Infrastructure",
+    "type": "Full-Time",
+    "status": "Offered",
+    "appliedDate": "2026-09-24",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "MS",
+    "resumeFile": "madhumitha_suresh_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-09-24",
+        "desc": "Applied stage for Graduate Structural Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-09-27",
+        "desc": "Shortlisted stage for Graduate Structural Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-09-30",
+        "desc": "Assessment stage for Graduate Structural Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-10-04",
+        "desc": "Interview stage for Graduate Structural Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-10-08",
+        "desc": "Selected by UrbanBuild Infrastructure after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5086,
+    "opportunityId": 2011,
+    "candidateId": 3128,
+    "candidateName": "Madhumitha Suresh",
+    "branch": "Civil",
+    "cgpa": 9.2,
+    "email": "madhumitha.suresh@iiits.in",
+    "collegeId": 1,
+    "title": "Project Planning Intern",
+    "company": "UrbanBuild Infrastructure",
+    "type": "Internship",
+    "status": "Rejected",
+    "appliedDate": "2026-09-23",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "MS",
+    "resumeFile": "madhumitha_suresh_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-09-23",
+        "desc": "Applied stage for Project Planning Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-09-26",
+        "desc": "Shortlisted stage for Project Planning Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-09-29",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5087,
+    "opportunityId": 2013,
+    "candidateId": 3128,
+    "candidateName": "Madhumitha Suresh",
+    "branch": "Civil",
+    "cgpa": 9.2,
+    "email": "madhumitha.suresh@iiits.in",
+    "collegeId": 1,
+    "title": "BIM Application Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-09-22",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "MS",
+    "resumeFile": "madhumitha_suresh_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-09-22",
+        "desc": "Applied stage for BIM Application Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-09-25",
+        "desc": "Shortlisted stage for BIM Application Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-09-28",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5088,
+    "opportunityId": 2010,
+    "candidateId": 3126,
+    "candidateName": "Aishwarya Rao",
+    "branch": "Civil",
+    "cgpa": 8.8,
+    "email": "aishwarya.rao@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Structural Engineer",
+    "company": "UrbanBuild Infrastructure",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-10-04",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "AR",
+    "resumeFile": "aishwarya_rao_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-10-04",
+        "desc": "Applied stage for Graduate Structural Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-10-07",
+        "desc": "Shortlisted stage for Graduate Structural Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-10-10",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5089,
+    "opportunityId": 2011,
+    "candidateId": 3126,
+    "candidateName": "Aishwarya Rao",
+    "branch": "Civil",
+    "cgpa": 8.8,
+    "email": "aishwarya.rao@iiits.in",
+    "collegeId": 1,
+    "title": "Project Planning Intern",
+    "company": "UrbanBuild Infrastructure",
+    "type": "Internship",
+    "status": "Rejected",
+    "appliedDate": "2026-10-03",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "AR",
+    "resumeFile": "aishwarya_rao_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-10-03",
+        "desc": "Applied stage for Project Planning Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-10-06",
+        "desc": "Shortlisted stage for Project Planning Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-10-09",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5090,
+    "opportunityId": 2013,
+    "candidateId": 3126,
+    "candidateName": "Aishwarya Rao",
+    "branch": "Civil",
+    "cgpa": 8.8,
+    "email": "aishwarya.rao@iiits.in",
+    "collegeId": 1,
+    "title": "BIM Application Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Offered",
+    "appliedDate": "2026-10-02",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "AR",
+    "resumeFile": "aishwarya_rao_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-10-02",
+        "desc": "Applied stage for BIM Application Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-10-05",
+        "desc": "Shortlisted stage for BIM Application Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-10-08",
+        "desc": "Assessment stage for BIM Application Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-10-12",
+        "desc": "Interview stage for BIM Application Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-10-18",
+        "desc": "Selected by TechCorp Solutions after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5091,
+    "opportunityId": 2010,
+    "candidateId": 3129,
+    "candidateName": "Pranav Nambiar",
+    "branch": "Civil",
+    "cgpa": 8,
+    "email": "pranav.nambiar@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Structural Engineer",
+    "company": "UrbanBuild Infrastructure",
+    "type": "Full-Time",
+    "status": "Offered",
+    "appliedDate": "2026-10-14",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "PN",
+    "resumeFile": "pranav_nambiar_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-10-14",
+        "desc": "Applied stage for Graduate Structural Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-10-17",
+        "desc": "Shortlisted stage for Graduate Structural Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-10-20",
+        "desc": "Assessment stage for Graduate Structural Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-10-24",
+        "desc": "Interview stage for Graduate Structural Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-10-28",
+        "desc": "Selected by UrbanBuild Infrastructure after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5092,
+    "opportunityId": 2011,
+    "candidateId": 3129,
+    "candidateName": "Pranav Nambiar",
+    "branch": "Civil",
+    "cgpa": 8,
+    "email": "pranav.nambiar@iiits.in",
+    "collegeId": 1,
+    "title": "Project Planning Intern",
+    "company": "UrbanBuild Infrastructure",
+    "type": "Internship",
+    "status": "Rejected",
+    "appliedDate": "2026-10-13",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "PN",
+    "resumeFile": "pranav_nambiar_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-10-13",
+        "desc": "Applied stage for Project Planning Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-10-16",
+        "desc": "Shortlisted stage for Project Planning Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-10-19",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5093,
+    "opportunityId": 2013,
+    "candidateId": 3129,
+    "candidateName": "Pranav Nambiar",
+    "branch": "Civil",
+    "cgpa": 8,
+    "email": "pranav.nambiar@iiits.in",
+    "collegeId": 1,
+    "title": "BIM Application Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-10-12",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "PN",
+    "resumeFile": "pranav_nambiar_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-10-12",
+        "desc": "Applied stage for BIM Application Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-10-15",
+        "desc": "Shortlisted stage for BIM Application Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-10-18",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": 5094,
+    "opportunityId": 2010,
+    "candidateId": 3127,
+    "candidateName": "Deepak Kumar",
+    "branch": "Civil",
+    "cgpa": 7.7,
+    "email": "deepak.kumar@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Structural Engineer",
+    "company": "UrbanBuild Infrastructure",
+    "type": "Full-Time",
+    "status": "Assessment",
+    "appliedDate": "2026-07-08",
+    "hasReferral": false,
+    "currentStageIndex": 2,
+    "initials": "DK",
+    "resumeFile": "deepak_kumar_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Scheduled",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-07-08",
+        "desc": "Applied stage for Graduate Structural Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-07-11",
+        "desc": "Shortlisted stage for Graduate Structural Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-07-14",
+        "desc": "Assessment stage for Graduate Structural Engineer",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5095,
+    "opportunityId": 2011,
+    "candidateId": 3127,
+    "candidateName": "Deepak Kumar",
+    "branch": "Civil",
+    "cgpa": 7.7,
+    "email": "deepak.kumar@iiits.in",
+    "collegeId": 1,
+    "title": "Project Planning Intern",
+    "company": "UrbanBuild Infrastructure",
+    "type": "Internship",
+    "status": "Offered",
+    "appliedDate": "2026-08-02",
+    "hasReferral": false,
+    "currentStageIndex": 4,
+    "initials": "DK",
+    "resumeFile": "deepak_kumar_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Pass",
+      "hr": "Pass"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-08-02",
+        "desc": "Applied stage for Project Planning Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-08-05",
+        "desc": "Shortlisted stage for Project Planning Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-08-08",
+        "desc": "Assessment stage for Project Planning Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-08-12",
+        "desc": "Interview stage for Project Planning Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Offered",
+        "date": "2026-08-16",
+        "desc": "Selected by UrbanBuild Infrastructure after completing the interview rounds",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5096,
+    "opportunityId": 2013,
+    "candidateId": 3127,
+    "candidateName": "Deepak Kumar",
+    "branch": "Civil",
+    "cgpa": 7.7,
+    "email": "deepak.kumar@iiits.in",
+    "collegeId": 1,
+    "title": "BIM Application Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Applied",
+    "appliedDate": "2026-09-03",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "DK",
+    "resumeFile": "deepak_kumar_resume.pdf",
+    "rounds": {
+      "resume": "Pending",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-09-03",
+        "desc": "Applied stage for BIM Application Engineer",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5097,
+    "opportunityId": 2010,
+    "candidateId": 3130,
+    "candidateName": "Sana Qureshi",
+    "branch": "Civil",
+    "cgpa": 7.3,
+    "email": "sana.qureshi@iiits.in",
+    "collegeId": 1,
+    "title": "Graduate Structural Engineer",
+    "company": "UrbanBuild Infrastructure",
+    "type": "Full-Time",
+    "status": "Interview",
+    "appliedDate": "2026-08-03",
+    "hasReferral": false,
+    "currentStageIndex": 3,
+    "initials": "SQ",
+    "resumeFile": "sana_qureshi_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pass",
+      "technical": "Scheduled",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-08-03",
+        "desc": "Applied stage for Graduate Structural Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-08-06",
+        "desc": "Shortlisted stage for Graduate Structural Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Assessment",
+        "date": "2026-08-09",
+        "desc": "Assessment stage for Graduate Structural Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Interview",
+        "date": "2026-08-13",
+        "desc": "Interview stage for Graduate Structural Engineer",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5098,
+    "opportunityId": 2011,
+    "candidateId": 3130,
+    "candidateName": "Sana Qureshi",
+    "branch": "Civil",
+    "cgpa": 7.3,
+    "email": "sana.qureshi@iiits.in",
+    "collegeId": 1,
+    "title": "Project Planning Intern",
+    "company": "UrbanBuild Infrastructure",
+    "type": "Internship",
+    "status": "Shortlisted",
+    "appliedDate": "2026-09-04",
+    "hasReferral": false,
+    "currentStageIndex": 1,
+    "initials": "SQ",
+    "resumeFile": "sana_qureshi_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-09-04",
+        "desc": "Applied stage for Project Planning Intern",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-09-07",
+        "desc": "Shortlisted stage for Project Planning Intern",
+        "status": "active"
+      }
+    ]
+  },
+  {
+    "id": 5099,
+    "opportunityId": 2013,
+    "candidateId": 3130,
+    "candidateName": "Sana Qureshi",
+    "branch": "Civil",
+    "cgpa": 7.3,
+    "email": "sana.qureshi@iiits.in",
+    "collegeId": 1,
+    "title": "BIM Application Engineer",
+    "company": "TechCorp Solutions",
+    "type": "Full-Time",
+    "status": "Rejected",
+    "appliedDate": "2026-10-05",
+    "hasReferral": false,
+    "currentStageIndex": 0,
+    "initials": "SQ",
+    "resumeFile": "sana_qureshi_resume.pdf",
+    "rounds": {
+      "resume": "Pass",
+      "assessment": "Pending",
+      "technical": "Pending",
+      "hr": "Pending"
+    },
+    "timeline": [
+      {
+        "stage": "Applied",
+        "date": "2026-10-05",
+        "desc": "Applied stage for BIM Application Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Shortlisted",
+        "date": "2026-10-08",
+        "desc": "Shortlisted stage for BIM Application Engineer",
+        "status": "completed"
+      },
+      {
+        "stage": "Rejected",
+        "date": "2026-10-11",
+        "desc": "The employer proceeded with other candidates",
+        "status": "completed"
+      }
+    ]
+  }
+]
