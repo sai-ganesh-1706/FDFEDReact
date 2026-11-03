@@ -17,7 +17,7 @@ export const defaultRecruiter = {
   avatar: "PK",
   company: "TechCorp Solutions",
   department: "Talent Acquisition",
-  phone: "+91 98765 43210",
+  phone: "9876543210",
   location: "Bangalore, Karnataka",
   joinedDate: "January 2024"
 };
@@ -100,7 +100,7 @@ export const defaultApplications = [
       "Shameer is a remarkably strong candidate. I've reviewed his React projects and competitive programming profiles — he's a great fit for this role. Referral submitted!",
     appliedDate: "2026-02-15",
     email: "shameer@college.in",
-    phone: "+91 9876543210",
+    phone: "9876543210",
     resumeFile: "Shameer_Basha_Shaik_Resume_2026.pdf",
     opportunityId: 1,
     rounds: {
@@ -131,7 +131,7 @@ export const defaultApplications = [
     isReferred: false,
     appliedDate: "2026-02-18",
     email: "arjun.sharma@college.edu",
-    phone: "+91 98451 22345",
+    phone: "9845122345",
     resumeFile: "Arjun_Sharma_Resume_v2.pdf",
     opportunityId: 1,
     rounds: {
@@ -155,7 +155,7 @@ export const defaultApplications = [
     isReferred: false,
     appliedDate: "2026-02-22",
     email: "sneha.patel@college.edu",
-    phone: "+91 98234 56789",
+    phone: "9823456789",
     resumeFile: "Sneha_Patel_Resume.pdf",
     opportunityId: 1,
     rounds: {
@@ -185,7 +185,7 @@ export const defaultApplications = [
     referrerNote: "Vikram built the UI for our internal dashboard project — solid React skills.",
     appliedDate: "2026-02-25",
     email: "vikram.nair@college.edu",
-    phone: "+91 97123 45678",
+    phone: "9712345678",
     resumeFile: "Vikram_Frontend.pdf",
     opportunityId: 2,
     rounds: {
@@ -209,7 +209,7 @@ export const defaultApplications = [
     isReferred: false,
     appliedDate: "2026-03-01",
     email: "pooja.rao@college.edu",
-    phone: "+91 99887 66554",
+    phone: "9988766554",
     resumeFile: "Pooja_CV.pdf",
     opportunityId: 2,
     rounds: {
@@ -233,7 +233,7 @@ export const defaultApplications = [
     isReferred: false,
     appliedDate: "2026-02-10",
     email: "rohit.verma@college.edu",
-    phone: "+91 91234 56780",
+    phone: "9123456780",
     resumeFile: "Rohit_SWE.pdf",
     opportunityId: 1,
     rounds: {

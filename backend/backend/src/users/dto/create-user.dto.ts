@@ -1,4 +1,4 @@
-import { IsString, IsEmail, IsNumber, IsOptional, IsIn, Min, Max, IsInt, MinLength } from 'class-validator';
+import { ValidateIf, Matches, IsString, IsEmail, IsNumber, IsOptional, IsIn, Min, Max, IsInt, MinLength } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateUserDto {
@@ -80,9 +80,11 @@ export class CreateUserDto {
   referrals?: number;
 
   // ── Recruiter fields ───────────────────────────────────────────────
-  @ApiPropertyOptional({ example: '+91 98765 43210' })
+  @ApiPropertyOptional({ example: '9876543210' })
   @IsOptional()
   @IsString()
+  @ValidateIf((_object, value) => value !== '')
+  @Matches(/^[0-9]{10}$/, { message: 'Phone number must contain exactly 10 digits, with no spaces or special characters' })
   phone?: string;
 
   @ApiPropertyOptional({ example: 'Bangalore' })

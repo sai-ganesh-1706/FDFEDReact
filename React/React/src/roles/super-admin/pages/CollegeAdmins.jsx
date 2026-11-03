@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { errorMessage } from '../../../services/api.js';
+import { collegeEmailDomain, collegeEmailError } from '../../../shared/utils/collegeEmail.js';
 import { ArrowLeft, UserPlus, Ban, CheckCircle, AlertTriangle, ShieldCheck, Users } from 'lucide-react';
 
 function AssignAdminModal({ college, onClose, onSave }) {
+  const emailDomain = collegeEmailDomain(college);
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
@@ -16,8 +18,8 @@ function AssignAdminModal({ college, onClose, onSave }) {
       setError('Enter the admin\'s real name (letters, spaces, . \' - only).');
       return;
     }
-    if (!/^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/.test(form.email.trim())) {
-      setError('Enter a valid email address.');
+    if (collegeEmailError(form.email, emailDomain)) {
+      setError(collegeEmailError(form.email, emailDomain));
       return;
     }
     if (form.password && form.password.length < 3) {
@@ -46,7 +48,8 @@ function AssignAdminModal({ college, onClose, onSave }) {
         </div>
         <div className="form-group">
           <label>Email *</label>
-          <input type="email" placeholder="admin@college.ac.in" value={form.email} onChange={e => set('email', e.target.value)} />
+          <input type="email" placeholder={`admin@${emailDomain}`} value={form.email} onChange={e => set('email', e.target.value)} />
+          <small>Use the college email domain (@{emailDomain}).</small>
         </div>
         <div className="form-group">
           <label>Password</label>

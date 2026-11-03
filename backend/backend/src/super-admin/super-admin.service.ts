@@ -1,4 +1,5 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
+import { collegeEmailDomain } from '../users/oversight-policy';
 import { UsersRepository, User } from '../users/users.repository';
 import { CollegesRepository, College } from '../colleges/colleges.repository';
 import { ApplicationsRepository } from '../applications/applications.repository';
@@ -182,9 +183,12 @@ export class SuperAdminService {
   createCollegeAdmin(collegeId: number, data: { name: string; email: string; password?: string }): Omit<User, 'password'> {
     const college = this.collegesRepo.findById(collegeId);
     if (!college) throw new NotFoundException(`College ${collegeId} not found`);
+    const email = data.email.trim().toLowerCase();
+    const domain = collegeEmailDomain(college);
+    if (email.split('@')[1] !== domain) throw new BadRequestException(`Use an @${domain} email address`);
 
     // Prevent duplicate email
-    const existingByEmail = this.usersRepo.findByEmail(data.email);
+    const existingByEmail = this.usersRepo.findByEmail(email);
     if (existingByEmail && existingByEmail.role !== 'college_admin') {
       throw new ConflictException(`User with email '${data.email}' already exists with role '${existingByEmail.role}'`);
     }
@@ -200,7 +204,7 @@ export class SuperAdminService {
 
     const user = this.usersRepo.create({
       name: data.name,
-      email: data.email,
+      email,
       role: 'college_admin',
       collegeId,
       status: 'active',
@@ -215,6 +219,13 @@ export class SuperAdminService {
   updateCollegeAdmin(collegeId: number, data: Partial<{ name: string; email: string; status: string }>): Omit<User, 'password'> {
     const admin = pickAdmin(this.usersRepo.findAll(), collegeId);
     if (!admin) throw new NotFoundException(`No college admin found for college ${collegeId}`);
+    if (data.email !== undefined) {
+      const college = this.collegesRepo.findById(collegeId)!;
+      const email = data.email.trim().toLowerCase();
+      const domain = collegeEmailDomain(college);
+      if (email.split('@')[1] !== domain) throw new BadRequestException(`Use an @${domain} email address`);
+      data.email = email;
+    }
     const updated = this.usersRepo.update(admin.id, data);
     return safeUser(updated!);
   }

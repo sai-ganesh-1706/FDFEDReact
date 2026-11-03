@@ -1,3 +1,4 @@
+import { phoneError, phoneInputProps } from '../../../shared/utils/phone.js';
 import { useEffect, useState } from "react";
 import api, { errorMessage } from "../../../services/api.js";
 
@@ -10,7 +11,7 @@ function validate(f) {
   if (f.company.trim().length < 2) e.company = "Please enter your company name.";
   if (f.role.trim().length < 2) e.role = "Please enter your designation.";
   if (!/^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/.test(f.email.trim())) e.email = "Enter a valid work email.";
-  if (f.phone.trim() && !/^[+]?[0-9 ()-]{8,16}$/.test(f.phone.trim())) e.phone = "Enter a valid phone number.";
+  if (phoneError(f.phone)) e.phone = phoneError(f.phone);
   if (!f.collegeId) e.collegeId = "Choose the college you want to hire from.";
   if (f.message.length > 1000) e.message = "Keep the message under 1000 characters.";
   return e;
@@ -87,7 +88,7 @@ function ContactSection() {
                 {field("email", "Work email *", { type: "email", placeholder: "you@company.com", autoComplete: "email" })}
                 {field("company", "Company *", { placeholder: "Google" })}
                 {field("role", "Designation *", { placeholder: "University Relations Lead" })}
-                {field("phone", "Phone", { placeholder: "+91 98765 43210", autoComplete: "tel" })}
+                {field("phone", "Phone", { ...phoneInputProps, placeholder: "9876543210", autoComplete: "tel" })}
                 <div className={`contact-field ${showError("collegeId") ? "has-error" : ""}`}>
                   <label htmlFor="contact-collegeId">College to recruit from *</label>
                   <select id="contact-collegeId" value={form.collegeId} onChange={set("collegeId")} onBlur={blur("collegeId")}>

@@ -1,7 +1,8 @@
+import { infoDialog } from '../../../shared/components/AppDialog.jsx';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useStore } from '../context/StoreContext.jsx';
-import { errorMessage } from '../../../services/api.js';
+import api, { readSession, errorMessage } from '../../../services/api.js';
 import { useUI } from '../context/UIContext.jsx';
 import '../styles/opportunities.css';
 import { Trash2, Check } from 'lucide-react';
@@ -170,10 +171,14 @@ export default function Opportunities() {
         if (applied) setTimeout(() => setSuccessOpen(true), 300);
     }
 
-    function handleResumeUpload(e) {
+    async function handleResumeUpload(e) {
         const file = e.target.files?.[0];
         if (!file) return;
-        const newEntry = { name: file.name, date: new Date().toISOString().split('T')[0], size: `${Math.round(file.size / 1024)} KB` };
+        if (!/\.(pdf|doc|docx)$/i.test(file.name) || file.size > 2 * 1024 * 1024) { infoDialog('Choose a PDF, DOC or DOCX file no larger than 2 MB.'); e.target.value = ''; return; }
+        let saved;
+        try { const form = new FormData(); form.append('file', file); saved = (await api.post(`/users/${readSession().id}/resume`, form, { headers: { 'Content-Type': 'multipart/form-data' } })).data; }
+        catch (error) { infoDialog(errorMessage(error, 'Could not upload resume.')); return; }
+        const newEntry = { resumeUrl: saved.resumeUrl, name: file.name, date: new Date().toISOString().split('T')[0], size: `${Math.round(file.size / 1024)} KB` };
         updateStore((s) => {
             if (!s.profileResumeData) s.profileResumeData = {};
             const rd = s.profileResumeData;
@@ -257,7 +262,7 @@ export default function Opportunities() {
                                 onClick={() => setActiveJobId(job.id)}
                             >
                                 <div className="job-item-header">
-                                    <h4>{job.title}</h4>
+                                    <h4>{job.title} ({job.jobId})</h4>
                                     <span className={`type-badge ${typeBadgeClass}`}>{typeBadgeText}</span>
                                 </div>
                                 <div className="job-item-company">{job.company}</div>
@@ -463,7 +468,7 @@ export default function Opportunities() {
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 28 }}>
                                 <button className="btn-secondary" onClick={() => setTermsOpen(false)}>Cancel</button>
-                                <button className="btn-primary" onClick={() => setApplyStep(2)}>Next  > </button>
+                                <button className="btn-primary" onClick={() => setApplyStep(2)}>Next &gt; </button>
                             </div>
                         </div>
                     )}
@@ -535,7 +540,7 @@ export default function Opportunities() {
 
                             <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, marginTop: 28 }}>
                                 <button className="btn-secondary" onClick={() => setApplyStep(1)}>← Back</button>
-                                <button className="btn-primary" disabled={!selectedResume} style={{ opacity: selectedResume ? 1 : 0.5 }} onClick={() => setApplyStep(3)}>Next  > </button>
+                                <button className="btn-primary" disabled={!selectedResume} style={{ opacity: selectedResume ? 1 : 0.5 }} onClick={() => setApplyStep(3)}>Next &gt; </button>
                             </div>
                         </div>
                     )}
@@ -576,7 +581,7 @@ export default function Opportunities() {
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, marginTop: 28 }}>
                                 <button className="btn-secondary" onClick={() => setApplyStep(2)}>← Back</button>
-                                <button className="btn-primary" onClick={() => setApplyStep(4)}>Next  > </button>
+                                <button className="btn-primary" onClick={() => setApplyStep(4)}>Next &gt; </button>
                             </div>
                         </div>
                     )}
@@ -732,7 +737,7 @@ function ActiveJobDetails({ job, store, onApply, onCheckEligibility, onAskQuery,
         <>
             <div className="details-card">
                 <div className="details-header-row">
-                    <h2>{job.title}</h2>
+                    <h2>{job.title} ({job.jobId})</h2>
                     <span className={`type-badge ${badgeClass}`} style={{ padding: '6px 14px', fontSize: 13 }}>
                         {badgeText}
                     </span>

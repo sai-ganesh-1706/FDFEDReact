@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { X, FileText, Mail, Phone, Calendar, Eye, Download, Lock } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import api from '../../../services/api.js';
+import { X, FileText, Mail, Phone, Calendar, Eye, Lock } from 'lucide-react';
 
 // ── Round configuration ──────────────────────────────────────────────────────
 const ROUND_KEYS = [
@@ -60,10 +61,20 @@ export default function CandidateModal({
   // Local round state (synced from candidate.rounds)
   const [localRounds, setLocalRounds] = useState(candidate?.rounds || {});
 
+  const [resumeBlob, setResumeBlob] = useState('');
+  const [resumeError, setResumeError] = useState('');
+  useEffect(() => {
+    if (!showResumePreview || !candidate?.resumeUrl) return;
+    let active = true; let url;
+    api.get(`/applications/${candidate.id}/resume`, { responseType: 'blob' }).then(({data}) => { if (active) { url = URL.createObjectURL(data); setResumeBlob(url); } }).catch(() => { if (active) setResumeError('Could not load the resume document.'); });
+    return () => { active = false; if (url) URL.revokeObjectURL(url); setResumeBlob(''); setResumeError(''); };
+  }, [showResumePreview, candidate?.id, candidate?.resumeUrl]);
+  const [saving, setSaving] = useState(false);
+  useEffect(() => { setLocalRounds(candidate?.rounds || {}); }, [candidate?.rounds]);
   if (!candidate) return null;
 
   // Derived current status (read-only chip shown to recruiter)
-  const derivedStatus = deriveStatus(localRounds);
+  const derivedStatus = candidate.status;
 
   // Status badge colour
   const statusColor = {
@@ -76,7 +87,7 @@ export default function CandidateModal({
 
   // ── Handlers ──────────────────────────────────────────────────────────────
 
-  const handleRoundChange = (roundKey, val) => {
+  const handleRoundChange = async (roundKey, val) => {
     const updated = { ...localRounds, [roundKey]: val };
 
     // If a round is un-passed, reset all downstream rounds to Pending
@@ -88,20 +99,10 @@ export default function CandidateModal({
       });
     }
 
-    setLocalRounds(updated);
-
-    // Save each changed round key
-    Object.entries(updated).forEach(([k, v]) => {
-      if (v !== (localRounds[k] || 'Pending')) {
-        onUpdateRound(candidate.id, k, v);
-      }
-    });
-    // Always save the primary changed round (in case value is the same as default)
-    onUpdateRound(candidate.id, roundKey, val);
-
-    // Auto-derive and propagate new status
-    const newStatus = deriveStatus(updated);
-    onUpdateStatus(candidate.id, newStatus);
+    setSaving(true);
+    const ok = await onUpdateRound(candidate.id, updated, deriveStatus(updated));
+    if (ok) setLocalRounds(updated);
+    setSaving(false);
   };
 
   return (
@@ -119,7 +120,7 @@ export default function CandidateModal({
                 {candidate.isReferred && <span className="tag-referred-badge">Referred</span>}
               </h3>
               <p style={{ fontSize: '13px', color: '#6B7280', marginTop: '2px' }}>
-                {candidate.role} - {candidate.branch} - CGPA: {candidate.cgpa}
+                {candidate.role} ({candidate.jobId}) - {candidate.branch} - CGPA: {candidate.cgpa}
               </p>
             </div>
           </div>
@@ -192,11 +193,11 @@ export default function CandidateModal({
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <Mail size={14} color="#6B7280" />
-            <span>{candidate.email || 'candidate@college.edu'}</span>
+            <span>{candidate.email || 'Not provided'}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <Phone size={14} color="#6B7280" />
-            <span>{candidate.phone || '+91 98000 12345'}</span>
+            <span>{candidate.phone || 'Not provided'}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <Calendar size={14} color="#6B7280" />
@@ -213,40 +214,14 @@ export default function CandidateModal({
                 gap: '4px', textDecoration: 'underline'
               }}
             >
-              <span>{candidate.resumeFile || 'Resume_Document.pdf'}</span>
+              <span>Resume</span>
               <Eye size={12} />
             </button>
           </div>
         </div>
 
         {/* ── RESUME PREVIEW ── */}
-        {showResumePreview && (
-          <div style={{ background: '#ECFDF5', border: '1px solid #A7F3D0', borderRadius: '10px', padding: '16px', marginBottom: '20px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <strong style={{ fontSize: '13px', color: '#065F46' }}>Resume Snapshot: {candidate.name}</strong>
-              <button type="button" onClick={() => setShowResumePreview(false)} style={{ background: 'none', border: 'none', color: '#065F46', cursor: 'pointer' }}>
-                <X size={15} />
-              </button>
-            </div>
-            <p style={{ fontSize: '12px', color: '#047857', marginBottom: '8px' }}>
-              <strong>Education:</strong> B.Tech in {candidate.branch} (CGPA: {candidate.cgpa}/10.0)
-            </p>
-            <p style={{ fontSize: '12px', color: '#047857', marginBottom: '8px' }}>
-              <strong>Core Competencies:</strong> Data Structures, Algorithms, React, Node.js, SQL, System Architecture
-            </p>
-            <p style={{ fontSize: '12px', color: '#047857', marginBottom: '10px' }}>
-              <strong>Experience / Projects:</strong> Developed campus event portal, internship with microservices backend.
-            </p>
-            <a
-              href={`#download-${candidate.id}`}
-              onClick={(e) => { e.preventDefault(); alert(`Simulated download: ${candidate.resumeFile || 'Resume.pdf'}`); }}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: '#065F46', fontWeight: 700, textDecoration: 'none', background: '#D1FAE5', padding: '4px 10px', borderRadius: '6px' }}
-            >
-              <Download size={12} />
-              <span>Download PDF File</span>
-            </a>
-          </div>
-        )}
+        {showResumePreview && <section style={{marginBottom:20}}><h4>Resume · {candidate.name}</h4>{candidate.resumeUrl ? resumeError ? <p>{resumeError}</p> : !resumeBlob ? <p>Loading resume…</p> : <>{candidate.resumeUrl.endsWith('.pdf') ? <iframe title={`${candidate.name} resume`} src={resumeBlob} style={{width:'100%',height:480,border:'1px solid #e5e7eb'}} /> : <p>This Word document is available to download. Upload a PDF for an in-window preview.</p>}<a href={resumeBlob} download>Download resume</a></> : <p>No resume document is available for this application. {candidate.resumeFile ? `Recorded filename: ${candidate.resumeFile}` : ''}</p>}</section>}
 
         {/* ── AUTO-DERIVED PIPELINE STATUS (read-only) ── */}
         <div style={{ marginBottom: '20px' }}>
@@ -302,7 +277,7 @@ export default function CandidateModal({
                 <select
                   className="round-select"
                   value={currentResult}
-                  disabled={locked}
+                  disabled={locked || saving}
                   onChange={(e) => handleRoundChange(round.key, e.target.value)}
                   style={{
                     color: locked ? '#9CA3AF' : currentResult === 'Pass' ? '#059669' : currentResult === 'Fail' ? '#DC2626' : '#2563EB',
@@ -321,8 +296,8 @@ export default function CandidateModal({
         </div>
 
         <div style={{ marginTop: '4px', display: 'flex', justifyContent: 'flex-end' }}>
-          <button className="btn-primary-action" onClick={onClose}>
-            Done &amp; Save
+          <button className="btn-primary-action" disabled={saving} onClick={onClose}>
+            Done
           </button>
         </div>
       </div>

@@ -1,7 +1,15 @@
-import { IsString, IsNumber, IsBoolean, IsOptional, IsIn, IsDateString } from 'class-validator';
+import { IsArray, ArrayNotEmpty, IsInt, Min, IsString, IsNumber, IsBoolean, IsOptional, IsIn, IsDateString } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateAssessmentDto {
+  @ApiPropertyOptional({ type: [Number] })
+  @IsOptional()
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsInt({ each: true })
+  @Min(1, { each: true })
+  applicationIds?: number[];
+
   @ApiProperty({ example: 'Coding Assessment — Round 1' })
   @IsString()
   title: string;
@@ -34,8 +42,8 @@ export class CreateAssessmentDto {
   @IsString()
   link: string;
 
-  @ApiProperty({ example: 'Online Test', enum: ['Online Test', 'Technical Interview', 'HR Interview', 'Group Discussion'] })
-  @IsIn(['Online Test', 'Technical Interview', 'HR Interview', 'Group Discussion'])
+  @ApiProperty({ example: 'Online Test', enum: ['Online Test', 'Technical Interview', 'Interview', 'HR Interview', 'Group Discussion'] })
+  @IsIn(['Online Test', 'Technical Interview', 'Interview', 'HR Interview', 'Group Discussion'])
   type: string;
 
   @ApiPropertyOptional({ example: false })

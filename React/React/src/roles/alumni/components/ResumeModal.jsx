@@ -6,7 +6,7 @@ const DUMMY_RESUME = {
   title: 'Software Engineer',
   contact: {
     email: 'candidate@email.com',
-    phone: '+91 98765 43210',
+    phone: '9876543210',
     linkedin: 'linkedin.com/in/candidate',
     location: 'Bangalore, India',
   },
@@ -75,7 +75,7 @@ export default function ResumeModal({
       email: `${(candidate?.name || candidateName || 'candidate')
         .toLowerCase()
         .replace(/[^a-z0-9]/g, '.')}@university.edu`,
-      phone: '+91 98765 43210',
+      phone: '9876543210',
       linkedin: `linkedin.com/in/${(candidate?.name || candidateName || 'candidate')
         .toLowerCase()
         .replace(/[^a-z0-9]/g, '-')}`,

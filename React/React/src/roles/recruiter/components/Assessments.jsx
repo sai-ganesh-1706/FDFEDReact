@@ -1,3 +1,4 @@
+import { confirmDialog } from '../../../shared/components/AppDialog.jsx';
 import React, { useState } from 'react';
 import { Calendar, Video, Users, ExternalLink, Plus, Trash2, Mail } from 'lucide-react';
 import ScheduleModal from './ScheduleModal';
@@ -51,8 +52,8 @@ export default function Assessments({ assessments, opportunities = [], applicati
                 <button 
                   style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer', padding: '4px' }}
                   title="Remove Round"
-                  onClick={() => {
-                    if (window.confirm(`Delete assessment round "${item.title}"?`)) {
+                  onClick={async () => {
+                    if (await confirmDialog(`Delete assessment round "${item.title}"?`)) {
                       onDeleteAssessment(item.id);
                     }
                   }}

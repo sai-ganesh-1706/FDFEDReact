@@ -1,6 +1,6 @@
 import {
   Controller, Get, Post, Put, Patch, Delete, Param,
-  Body, ParseIntPipe, UseGuards, Query, HttpCode, HttpStatus,
+  Body, ParseIntPipe, UseGuards, Query, HttpCode, HttpStatus, ForbiddenException,
 } from '@nestjs/common';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import type { RequestUser } from '../common/guards/roles.guard';
@@ -25,7 +25,7 @@ export class RecruitersController {
   private name(u: RequestUser) { return this.users.findById(u.userId ?? 0)?.name ?? 'Placement officer'; }
 
   @Get()
-  @Roles('placement_officer')
+  @Roles('placement_officer', 'college_admin')
   @ApiOperation({ summary: 'Get all recruiters (placement_officer only)' })
   @ApiQuery({ name: 'status', required: false, enum: ['active', 'pending', 'declined'] })
   @ApiResponse({ status: 200, description: 'List of recruiters' })
@@ -39,6 +39,14 @@ export class RecruitersController {
   @ApiOperation({ summary: 'Get recruiter statistics (placement_officer only)' })
   getStats(@CurrentUser() user: RequestUser) {
     return this.service.getStats(user.role === 'super_admin' ? null : user.collegeId);
+  }
+
+  @Get(':id/opportunities')
+  @Roles('placement_officer', 'college_admin')
+  postedOpportunities(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: RequestUser) {
+    const recruiter = this.service.findOne(id);
+    if (user.role !== 'super_admin' && (recruiter.collegeId ?? 1) !== user.collegeId) throw new ForbiddenException('Not your college');
+    return this.service.postedOpportunities(id);
   }
 
   @Get(':id')

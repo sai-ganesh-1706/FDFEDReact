@@ -1,3 +1,4 @@
+import { phoneError, phoneInputProps } from '../../../shared/utils/phone.js';
 import { useEffect, useState } from 'react';
 import { ExternalLink, Mail, ShieldCheck, User } from 'lucide-react';
 import api, { errorMessage, readSession } from '../../../services/api.js';
@@ -47,6 +48,7 @@ export default function Profile({ showToast, onProfileUpdated }) {
 
   const save = async () => {
     if (!session.id || saving) return;
+    if (phoneError(editFields.phone)) { showToast?.(phoneError(editFields.phone), 'error'); return; }
     setSaving(true);
     try {
       const { data: updated } = await api.put(`/users/${session.id}`, {
@@ -154,7 +156,7 @@ function EditForm({ fields, setField }) {
 
 function Field({ label, type = 'text', value, onChange, placeholder }) {
   const id = `sa-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
-  return <div className="sa-profile-field"><label htmlFor={id}>{label}</label><input id={id} type={type} value={value} onChange={onChange} placeholder={placeholder} /></div>;
+  return <div className="sa-profile-field"><label htmlFor={id}>{label}</label><input id={id} {...(type === 'tel' ? phoneInputProps : {})} type={type} value={value} onChange={onChange} placeholder={placeholder} /></div>;
 }
 
 function InfoRow({ label, value }) {

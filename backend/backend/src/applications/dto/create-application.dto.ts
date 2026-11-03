@@ -1,7 +1,13 @@
-import { IsString, IsNumber, IsOptional, IsBoolean, IsDateString, IsIn, IsArray } from 'class-validator';
+import { Matches, IsString, IsNumber, IsOptional, IsBoolean, IsDateString, IsIn, IsArray } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateApplicationDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @Matches(/^resume-\d+-[a-f0-9-]+\.(pdf|doc|docx)$/)
+  resumeUrl?: string;
+
   @ApiProperty({ example: 1, description: 'Opportunity ID to apply for' })
   @IsNumber()
   opportunityId: number;

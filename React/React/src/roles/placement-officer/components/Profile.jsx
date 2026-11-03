@@ -1,3 +1,5 @@
+import { phoneError, phoneInputProps } from '../../../shared/utils/phone.js';
+import { infoDialog } from '../../../shared/components/AppDialog.jsx';
 import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import Header from './Header';
@@ -8,14 +10,12 @@ import ChangePasswordModal from '../../../shared/components/ChangePasswordModal'
 
 
 /* ── Validation helpers ─────────────────────────────── */
-const EMAIL_REGEX = /^[a-zA-Z0-9]+([._%+-][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-][a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/;
-const PHONE_REGEX = /^\+?[\d\s\-().]{10,16}$/;
 const NAME_REGEX  = /^[A-Za-z\s.'\-]{2,60}$/;
 
 function validate(form) {
   const errors = {};
   const nameTrim = form.name.trim();
-  const emailTrim = form.email.trim();
+
   const phoneTrim = form.phone.trim();
   const empIdTrim = form.employeeId.trim();
   const instTrim = form.institution.trim();
@@ -28,17 +28,9 @@ function validate(form) {
     errors.name = 'Name must contain only letters, spaces, or dots (2–60 characters).';
   }
 
-  if (!emailTrim) {
-    errors.email = 'Email address is required.';
-  } else if (!/^[a-zA-Z0-9]+([._-][a-zA-Z0-9]+)*@college\.edu$/i.test(emailTrim)) {
-    errors.email = 'Placement Officer email must strictly end with @college.edu (e.g. rajesh@college.edu).';
-  }
 
   if (phoneTrim) {
-    const digits = phoneTrim.replace(/\D/g, '');
-    if (!PHONE_REGEX.test(phoneTrim) || digits.length < 10) {
-      errors.phone = 'Enter a valid phone number with at least 10 digits (e.g. +91 98765 43210).';
-    }
+    if (phoneError(form.phone)) errors.phone = phoneError(form.phone);
   }
 
   const EMP_ID_REGEX = /^[A-Za-z]{2,5}-[A-Za-z]{2,5}-\d{4}-\d{2,4}$/;
@@ -272,7 +264,7 @@ function EditProfileModal({ userData, onSave, onClose }) {
         }}>
           <span style={{ flexShrink: 0, marginTop: '1px' }}>🔒</span>
           <span>
-            <strong>Security Notice:</strong> Changes to your email and Employee ID affect your login credentials.
+            <strong>Security Notice:</strong> Your email is fixed and cannot be changed in your profile.
             Ensure all information is accurate before saving.
           </span>
         </div>
@@ -299,15 +291,15 @@ function EditProfileModal({ userData, onSave, onClose }) {
             <FieldGroup label="Email Address" required error={fieldError('email')}>
               <StyledInput
                 type="email" placeholder="name@college.edu"
-                value={form.email} onChange={setField('email')} onBlur={handleBlur('email')}
+                value={form.email} readOnly aria-readonly="true"
                 hasError={!!fieldError('email')}
               />
             </FieldGroup>
 
             <FieldGroup label="Phone Number" error={fieldError('phone')}>
               <StyledInput
-                type="tel" placeholder="+91 98765 43210"
-                value={form.phone} onChange={setField('phone')} onBlur={handleBlur('phone')}
+                type="tel" placeholder="9876543210"
+                {...phoneInputProps} value={form.phone} onChange={setField('phone')} onBlur={handleBlur('phone')}
                 hasError={!!fieldError('phone')}
               />
             </FieldGroup>
@@ -454,7 +446,6 @@ export default function Profile({ onNavigate, activePage = 'profile' }) {
   const [editingSection, setEditingSection] = useState(null);
   const [draft, setDraft] = useState({});
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState(false);
 
   const act = userData.activity || {};
 
@@ -486,10 +477,11 @@ export default function Profile({ onNavigate, activePage = 'profile' }) {
   const updateDraft = (key) => (event) => setDraft((current) => ({ ...current, [key]: event.target.value }));
 
   const handleSave = async (form) => {
+    if (phoneError(form.phone)) { infoDialog(phoneError(form.phone)); return false; }
     const next = {
       ...userData,
       name:        form.name,
-      email:       form.email,
+      email:       userData.email,
       phone:       form.phone,
       institution: form.institution,
       department:  form.department,
@@ -504,17 +496,16 @@ export default function Profile({ onNavigate, activePage = 'profile' }) {
     };
     try {
       await api.put(`/users/${session.id}`, {
-        name: next.name, email: next.email, phone: next.phone, university: next.institution, department: next.department,
+        name: next.name, phone: next.phone, university: next.institution, department: next.department,
         location: next.location, about: next.bio,
         socialLinks: { linkedin: next.social.linkedin, portfolio: next.social.website },
         resumeData: { officerProfile: { employeeId: next.employeeId, education: next.education, skills: next.skills, achievements: next.achievements } },
       });
       localStorage.setItem('loggedInUser', JSON.stringify({ ...session, name: next.name, email: next.email }));
       setUserData(next);
-      setSaveSuccess(true);
-      setTimeout(() => setSaveSuccess(false), 4000);
+      infoDialog('Profile updated successfully.');
     } catch (error) {
-      window.alert(errorMessage(error, 'Could not save your profile.'));
+      infoDialog(errorMessage(error, 'Could not save your profile.'));
     }
   };
 
@@ -593,17 +584,6 @@ export default function Profile({ onNavigate, activePage = 'profile' }) {
           </button>
         </div>
 
-        {/* Save success banner */}
-        {saveSuccess && (
-          <div style={{
-            marginBottom: '16px', padding: '12px 18px',
-            background: '#dcfce7', border: '1px solid #bbf7d0',
-            borderRadius: '10px', color: '#166534', fontSize: '14px', fontWeight: 600,
-            display: 'flex', alignItems: 'center', gap: '8px',
-          }}>
-            Profile updated successfully.
-          </div>
-        )}
 
         {/* Hero Card */}
         <div className="hero-card" style={{ marginBottom: '24px' }}>
@@ -654,8 +634,8 @@ export default function Profile({ onNavigate, activePage = 'profile' }) {
                 <>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '12px' }}>
                     <StyledInput value={draft.name || ''} onChange={updateDraft('name')} placeholder="Full name" />
-                    <StyledInput type="email" value={draft.email || ''} onChange={updateDraft('email')} placeholder="Email address" />
-                    <StyledInput value={draft.phone || ''} onChange={updateDraft('phone')} placeholder="Phone number" />
+                    <StyledInput type="email" value={draft.email || ''} readOnly aria-readonly="true" />
+                    <StyledInput {...phoneInputProps} value={draft.phone || ''} onChange={updateDraft('phone')} placeholder="Phone number" />
                     <StyledInput value={draft.employeeId || ''} onChange={updateDraft('employeeId')} placeholder="Employee ID" />
                     <StyledInput value={draft.institution || ''} onChange={updateDraft('institution')} placeholder="Institution" />
                     <StyledInput value={draft.department || ''} onChange={updateDraft('department')} placeholder="Department" />

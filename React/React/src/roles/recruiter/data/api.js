@@ -6,6 +6,7 @@ const initialsOf = (name = '') => name.split(' ').filter(Boolean).map((w) => w[0
 
 export const toOpportunity = (o) => ({
   id: o.id,
+  jobId: o.jobId || `JOB-${o.id}`,
   title: o.title,
   company: o.company,
   location: o.location,
@@ -24,6 +25,7 @@ export const toOpportunity = (o) => ({
 });
 
 export const fromOpportunity = (o, extra = {}) => ({
+  jobId: o.jobId,
   title: o.title,
   location: o.location,
   deadline: o.deadline,
@@ -34,16 +36,18 @@ export const fromOpportunity = (o, extra = {}) => ({
   type: o.type,
   tags: o.skills,
   description: o.description,
-  ...(o.duration ? { duration: o.duration } : {}),
+  duration: o.type === 'Internship' ? o.duration || 'Not specified' : '',
   ...extra,
 });
 
 export const toApplication = (a) => ({
   id: a.id,
   opportunityId: a.opportunityId,
+  jobId: a.jobId,
+  resumeUrl: a.resumeUrl,
   candidateId: a.candidateId,
   name: a.candidateName,
-  initials: a.initials || initialsOf(a.candidateName),
+  initials: initialsOf(a.candidateName),
   branch: a.branch || '',
   cgpa: a.cgpa ?? 0,
   role: a.title,
@@ -53,7 +57,7 @@ export const toApplication = (a) => ({
   email: a.email || '',
   phone: a.phone || '',
   resumeFile: a.resumeFile || '',
-  rounds: a.rounds || { resume: 'Scheduled', assessment: 'Scheduled', technical: 'Scheduled', hr: 'Scheduled' },
+  rounds: a.rounds || { resume: 'Pending', assessment: 'Pending', technical: 'Pending', hr: 'Pending' },
   evaluation: a.evaluation,
   recruiterFeedback: a.recruiterFeedback,
   feedbackSent: a.feedbackSent,

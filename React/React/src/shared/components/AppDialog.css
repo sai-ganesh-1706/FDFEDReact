@@ -1,0 +1,48 @@
+.cn-app-dialog {
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 26px;
+  width: min(440px, calc(100vw - 40px));
+  box-sizing: border-box;
+  box-shadow: 0 24px 80px #0f172a40;
+  color: #1f2937;
+  background: white;
+  font:
+    14px/1.6 Inter,
+    system-ui,
+    sans-serif;
+}
+.cn-app-dialog::backdrop {
+  background: #0f172a80;
+}
+.cn-app-dialog h2 {
+  margin: 0 0 12px;
+  font-size: 20px;
+}
+.cn-app-dialog p {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 0 0 24px;
+}
+.cn-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.cn-dialog-actions button {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+  padding: 9px 20px;
+  font: inherit;
+  cursor: pointer;
+}
+.cn-dialog-actions .cn-dialog-primary {
+  background: #0f8f63;
+  color: white;
+  border-color: #0f8f63;
+}
+.cn-dialog-actions button:focus-visible {
+  outline: 3px solid #86efac;
+  outline-offset: 2px;
+}

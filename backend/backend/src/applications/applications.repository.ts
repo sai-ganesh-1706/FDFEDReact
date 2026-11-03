@@ -10,7 +10,7 @@ export interface Application {
   branch?: string; cgpa?: number; title: string; company: string; type: string;
   status: string; appliedDate: string; hasReferral: boolean; currentStageIndex: number;
   timeline: ApplicationTimeline[]; interviewDate?: string; remarks?: string;
-  resumeFile?: string; initials?: string; collegeId?: number; email?: string; phone?: string;
+  jobId?: string; resumeUrl?: string; resumeFile?: string; initials?: string; collegeId?: number; email?: string; phone?: string;
   evaluation?: Record<string, number>; recruiterFeedback?: string; feedbackSent?: boolean;
   rounds?: { resume?: string; assessment?: string; technical?: string; hr?: string; };
   referrerName?: string; referrerInitials?: string; referrerCompany?: string;

@@ -1,3 +1,4 @@
+import { phoneError, phoneInputProps } from '../../../shared/utils/phone.js';
 import { useEffect, useState } from 'react';
 import { Building2, ExternalLink, Mail, Shield, User } from 'lucide-react';
 import api, { errorMessage, readSession } from '../../../services/api.js';
@@ -65,11 +66,11 @@ export default function Profile({ collegeName, showToast, onProfileUpdated }) {
 
   const saveProfile = async () => {
     if (!session.id || saving) return;
+    if (phoneError(editFields.phone)) { showToast?.(phoneError(editFields.phone), 'error'); return; }
     setSaving(true);
     try {
       const { data: updated } = await api.put(`/users/${session.id}`, {
         name: editFields.name.trim(),
-        email: editFields.email.trim(),
         phone: editFields.phone.trim(),
         department: editFields.department.trim(),
         location: editFields.location.trim(),
@@ -177,7 +178,7 @@ function PersonalEditForm({ fields, setField }) {
   return (
     <div className="ca-profile-edit-form">
       <Field label="Full Name" value={fields.name} onChange={setField('name')} />
-      <Field label="Email Address" type="email" value={fields.email} onChange={setField('email')} />
+      <Field label="Email Address" type="email" value={fields.email} readOnly />
       <Field label="Phone Number" type="tel" value={fields.phone} onChange={setField('phone')} />
       <Field label="Department" value={fields.department} onChange={setField('department')} />
       <Field label="Location" value={fields.location} onChange={setField('location')} />
@@ -189,9 +190,9 @@ function PersonalEditForm({ fields, setField }) {
   );
 }
 
-function Field({ label, type = 'text', value, onChange, placeholder }) {
+function Field({ label, type = 'text', value, onChange, placeholder, readOnly = false }) {
   const id = `ca-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
-  return <div className="ca-profile-field"><label htmlFor={id}>{label}</label><input id={id} type={type} value={value} onChange={onChange} placeholder={placeholder} /></div>;
+  return <div className="ca-profile-field"><label htmlFor={id}>{label}</label><input id={id} {...(type === 'tel' ? phoneInputProps : {})} type={type} readOnly={readOnly} aria-readonly={readOnly} value={value} onChange={onChange} placeholder={placeholder} /></div>;
 }
 
 function InfoRow({ label, value }) {

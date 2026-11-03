@@ -230,7 +230,8 @@ export function StoreProvider({ children }) {
 
         // Throws on failure so the page can tell the candidate what went wrong.
         async applyToJob(job, resumeFile) {
-            await api.post('/applications', { opportunityId: job.id, resumeFile: resumeFile || undefined });
+            const resume = store.profileResumeData?.resumeHistory?.find(r => r.name === resumeFile);
+            await api.post('/applications', { opportunityId: job.id, resumeFile: resumeFile || undefined, resumeUrl: resume?.resumeUrl });
             await load();
         },
 
@@ -273,7 +274,7 @@ export function StoreProvider({ children }) {
             await api.post('/referrals', { opportunityId, applicationId, alumniId, userMessage: message });
             await load();
         },
-    }), [load, updateStore]);
+    }), [load, updateStore, store.profileResumeData]);
 
     const value = useMemo(
         () => ({ store, updateStore, loading, loadError, ...actions }),

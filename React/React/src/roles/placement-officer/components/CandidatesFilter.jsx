@@ -1,3 +1,4 @@
+import { infoDialog } from '../../../shared/components/AppDialog.jsx';
 import React, { useState, useMemo, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import Header from './Header';
@@ -41,7 +42,7 @@ export default function CandidatesFilter({ onNavigate, activePage = 'candidates-
 
   const handleExportCSV = () => {
     if (filteredCandidates.length === 0) {
-      alert('No candidates match the current filters to export.');
+      infoDialog('No candidates match the current filters to export.');
       return;
     }
     const header = 'Name,Roll No,Department,CGPA,Backlogs,Batch,Skills';

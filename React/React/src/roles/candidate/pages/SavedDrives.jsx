@@ -58,7 +58,7 @@ export default function SavedDrives() {
                                 <div className="drive-card" key={job.id}>
                                     <div className="drive-icon">{isIntern ? '🎓' : '💼'}</div>
                                     <div className="drive-info">
-                                        <div className="drive-title">{job.title}</div>
+                                        <div className="drive-title">{job.title} ({job.jobId})</div>
                                         <div className="drive-company">{job.company}</div>
                                         <div className="drive-tags">
                                             <span className="tag tag-green">💰 {job.salary}</span>

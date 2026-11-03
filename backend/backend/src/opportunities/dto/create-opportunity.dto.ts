@@ -1,7 +1,12 @@
-import { IsString, IsNumber, IsArray, IsOptional, IsIn, IsDateString, Min, Max } from 'class-validator';
+import { IsString, Matches, IsNumber, IsArray, IsOptional, IsIn, IsDateString, Min, Max } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateOpportunityDto {
+  @ApiProperty({ example: 'ENG-2026-001' })
+  @IsString()
+  @Matches(/^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$/, { message: 'Job ID is required and must use letters, numbers, dots, underscores or hyphens' })
+  jobId: string;
+
   @ApiPropertyOptional({ example: '3 months' })
   @IsOptional()
   @IsString()

@@ -37,9 +37,6 @@ export default function SuperAdminSidebar({ activeTab, setActiveTab, onSignOut }
       </nav>
 
       <div className="sidebar-bottom">
-        <div className="sidebar-help-text">
-          As Super Admin, you manage all colleges and their administrators.
-        </div>
         <button className="btn-signout" onClick={onSignOut}>
           <LogOut size={16} />
           Sign Out

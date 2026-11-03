@@ -10,7 +10,7 @@ export function validateOversightUser(user: CreateUserDto, policy: OversightPoli
   if (name.length < 2 || name.length > 100 || (name.match(/\p{L}/gu) || []).length < 2 || !/^[\p{L}][\p{L}\p{M} .'-]*$/u.test(name)) errors.push('Name must contain at least two letters and at most 100 characters');
   if (!isEmail(text(user.email))) errors.push('Enter a valid email address');
   if (user.role === 'candidate' && text(user.email).toLowerCase().split('@')[1] !== policy.studentEmailDomain) errors.push(`Use an @${policy.studentEmailDomain} email address`);
-  if (user.phone && !/^\+?[\d ()-]{8,20}$/.test(text(user.phone))) errors.push('Enter a valid phone number');
+  if (user.phone && !/^[0-9]{10}$/.test(String(user.phone))) errors.push('Phone number must contain exactly 10 digits, with no spaces or special characters');
   for (const [label, value] of [['Designation', user.headline], ['Location', user.location]] as const) {
     if (value && (text(value).length > 100 || !/\p{L}/u.test(text(value)) || /[<>\r\n]/.test(text(value)))) errors.push(`${label} must contain valid text with letters and be at most 100 characters`);
   }

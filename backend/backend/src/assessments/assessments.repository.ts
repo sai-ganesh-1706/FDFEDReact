@@ -15,6 +15,7 @@ export interface Assessment {
   opportunityId?: number;
   recruiterId?: number;
   applicationId?: number;
+  applicationIds?: number[];
   candidateIds?: number[];
   candidateName?: string;
   company?: string;

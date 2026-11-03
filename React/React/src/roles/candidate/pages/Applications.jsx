@@ -1,3 +1,4 @@
+import { confirmDialog } from '../../../shared/components/AppDialog.jsx';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useStore } from '../context/StoreContext.jsx';
@@ -238,7 +239,7 @@ export default function Applications() {
     }, [apps, filter, search]);
 
     async function cancelApplication(id) {
-        if (!window.confirm('Withdraw this application? This cannot be undone.')) return;
+        if (!await confirmDialog('Withdraw this application? This cannot be undone.')) return;
         try { await withdrawApplication(id); }
         catch (e) { setNotice({ type: 'error', text: errorMessage(e, 'Could not withdraw this application.') }); }
     }

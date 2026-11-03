@@ -16,20 +16,20 @@ export default function Applications({
   const [statusFilter, setStatusFilter] = useState('All');
   const [selectedCandidate, setSelectedCandidate] = useState(null);
 
-  const statuses = ['All', 'Applied', 'Shortlisted', 'Interview', 'Offered', 'Rejected'];
+  const statuses = ['All', 'Applied', 'Shortlisted', 'Assessment', 'Interview', 'Offered', 'Rejected', 'Withdrawn'];
 
   // Extract unique roles from applications
-  const uniqueRoles = ['All Roles', ...new Set(applications.map(a => a.role))];
+  const uniqueRoles = [...new Map(applications.map(a => [String(a.opportunityId), { id: String(a.opportunityId), label: `${a.role} (${a.jobId || a.opportunityId})` }])).values()];
 
   // Filtering logic - base filters (everything except statusFilter)
   const baseFiltered = applications.filter((app) => {
     const matchesSearch =
       app.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       app.branch.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      app.role.toLowerCase().includes(searchTerm.toLowerCase());
+      `${app.role} ${app.jobId || ''} ${app.email || ''}`.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesReferred = !filterReferred || app.isReferred;
-    const matchesRole = !selectedRoleFilter || selectedRoleFilter === 'All Roles' || app.role === selectedRoleFilter;
+    const matchesRole = !selectedRoleFilter || selectedRoleFilter === 'All Roles' || String(app.opportunityId) === selectedRoleFilter;
 
     return matchesSearch && matchesReferred && matchesRole;
   });
@@ -68,9 +68,7 @@ export default function Applications({
             value={selectedRoleFilter || 'All Roles'}
             onChange={(e) => setSelectedRoleFilter(e.target.value)}
           >
-            {uniqueRoles.map((role) => (
-              <option key={role} value={role}>{role}</option>
-            ))}
+            <option value="All Roles">All Roles</option>{uniqueRoles.map(role => <option key={role.id} value={role.id}>{role.label}</option>)}
           </select>
 
           {/* Referred only */}
@@ -138,7 +136,7 @@ export default function Applications({
                     {app.isReferred && <span className="tag-referred-badge">Referred</span>}
                   </h4>
                   <p className="app-card-metadata">
-                    {app.branch} &middot; CGPA: <strong>{app.cgpa}</strong> &middot; Role: <strong>{app.role}</strong>
+                    {app.branch} &middot; CGPA: <strong>{app.cgpa}</strong> &middot; Role: <strong>{app.role} ({app.jobId})</strong>
                   </p>
                   {app.isReferred && app.referrerName && (
                     <div style={{
@@ -179,7 +177,7 @@ export default function Applications({
               </div>
 
  <div className="app-card-right" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                {onSchedule && ['Shortlisted', 'Interview'].includes(app.status) && (
+                {onSchedule && ['Shortlisted', 'Assessment', 'Interview'].includes(app.status) && (
                   <button
                     className="btn-secondary-action"
                     style={{ padding: '6px 12px', fontSize: 12 }}
@@ -211,30 +209,11 @@ export default function Applications({
       {/* Candidate Evaluation Modal */}
       {selectedCandidate && (
         <CandidateModal 
-          candidate={selectedCandidate}
+          candidate={applications.find(a => a.id === selectedCandidate.id) || selectedCandidate}
           onClose={() => setSelectedCandidate(null)}
-          onUpdateStatus={(id, newStatus) => {
-            onUpdateStatus(id, newStatus);
-            setSelectedCandidate(prev => prev ? { ...prev, status: newStatus } : null);
-          }}
-          onUpdateRound={(id, roundKey, val) => {
-            onUpdateRound(id, roundKey, val);
-            setSelectedCandidate(prev => prev ? {
-              ...prev,
-              rounds: { ...prev.rounds, [roundKey]: val }
-            } : null);
-          }}
-          onUpdateEvaluation={(id, evalMetrics, feedback, sent) => {
-            if (onUpdateEvaluation) {
-              onUpdateEvaluation(id, evalMetrics, feedback, sent);
-            }
-            setSelectedCandidate(prev => prev ? {
-              ...prev,
-              evaluation: evalMetrics,
-              ...(feedback !== undefined ? { recruiterFeedback: feedback } : {}),
-              ...(sent !== undefined ? { feedbackSent: sent } : {})
-            } : null);
-          }}
+          onUpdateStatus={onUpdateStatus}
+          onUpdateRound={onUpdateRound}
+          onUpdateEvaluation={onUpdateEvaluation}
         />
       )}
     </div>

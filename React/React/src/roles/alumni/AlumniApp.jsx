@@ -1,3 +1,4 @@
+import { infoDialog } from '../../shared/components/AppDialog.jsx';
 import { useEffect, useState } from 'react';
 import api, { clearSession, errorMessage, readSession } from '../../services/api.js';
 import Sidebar from './components/Sidebar';
@@ -133,7 +134,7 @@ export default function AlumniApp() {
         company: info.company || session?.company,
       }));
     } catch (error) {
-      window.alert(errorMessage(error, 'Could not save your profile.'));
+      infoDialog(errorMessage(error, 'Could not save your profile.'));
     }
   };
 
@@ -143,7 +144,7 @@ export default function AlumniApp() {
     try {
       await api.put(`/users/${session.id}`, { skills: value });
     } catch (error) {
-      window.alert(errorMessage(error, 'Could not save your skills.'));
+      infoDialog(errorMessage(error, 'Could not save your skills.'));
     }
   };
 
@@ -157,7 +158,7 @@ export default function AlumniApp() {
       const fresh = await loadReferrals();
       setAlumniData((prev) => ({ ...prev, totalReferrals: fresh.length, approved: fresh.filter((r) => r.status === 'approved').length }));
     } catch (error) {
-      window.alert(errorMessage(error, 'Could not save your response. Please try again.'));
+      infoDialog(errorMessage(error, 'Could not save your response. Please try again.'));
     }
   };
 

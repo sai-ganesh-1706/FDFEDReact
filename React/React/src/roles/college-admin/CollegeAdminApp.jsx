@@ -1,9 +1,11 @@
+import { infoDialog } from '../../shared/components/AppDialog.jsx';
 import React, { useCallback, useEffect, useState } from 'react';
 import CollegeAdminSidebar from './components/Sidebar';
 import CATopbar from './components/Topbar';
 import CADashboard from './pages/Dashboard';
 import Officers from './pages/Officers';
-import Students from './pages/Students';
+import AccountDirectory from '../../shared/components/AccountDirectory.jsx';
+import ActivityLog from './pages/ActivityLog.jsx';
 import Announcements from './pages/Announcements';
 import Reports from './pages/Reports';
 import Profile from './pages/Profile';
@@ -24,6 +26,8 @@ function getTitle(tab) {
     case 'dashboard':     return 'College Dashboard';
     case 'officers':      return 'Placement Officers';
     case 'students':      return 'Students';
+    case 'alumni': return 'Alumni';
+    case 'activity': return 'Placement Officer Activity';
     case 'announcements': return 'Announcements';
     case 'messages':      return 'Messages';
     case 'reports':       return 'Placement Reports';
@@ -32,7 +36,7 @@ function getTitle(tab) {
   }
 }
 
-const COLLEGE_ADMIN_TABS = ['dashboard', 'officers', 'students', 'announcements', 'messages', 'reports', 'profile'];
+const COLLEGE_ADMIN_TABS = ['dashboard', 'officers', 'students', 'alumni', 'activity', 'announcements', 'messages', 'reports', 'profile'];
 const COLLEGE_ADMIN_TAB_KEY = 'cn_active_college_admin_tab';
 
 export default function CollegeAdminApp() {
@@ -45,7 +49,6 @@ export default function CollegeAdminApp() {
   const userName = user.name || localStorage.getItem('userName') || 'College Admin';
 
   const [activeTab, setActiveTabState] = useState(() => readSavedPage(COLLEGE_ADMIN_TAB_KEY, 'dashboard', COLLEGE_ADMIN_TABS));
-  const [toast, setToast]         = useState(null);
   const [unread, setUnread]       = useState(0);
   const [isSignOutOpen, setIsSignOutOpen] = useState(false);
 
@@ -67,7 +70,6 @@ export default function CollegeAdminApp() {
   const officers    = data.officersByCollege[collegeId]   || [];
   const students    = data.studentsByCollege[collegeId]   || [];
   const alumniCount = (data.alumniByCollege[collegeId]    || []).length;
-  const recruiterCount = (data.recruitersByCollege[collegeId] || []).length;
   const applications = data.applicationsByCollege?.[collegeId] || [];
   const placedStudentIds = new Set(
     applications
@@ -80,10 +82,7 @@ export default function CollegeAdminApp() {
     (student) => placedStudentIds.has(student.id) || student.status === 'placed'
   ).length;
 
-  const showToast = useCallback((msg, type = 'success') => {
-    setToast({ msg, type });
-    setTimeout(() => setToast(null), 3200);
-  }, []);
+  const showToast = useCallback((msg) => { infoDialog(msg); }, []);
 
   const setActiveTab = useCallback((tab) => {
     const nextTab = COLLEGE_ADMIN_TABS.includes(tab) ? tab : 'dashboard';
@@ -98,9 +97,10 @@ export default function CollegeAdminApp() {
   };
 
   const sharedProps = {
-    officers, students, platform, alumniCount, recruiterCount, applications,
+    officers, students, platform, alumniCount, applications,
     placedCount, placedStudentIds,
     collegeName: collegeInfo.name,
+    collegeInfo,
     showToast,
     setActiveTab,
     userName,
@@ -131,7 +131,9 @@ export default function CollegeAdminApp() {
           <div className="page-content">
             {activeTab === 'dashboard'     && <CADashboard     {...sharedProps} />}
             {activeTab === 'officers'      && <Officers        {...sharedProps} />}
-            {activeTab === 'students'      && <Students        {...sharedProps} />}
+            {activeTab === 'students' && <AccountDirectory key="students" canCreate initialTab="candidates" showTabs={false} onChanged={platform.refresh} />}
+            {activeTab === 'alumni' && <AccountDirectory key="alumni" canCreate initialTab="alumni" showTabs={false} onChanged={platform.refresh} />}
+            {activeTab === 'activity' && <ActivityLog />}
             {activeTab === 'announcements' && <Announcements   collegeName={collegeInfo.name} />}
             {activeTab === 'messages'      && <Messages        onSeen={markMessagesSeen} />}
             {activeTab === 'reports'       && <Reports         students={students} collegeName={collegeInfo.name} placedStudentIds={placedStudentIds} />}
@@ -140,12 +142,7 @@ export default function CollegeAdminApp() {
         </div>
 
         {/* Toast */}
-        {toast && (
-          <div className={`toast ${toast.type}`}>
-            {toast.type === 'success' ? <CheckCircle size={16} /> : <XCircle size={16} />}
-            {toast.msg}
-          </div>
-        )}
+
         <SignOutModal
           isOpen={isSignOutOpen}
           onClose={() => setIsSignOutOpen(false)}

@@ -1,11 +1,16 @@
 import {
   Controller, Get, Post, Put, Delete, Param, Body, Query,
-  ParseIntPipe, UseGuards, HttpCode, HttpStatus, Headers, Req, ForbiddenException,
+  ParseIntPipe, UseGuards, HttpCode, HttpStatus, Headers, Req, ForbiddenException, UseInterceptors, UploadedFile, BadRequestException,
 } from '@nestjs/common';
 import {
   ApiTags, ApiOperation, ApiParam, ApiBody, ApiSecurity,
   ApiResponse, ApiQuery, ApiHeader, ApiConsumes,
 } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { randomUUID } from 'crypto';
+import { extname, join } from 'path';
+import { mkdirSync } from 'fs';
 import type { Request } from 'express';
 import { IsEmail, IsString, MinLength } from 'class-validator';
 import { UsersService } from './users.service';
@@ -24,7 +29,7 @@ import { ImportStudentsDto } from './dto/import-students.dto';
 /** Which roles each administrator may create / manage. */
 const MANAGEABLE: Record<string, string[]> = {
   placement_officer: ['candidate', 'alumni', 'recruiter'],
-  college_admin: ['placement_officer'],
+  college_admin: ['placement_officer', 'candidate', 'alumni'],
 };
 
 /** Minimal DTO for login */
@@ -51,6 +56,26 @@ export class UsersController {
     private readonly sessions: AuthSessionService,
   ) {}
 
+  @Post(':id/resume')
+  @Roles('candidate')
+  @UseInterceptors(FileInterceptor('file', {
+    storage: diskStorage({
+      destination: (_req, _file, cb) => { const dir = join(process.cwd(), 'uploads', 'resumes'); mkdirSync(dir, { recursive: true }); cb(null, dir); },
+      filename: (req, file, cb) => cb(null, `resume-${req.params.id}-${randomUUID()}${extname(file.originalname).toLowerCase()}`),
+    }),
+    limits: { fileSize: 2 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+      if (Number(req.params.id) !== Number(req.headers['x-user-id'])) return cb(new ForbiddenException('Upload your own resume'), false);
+      const valid = { '.pdf': 'application/pdf', '.doc': 'application/msword', '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' };
+      cb(valid[extname(file.originalname).toLowerCase()] === file.mimetype ? null : new BadRequestException('Upload a PDF, DOC or DOCX resume'), !!valid[extname(file.originalname).toLowerCase()] && valid[extname(file.originalname).toLowerCase()] === file.mimetype);
+    },
+  }))
+  uploadResume(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: RequestUser, @UploadedFile() file?: Express.Multer.File) {
+    if (user.userId !== id) throw new ForbiddenException('Upload your own resume');
+    if (!file) throw new BadRequestException('Resume file is required');
+    return { resumeUrl: file.filename, name: file.originalname, size: file.size };
+  }
+
   /** Throws unless the caller may change this user (themselves, or someone in their remit). */
   private assertCanManage(caller: RequestUser, targetId: number) {
     if (caller.role === 'super_admin') return;
@@ -64,9 +89,9 @@ export class UsersController {
   }
 
   @Get('oversight-policy')
-  @Roles('placement_officer')
+  @Roles('placement_officer', 'college_admin')
   oversightPolicy(@CurrentUser() caller: RequestUser) {
-    if (caller.role !== 'placement_officer' || !caller.collegeId) throw new ForbiddenException('A college placement officer is required');
+    if (!['placement_officer', 'college_admin'].includes(caller.role) || !caller.collegeId) throw new ForbiddenException('A college administrator or placement officer is required');
     return this.usersService.getOversightPolicy(caller.collegeId);
   }
 
@@ -120,10 +145,10 @@ export class UsersController {
   }
 
   @Get('oversight')
-  @Roles('placement_officer')
+  @Roles('placement_officer', 'college_admin')
   @ApiOperation({ summary: 'Current candidate and alumni accounts for the placement officer’s college, sorted alphabetically' })
   oversight(@CurrentUser() caller: RequestUser) {
-    if (caller.role !== 'placement_officer' || !caller.collegeId) throw new ForbiddenException('User Oversight requires a college placement officer');
+    if (!['placement_officer', 'college_admin'].includes(caller.role) || !caller.collegeId) throw new ForbiddenException('User Oversight requires a college account');
     return this.usersService.findOversight(caller.collegeId);
   }
 
@@ -164,27 +189,28 @@ export class UsersController {
   @ApiBody({ schema: { example: { currentPassword: '123', newPassword: 'newSecret1' } } })
   @ApiResponse({ status: 201, description: 'Password updated' })
   @ApiResponse({ status: 401, description: 'Current password incorrect' })
-  changePassword(@Param('id', ParseIntPipe) id: number, @Body() body: ChangePasswordDto) {
+  changePassword(@Param('id', ParseIntPipe) id: number, @Body() body: ChangePasswordDto, @CurrentUser() user: RequestUser) {
+    if (user.userId !== id) throw new ForbiddenException('You can only change your own password');
     return this.usersService.changePassword(id, body.currentPassword, body.newPassword);
   }
 
   @Post('import-students')
-  @Roles('placement_officer')
+  @Roles('college_admin')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Validate or import a student CSV into the signed-in placement officer’s college' })
+  @ApiOperation({ summary: 'Validate or import a student CSV into the signed-in college administrator’s college' })
   importStudents(@Body() dto: ImportStudentsDto, @CurrentUser() caller: RequestUser) {
-    if (caller.role !== 'placement_officer' || !caller.collegeId) throw new ForbiddenException('Student imports require a college placement officer');
+    if (caller.role !== 'college_admin' || !caller.collegeId) throw new ForbiddenException('Only college administrators can import students');
     const result = this.usersService.importStudents(dto.csv, caller.collegeId, dto.dryRun !== false);
     if (result.imported) this.activity.log({ action: 'Students Imported', detail: `${result.imported} students added by CSV`, actor: this.usersService.findRaw(caller.userId ?? 0)?.name ?? caller.role, actorRole: caller.role, collegeId: caller.collegeId, type: 'user' });
     return result;
   }
 
   @Post('import-alumni')
-  @Roles('placement_officer')
+  @Roles('college_admin')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Validate or import an alumni CSV into the signed-in placement officer’s college' })
+  @ApiOperation({ summary: 'Validate or import an alumni CSV into the signed-in college administrator’s college' })
   importAlumni(@Body() dto: ImportStudentsDto, @CurrentUser() caller: RequestUser) {
-    if (caller.role !== 'placement_officer' || !caller.collegeId) throw new ForbiddenException('Alumni imports require a college placement officer');
+    if (caller.role !== 'college_admin' || !caller.collegeId) throw new ForbiddenException('Only college administrators can import alumni');
     const result = this.usersService.importAlumni(dto.csv, caller.collegeId, dto.dryRun !== false);
     if (result.imported) this.activity.log({ action: 'Alumni Imported', detail: `${result.imported} alumni added by CSV`, actor: this.usersService.findRaw(caller.userId ?? 0)?.name ?? caller.role, actorRole: caller.role, collegeId: caller.collegeId, type: 'user' });
     return result;
@@ -196,6 +222,7 @@ export class UsersController {
   @ApiBody({ type: CreateUserDto })
   @ApiResponse({ status: 201, description: 'User created' })
   create(@Body() dto: CreateUserDto, @CurrentUser() caller: RequestUser) {
+    if (['candidate', 'alumni'].includes(dto.role) && caller.role !== 'college_admin') throw new ForbiddenException('Only college administrators can add students and alumni');
     let collegeId = dto.collegeId;
     if (caller.role !== 'super_admin') {
       if (!(MANAGEABLE[caller.role] ?? []).includes(dto.role)) {
@@ -222,6 +249,10 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'User not found' })
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateUserDto, @CurrentUser() caller: RequestUser) {
     this.assertCanManage(caller, id);
+    const current = this.usersService.findRaw(id);
+    if (caller.userId === id && ['placement_officer', 'college_admin'].includes(caller.role) && dto.email !== undefined && dto.email !== current?.email) {
+      throw new ForbiddenException('Your profile email cannot be changed');
+    }
     // Nobody can promote, move or re-credential themselves through the profile form.
     if (caller.role !== 'super_admin' && caller.userId === id) {
       delete (dto as any).role; delete (dto as any).collegeId; delete (dto as any).status; delete (dto as any).password;

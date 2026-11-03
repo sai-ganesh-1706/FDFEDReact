@@ -1,3 +1,4 @@
+import { infoDialog, confirmDialog } from '../../../shared/components/AppDialog.jsx';
 /* ═══════════════════════════════════════════════════════════════════════════
    CareerNest — Placement Officer Mock Data
    Character: Dr. Rajesh Nair · Senior Placement Officer · CareerNest University
@@ -19,7 +20,7 @@ const MOCK = {
         email: 'rajesh@college.edu',
         initials: 'RN',
         role: 'Senior Placement Officer',
-        phone: '+91 98765 43210',
+        phone: '9876543210',
         department: 'Training & Placement Cell',
         institution: 'CareerNest University',
         employeeId: 'CNU-TPO-2018-042',
@@ -237,14 +238,14 @@ const MOCK = {
     ],
 
     recruiters: [
-        { name: 'Priya Kapoor',  company: 'TechCorp Solutions', role: 'HR Manager',     opps: 2, status: 'active',  email: 'priya.kapoor@techcorp.com',      phone: '+91 98765 43210', location: 'Bangalore, Karnataka', joined: 'January 15, 2024',   bio: 'Experienced HR professional with over 8 years in talent acquisition. Posted "Software Engineer" and "Frontend Developer" drives for the 2026 batch.' },
-        { name: 'Raj Kumar',     company: 'AI Dynamics',        role: 'Hiring Lead',    opps: 1, status: 'active',  email: 'raj.kumar@aidynamics.com',       phone: '+91 87654 32109', location: 'Hyderabad',            joined: 'March 22, 2024',     bio: 'Leading hiring efforts at AI Dynamics. Focused on building world-class AI and ML engineering teams across India.' },
-        { name: 'Amit Joshi',    company: 'Analytics Hub',      role: 'HR Manager',     opps: 1, status: 'active',  email: 'amit.joshi@analyticshub.com',    phone: '+91 76543 21098', location: 'Pune, Maharashtra',    joined: 'June 10, 2023',      bio: 'HR manager specializing in data analytics and business intelligence roles. Focused on campus-to-corporate hiring pipelines.' },
-        { name: 'Sara Thomas',   company: 'CloudBase Inc',      role: 'Recruiter',      opps: 1, status: 'active',  email: 'sara.thomas@cloudbase.io',       phone: '+91 65432 10987', location: 'Chennai, Tamil Nadu',  joined: 'September 5, 2023',  bio: 'Cloud infrastructure recruiter with expertise in identifying talent for DevOps, SRE, and cloud engineering roles.' },
-        { name: 'Kiran Rao',     company: 'StartupX',           role: 'Founder & CEO',  opps: 1, status: 'pending', email: 'kiran.rao@startupx.in',          phone: '+91 54321 09876', location: 'Delhi NCR',            joined: 'December 1, 2024',   bio: 'Founder & CEO of StartupX, an early-stage fintech startup. Looking for versatile product engineers who thrive in fast-paced environments.' },
-        { name: 'Vikash Singh',  company: 'SecureNet',          role: 'Recruiter',      opps: 1, status: 'pending', email: 'vikash.singh@securenet.com',     phone: '+91 43210 98765', location: 'Chennai, Tamil Nadu',  joined: 'November 18, 2024',  bio: 'Cybersecurity recruiter at SecureNet. Specializes in hiring for security operations, ethical hacking, and compliance roles.' },
-        { name: 'Arjun Mehta',   company: 'FinTech Pro',        role: 'Talent Manager', opps: 1, status: 'pending', email: 'arjun.mehta@fintechpro.com',     phone: '+91 32109 87654', location: 'Mumbai, Maharashtra',  joined: 'October 28, 2024',   bio: 'Talent acquisition manager at FinTech Pro. Passionate about scaling fintech teams and bringing in diverse talent across payments and banking tech.' },
-        { name: 'Meera Reddy',   company: 'EduTech Solutions',  role: 'HR Lead',        opps: 1, status: 'active',  email: 'meera.reddy@edutechsol.com',     phone: '+91 21098 76543', location: 'Bangalore, Karnataka', joined: 'February 20, 2023',  bio: 'HR lead at EduTech Solutions with a focus on hiring instructional designers, ed-tech engineers, and content strategists.' }
+        { name: 'Priya Kapoor',  company: 'TechCorp Solutions', role: 'HR Manager',     opps: 2, status: 'active',  email: 'priya.kapoor@techcorp.com',      phone: '9876543210', location: 'Bangalore, Karnataka', joined: 'January 15, 2024',   bio: 'Experienced HR professional with over 8 years in talent acquisition. Posted "Software Engineer" and "Frontend Developer" drives for the 2026 batch.' },
+        { name: 'Raj Kumar',     company: 'AI Dynamics',        role: 'Hiring Lead',    opps: 1, status: 'active',  email: 'raj.kumar@aidynamics.com',       phone: '8765432109', location: 'Hyderabad',            joined: 'March 22, 2024',     bio: 'Leading hiring efforts at AI Dynamics. Focused on building world-class AI and ML engineering teams across India.' },
+        { name: 'Amit Joshi',    company: 'Analytics Hub',      role: 'HR Manager',     opps: 1, status: 'active',  email: 'amit.joshi@analyticshub.com',    phone: '7654321098', location: 'Pune, Maharashtra',    joined: 'June 10, 2023',      bio: 'HR manager specializing in data analytics and business intelligence roles. Focused on campus-to-corporate hiring pipelines.' },
+        { name: 'Sara Thomas',   company: 'CloudBase Inc',      role: 'Recruiter',      opps: 1, status: 'active',  email: 'sara.thomas@cloudbase.io',       phone: '6543210987', location: 'Chennai, Tamil Nadu',  joined: 'September 5, 2023',  bio: 'Cloud infrastructure recruiter with expertise in identifying talent for DevOps, SRE, and cloud engineering roles.' },
+        { name: 'Kiran Rao',     company: 'StartupX',           role: 'Founder & CEO',  opps: 1, status: 'pending', email: 'kiran.rao@startupx.in',          phone: '5432109876', location: 'Delhi NCR',            joined: 'December 1, 2024',   bio: 'Founder & CEO of StartupX, an early-stage fintech startup. Looking for versatile product engineers who thrive in fast-paced environments.' },
+        { name: 'Vikash Singh',  company: 'SecureNet',          role: 'Recruiter',      opps: 1, status: 'pending', email: 'vikash.singh@securenet.com',     phone: '4321098765', location: 'Chennai, Tamil Nadu',  joined: 'November 18, 2024',  bio: 'Cybersecurity recruiter at SecureNet. Specializes in hiring for security operations, ethical hacking, and compliance roles.' },
+        { name: 'Arjun Mehta',   company: 'FinTech Pro',        role: 'Talent Manager', opps: 1, status: 'pending', email: 'arjun.mehta@fintechpro.com',     phone: '3210987654', location: 'Mumbai, Maharashtra',  joined: 'October 28, 2024',   bio: 'Talent acquisition manager at FinTech Pro. Passionate about scaling fintech teams and bringing in diverse talent across payments and banking tech.' },
+        { name: 'Meera Reddy',   company: 'EduTech Solutions',  role: 'HR Lead',        opps: 1, status: 'active',  email: 'meera.reddy@edutechsol.com',     phone: '2109876543', location: 'Bangalore, Karnataka', joined: 'February 20, 2023',  bio: 'HR lead at EduTech Solutions with a focus on hiring instructional designers, ed-tech engineers, and content strategists.' }
     ]
 };
 
@@ -343,9 +344,9 @@ MOCK.applications = [
     }
 ];
 
-function signOut() {
-    if (confirm('Are you sure you want to sign out?')) {
-        alert('sign out');
+async function signOut() {
+    if (await confirmDialog('Are you sure you want to sign out?')) {
+        infoDialog('sign out');
     }
 }
 

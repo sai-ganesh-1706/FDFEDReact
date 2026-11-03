@@ -1,7 +1,12 @@
+import { phoneInputProps } from '../../../shared/utils/phone.js';
+import ChangePasswordModal from '../../../shared/components/ChangePasswordModal.jsx';
+import { readSession } from '../../../services/api.js';
 import React, { useState } from 'react';
 import { User, Building, Mail, Phone, MapPin, Edit3, Check, AlertCircle } from 'lucide-react';
 
 export default function Profile({ recruiter, onUpdateProfile }) {
+  const [passwordOpen, setPasswordOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ ...recruiter });
   const [errors, setErrors] = useState({});
@@ -31,9 +36,7 @@ export default function Profile({ recruiter, onUpdateProfile }) {
     }
 
     // Department: only alphabets and spaces
-    if (!data.department || !data.department.trim()) {
-      errs.department = 'Department is required.';
-    } else if (!/^[A-Za-z\s]+$/.test(data.department.trim())) {
+    if (data.department && !/^[A-Za-z\s]+$/.test(data.department.trim())) {
       errs.department = 'Department must contain only letters and spaces.';
     }
 
@@ -47,8 +50,8 @@ export default function Profile({ recruiter, onUpdateProfile }) {
     // Phone Number: only digits
     if (!data.phone || !data.phone.trim()) {
       errs.phone = 'Phone Number is required.';
-    } else if (!/^\d+$/.test(data.phone.trim())) {
-      errs.phone = 'Phone Number must contain only digits.';
+    } else if (!/^\d{10}$/.test(data.phone)) {
+      errs.phone = 'Phone Number must contain exactly 10 digits, with no spaces or special characters.';
     }
 
     return errs;
@@ -73,15 +76,17 @@ export default function Profile({ recruiter, onUpdateProfile }) {
     setErrors((prev) => ({ ...prev, [field]: errs[field] }));
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
     const errs = validate(formData);
     setErrors(errs);
     if (Object.keys(errs).length > 0) {
       return;
     }
-    onUpdateProfile(formData);
-    setIsEditing(false);
+    setSaving(true);
+    const ok = await onUpdateProfile(formData);
+    setSaving(false);
+    if (ok) setIsEditing(false);
   };
 
   return (
@@ -93,6 +98,8 @@ export default function Profile({ recruiter, onUpdateProfile }) {
         </p>
       </div>
 
+      <button className="btn-secondary-action" style={{marginBottom:16}} onClick={() => setPasswordOpen(true)}>Change Password</button>
+      <ChangePasswordModal isOpen={passwordOpen} onClose={() => setPasswordOpen(false)} userId={readSession()?.id} accentColor="#0f8f63" />
       <div className="profile-card-full">
         <div className="profile-top-wrap">
           <div className="profile-avatar-large">
@@ -191,7 +198,7 @@ export default function Profile({ recruiter, onUpdateProfile }) {
                   type="email" 
                   className={`form-input${errors.email ? ' input-error' : ''}`}
                   value={formData.email || ''}
-                  onChange={(e) => handleChange('email', e.target.value)}
+                  readOnly aria-readonly="true"
                 />
                 {errors.email && (
                   <span className="field-error" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
@@ -205,7 +212,7 @@ export default function Profile({ recruiter, onUpdateProfile }) {
                 <input 
                   type="text" 
                   className={`form-input${errors.phone ? ' input-error' : ''}`}
-                  value={formData.phone || ''}
+                  {...phoneInputProps} value={formData.phone || ''}
                   onChange={(e) => handleChange('phone', e.target.value)}
                 />
                 {errors.phone && (
@@ -237,7 +244,7 @@ export default function Profile({ recruiter, onUpdateProfile }) {
               >
                 Cancel
               </button>
-              <button type="submit" className="btn-primary-action">
+              <button type="submit" disabled={saving} className="btn-primary-action">
                 Save Changes
               </button>
             </div>

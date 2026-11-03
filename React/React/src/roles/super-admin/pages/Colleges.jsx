@@ -1,3 +1,4 @@
+import { phoneError, phoneInputProps } from '../../../shared/utils/phone.js';
 import React, { useState } from 'react';
 import { errorMessage } from '../../../services/api.js';
 import { Plus, Ban, CheckCircle, ShieldCheck, AlertTriangle, Building2 } from 'lucide-react';
@@ -8,7 +9,7 @@ const FIELD_META = [
   { key: 'name', label: 'College name', required: true, placeholder: 'e.g. IIT Bombay' },
   { key: 'code', label: 'College code', required: true, placeholder: 'e.g. IITB', hint: '2–12 capital letters, numbers or hyphens' },
   { key: 'email', label: 'Official email', required: true, placeholder: 'admin@college.ac.in' },
-  { key: 'phone', label: 'Phone', placeholder: '+91 98765 43210' },
+  { key: 'phone', label: 'Phone', placeholder: '9876543210' },
   { key: 'address', label: 'Address', placeholder: 'City, State' },
   { key: 'website', label: 'Website', placeholder: 'https://college.ac.in' },
 ];
@@ -34,7 +35,7 @@ function validateField(key, raw, existing = []) {
       if (existing.some((c) => (c.email || '').toLowerCase() === v.toLowerCase())) return 'Another college already uses this email.';
       return '';
     case 'phone':
-      if (v && !/^[+]?[0-9 ()-]{8,16}$/.test(v)) return 'Enter a valid phone number (8–16 digits).';
+      return phoneError(raw);
       return '';
     case 'address':
       if (v && (v.length < 5 || v.length > 200)) return 'Address must be 5–200 characters.';
@@ -77,7 +78,8 @@ function AddCollegeModal({ onClose, onSave, existing }) {
           <div className="form-group" key={key}>
             <label>{label}{required ? ' *' : ''}</label>
             <input
-              type="text"
+              type={key === 'phone' ? 'tel' : 'text'}
+              {...(key === 'phone' ? phoneInputProps : {})}
               placeholder={placeholder}
               value={form[key]}
               style={touched[key] && errors[key] ? { borderColor: '#ef4444' } : undefined}

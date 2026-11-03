@@ -221,7 +221,7 @@ export default function Dashboard() {
                                 <div className="job-card" key={job.id}>
                                     <div className="job-header">
                                         <div className="job-title-wrapper">
-                                            <h4>{job.title}</h4>
+                                            <h4>{job.title} ({job.jobId})</h4>
                                             <span className={`badge ${badgeClass}`}>{job.type}</span>
                                         </div>
                                         <p className="company">{job.company}</p>

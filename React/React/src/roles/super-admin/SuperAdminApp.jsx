@@ -1,3 +1,4 @@
+import { infoDialog } from '../../shared/components/AppDialog.jsx';
 import React, { useCallback, useState } from 'react';
 import SuperAdminSidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
@@ -44,13 +45,9 @@ export default function SuperAdminApp() {
 
   const [activeTab, setActiveTab] = useState(() => readSavedPage(SUPER_ADMIN_TAB_KEY, 'dashboard', SUPER_ADMIN_TABS));
   const [adminCollegeId, setAdminCollegeId] = useState(null);
-  const [toast, setToast] = useState(null);
   const [isSignOutOpen, setIsSignOutOpen] = useState(false);
 
-  const showToast = useCallback((msg, type = 'success') => {
-    setToast({ msg, type });
-    setTimeout(() => setToast(null), 3200);
-  }, []);
+  const showToast = useCallback((msg) => { infoDialog(msg); }, []);
 
   const handleSignOut = () => setIsSignOutOpen(true);
   const confirmSignOut = () => {
@@ -104,12 +101,7 @@ export default function SuperAdminApp() {
         </div>
 
         {/* Toast */}
-        {toast && (
-          <div className={`toast ${toast.type}`}>
-            {toast.type === 'success' ? <CheckCircle size={16} /> : <XCircle size={16} />}
-            {toast.msg}
-          </div>
-        )}
+
         <SignOutModal
           isOpen={isSignOutOpen}
           onClose={() => setIsSignOutOpen(false)}

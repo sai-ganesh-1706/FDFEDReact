@@ -1,8 +1,11 @@
+import { phoneError, phoneInputProps } from '../../../shared/utils/phone.js';
+import { collegeEmailDomain, collegeEmailError } from '../../../shared/utils/collegeEmail.js';
+import { confirmDialog } from '../../../shared/components/AppDialog.jsx';
 import React, { useState } from 'react';
 import { errorMessage } from '../../../services/api.js';
 import { UserPlus, Trash2, ShieldCheck, Ban, CheckCircle } from 'lucide-react';
 
-function AddOfficerModal({ onClose, onSave }) {
+function AddOfficerModal({ onClose, onSave, emailDomain }) {
   const [form, setForm] = useState({ name: '', email: '', department: '', phone: '' });
   const [error, setError] = useState('');
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
@@ -12,10 +15,11 @@ function AddOfficerModal({ onClose, onSave }) {
       setError('Name and email are required.');
       return;
     }
-    if (!/^\S+@\S+\.\S+$/.test(form.email.trim())) {
-      setError('Enter a valid email address.');
+    if (collegeEmailError(form.email, emailDomain)) {
+      setError(collegeEmailError(form.email, emailDomain));
       return;
     }
+    if (phoneError(form.phone)) { setError(phoneError(form.phone)); return; }
     onSave({
       name: form.name.trim(),
       email: form.email.trim(),
@@ -35,7 +39,8 @@ function AddOfficerModal({ onClose, onSave }) {
         </div>
         <div className="form-group">
           <label>Email *</label>
-          <input type="email" placeholder="rajesh@college.edu" value={form.email} onChange={e => set('email', e.target.value)} />
+          <input type="email" placeholder={`name@${emailDomain}`} value={form.email} onChange={e => set('email', e.target.value)} />
+          <small>Use your college email (@{emailDomain}).</small>
         </div>
         <div className="form-group">
           <label>Department</label>
@@ -43,7 +48,7 @@ function AddOfficerModal({ onClose, onSave }) {
         </div>
         <div className="form-group">
           <label>Phone</label>
-          <input placeholder="+91 9XXXXXXXXX" value={form.phone} onChange={e => set('phone', e.target.value)} />
+          <input placeholder="9876543210" {...phoneInputProps} value={form.phone} onChange={e => set('phone', e.target.value)} />
         </div>
         <p className="form-hint">Default login password: <strong>123</strong></p>
         {error && <p className="form-error">{error}</p>}
@@ -58,7 +63,8 @@ function AddOfficerModal({ onClose, onSave }) {
   );
 }
 
-export default function Officers({ officers, platform, collegeName, showToast }) {
+export default function Officers({ officers, platform, collegeName, collegeInfo, showToast }) {
+  const emailDomain = collegeEmailDomain(collegeInfo);
   const [showAdd, setShowAdd]     = useState(false);
   const [filter, setFilter]       = useState('all'); // all | active | inactive
 
@@ -96,7 +102,7 @@ export default function Officers({ officers, platform, collegeName, showToast })
   };
 
   const handleRemove = async (id, name) => {
-    if (!window.confirm(`Permanently remove placement officer "${name}"? This cannot be undone.`)) return;
+    if (!await confirmDialog(`Permanently remove placement officer "${name}"? This cannot be undone.`)) return;
     try {
       await platform.removeUser(id);
       showToast('Officer removed.', 'success');
@@ -217,7 +223,7 @@ export default function Officers({ officers, platform, collegeName, showToast })
       </div>
 
       {showAdd && (
-        <AddOfficerModal onClose={() => setShowAdd(false)} onSave={handleAdd} />
+        <AddOfficerModal onClose={() => setShowAdd(false)} onSave={handleAdd} emailDomain={emailDomain} />
       )}
     </>
   );

@@ -36,6 +36,13 @@ export class ApplicationsService {
       idx = Math.max(0, ...app.timeline.map((t) => STAGES.indexOf(t.stage === 'Offer' ? 'Offered' : t.stage)));
     }
     const user = this.usersRepo.findById(app.candidateId);
+    let opp: ReturnType<OpportunitiesService['findOne']> | undefined;
+    try {
+      opp = this.oppsService.findOne(app.opportunityId);
+    } catch (error) {
+      // Historical applications remain readable after a drive is removed.
+      if (!(error instanceof NotFoundException)) throw error;
+    }
     const refs = this.referralsRepo.findByCandidate(app.candidateId).filter((r) => r.opportunityId === app.opportunityId);
     const rank = (r: Referral) => ({ approved: 3, pending: 2, declined: 1 } as Record<string, number>)[norm(r.status) === 'rejected' ? 'declined' : norm(r.status)] ?? 0;
     const ref = [...refs].sort((a, b) => rank(b) - rank(a) || b.id - a.id)[0];
@@ -43,8 +50,15 @@ export class ApplicationsService {
       ...app,
       status,
       currentStageIndex: idx,
+      candidateName: user?.name ?? app.candidateName,
+      branch: user?.department ?? app.branch,
+      cgpa: user?.cgpa ?? app.cgpa,
+      jobId: opp?.jobId ?? `JOB-${app.opportunityId}`,
+      title: opp?.title ?? app.title,
+      company: opp?.company ?? app.company,
+      type: opp?.type ?? app.type,
       email: user?.email ?? app.email,
-      phone: app.phone ?? user?.phone,
+      phone: user?.phone ?? app.phone,
     };
     if (ref) {
       const refStatus = norm(ref.status) === 'rejected' ? 'declined' : (norm(ref.status) as 'pending' | 'approved' | 'declined');
@@ -193,6 +207,7 @@ export class ApplicationsService {
     if ((opp.collegeId ?? 1) !== (user.collegeId ?? 1)) {
       throw new ConflictException('This opportunity is not open to your college');
     }
+    if (dto.resumeUrl && !dto.resumeUrl.startsWith(`resume-${candidateId}-`)) throw new BadRequestException('Resume must belong to the applicant');
     const name = user.name;
     const now = new Date().toISOString().split('T')[0];
     const application = this.repo.create({
@@ -205,6 +220,7 @@ export class ApplicationsService {
       email: user.email,
       phone: user.phone,
       resumeFile: dto.resumeFile,
+      resumeUrl: dto.resumeUrl,
       title: opp.title,
       company: opp.company,
       type: opp.type,

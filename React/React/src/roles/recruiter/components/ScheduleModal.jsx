@@ -4,11 +4,14 @@ import { X, AlertCircle } from 'lucide-react';
 export default function ScheduleModal({ onClose, onAddAssessment, opportunities = [], applications = [], preselectApplicationId }) {
   const [title, setTitle] = useState('');
   // Who this round is for: one application ("app:12") or everyone who applied to a role ("opp:3")
-  const schedulable = applications.filter((a) => ['Shortlisted', 'Interview'].includes(a.status));
+  const schedulable = applications.filter((a) => ['Shortlisted', 'Assessment', 'Interview'].includes(a.status));
   const isPreselectedValid = preselectApplicationId && schedulable.some((a) => a.id === Number(preselectApplicationId));
-  const [target, setTarget] = useState(
-    isPreselectedValid ? `app:${preselectApplicationId}` : schedulable[0] ? `app:${schedulable[0].id}` : ''
-  );
+  const [jobId, setJobId] = useState(isPreselectedValid ? String(schedulable.find(a => a.id === Number(preselectApplicationId)).opportunityId) : '');
+  const [selectedIds, setSelectedIds] = useState(isPreselectedValid ? [Number(preselectApplicationId)] : []);
+  const [search, setSearch] = useState('');
+  const [saving, setSaving] = useState(false);
+  const eligible = schedulable.filter(a => String(a.opportunityId) === jobId);
+  const visible = eligible.filter(a => `${a.name} ${a.email} ${a.branch} ${a.role} ${a.jobId || ''}`.toLowerCase().includes(search.toLowerCase()));
   const [date, setDate] = useState('');
   const [time, setTime] = useState('10:00');
   const [duration, setDuration] = useState('60 min');
@@ -78,12 +81,13 @@ export default function ScheduleModal({ onClose, onAddAssessment, opportunities 
 
   // ── Submit ────────────────────────────────────────────────────────────────
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newErrors = {
       title: validateTitle(title),
-      target: target ? '' : 'Choose who this round is for.',
+      jobId: jobId ? '' : 'Select a Job ID.',
+      target: eligible.some(a => selectedIds.includes(a.id)) ? '' : 'Select at least one candidate for this job.',
       date:  validateDate(date),
       link:  validateLink(link),
     };
@@ -96,26 +100,26 @@ export default function ScheduleModal({ onClose, onAddAssessment, opportunities 
       formattedLink = `https://${formattedLink}`;
     }
 
-    const [kind, rawId] = target.split(':');
-    const chosenApp = kind === 'app' ? applications.find((a) => a.id === Number(rawId)) : null;
-    const chosenOpp = kind === 'opp' ? opportunities.find((o) => o.id === Number(rawId)) : null;
+    setSaving(true);
+    const chosen = eligible.filter(a => selectedIds.includes(a.id));
     const newAssessment = {
+      opportunityId: Number(jobId),
+      applicationIds: chosen.map(a => a.id),
       title: title.trim(),
-      role: chosenApp?.role || chosenOpp?.title || '',
-      ...(chosenApp ? { applicationId: chosenApp.id, opportunityId: chosenApp.opportunityId } : {}),
-      ...(chosenOpp ? { opportunityId: chosenOpp.id } : {}),
+      role: [...new Set(chosen.map(a => a.role))].join(', '),
       date,
       time: time || '10:00 AM',
       duration,
-      candidates: 1,
+      candidates: chosen.length,
       platform: platform.trim() || 'Google Meet',
       link: formattedLink,
       type,
       isDraft: false,
     };
 
-    onAddAssessment(newAssessment);
-    onClose();
+    const ok = await onAddAssessment(newAssessment);
+    setSaving(false);
+    if (ok) onClose();
   };
 
   return (
@@ -146,29 +150,16 @@ export default function ScheduleModal({ onClose, onAddAssessment, opportunities 
             )}
           </div>
 
+          <div className="form-group" style={{marginBottom:14}}><label htmlFor="schedule-job">Job ID *</label><select id="schedule-job" className="form-select" required value={jobId} onChange={event => { setJobId(event.target.value); setSelectedIds([]); setErrors(previous => ({...previous,jobId:'',target:''})); }}><option value="">Select a Job ID</option>{opportunities.map(job => <option key={job.id} value={String(job.id)}>{job.jobId} · {job.title}</option>)}</select>{errors.jobId && <span className="field-error">{errors.jobId}</span>}</div>
           {/* ── Who is this for ── */}
           <div className="form-group" style={{ marginBottom: '14px' }}>
             <label>Candidate / Application *</label>
-            {schedulable.length > 0 ? (
-              <select
-                className={`form-select${errors.target ? ' input-error' : ''}`}
-                value={target}
-                onChange={(e) => { setTarget(e.target.value); setErrors((p) => ({ ...p, target: '' })); }}
-              >
-                <optgroup label="One candidate">
-                  {schedulable.map((a) => (
-                    <option key={a.id} value={`app:${a.id}`}>{a.name} — {a.role} ({a.status})</option>
-                  ))}
-                </optgroup>
-                <optgroup label="Everyone who is shortlisted">
-                  {opportunities.filter((o) => applications.some((a) => a.opportunityId === o.id && a.status === 'Shortlisted')).map((o) => (
-                    <option key={o.id} value={`opp:${o.id}`}>All shortlisted — {o.title}</option>
-                  ))}
-                </optgroup>
-              </select>
-            ) : (
-              <div className="field-error">No eligible candidates available. Only Shortlisted and Interview candidates can be scheduled.</div>
-            )}
+            <input className="form-input" aria-label="Search candidates" placeholder="Search name, email, department, Job ID or role" value={search} onChange={e => setSearch(e.target.value)} />
+            <div style={{maxHeight:220,overflowY:'auto',border:'1px solid #e5e7eb',padding:12,borderRadius:8}}>
+              <label style={{display:'block'}}><input type="checkbox" checked={visible.length > 0 && visible.every(a => selectedIds.includes(a.id))} onChange={e => setSelectedIds(prev => e.target.checked ? [...new Set([...prev,...visible.map(a => a.id)])] : prev.filter(id => !visible.some(a => a.id === id)))} /> Select all matching candidates</label>
+              {visible.map(a => <label key={a.id} style={{display:'block',padding:'8px 0'}}><input type="checkbox" checked={selectedIds.includes(a.id)} onChange={() => setSelectedIds(prev => prev.includes(a.id) ? prev.filter(id => id !== a.id) : [...prev,a.id])} /> {a.name} · {a.email} · {a.branch} · {a.role} ({a.jobId})</label>)}
+              {!visible.length && <p>{!jobId ? 'Select a Job ID to see eligible candidates.' : eligible.length ? 'No candidates match your search.' : 'No shortlisted candidates are available for this job.'}</p>}
+            </div><p>{selectedIds.length} selected</p>
             <span style={{ fontSize: '11px', color: '#9CA3AF', marginTop: '2px', display: 'block' }}>
               The candidate gets the date, time and link in their Applications page and notifications.
             </span>
@@ -269,7 +260,7 @@ export default function ScheduleModal({ onClose, onAddAssessment, opportunities 
             <button type="button" className="btn-secondary-action" onClick={onClose}>
               Cancel
             </button>
-            <button type="submit" className="btn-primary-action">
+            <button type="submit" disabled={saving} className="btn-primary-action">
               Schedule Round
             </button>
           </div>

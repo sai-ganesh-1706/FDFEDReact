@@ -1,4 +1,4 @@
-import { IsString, IsEmail, IsOptional, IsIn, Length, Matches, IsUrl } from 'class-validator';
+import { ValidateIf, IsString, IsEmail, IsOptional, IsIn, Length, Matches, IsUrl } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateCollegeDto {
@@ -17,9 +17,10 @@ export class CreateCollegeDto {
   @IsEmail({}, { message: 'Enter a valid college email address' })
   email: string;
 
-  @ApiPropertyOptional({ example: '+91 8626 252525' })
+  @ApiPropertyOptional({ example: '8626252525' })
   @IsOptional()
-  @Matches(/^[+]?[0-9 ()-]{8,16}$/, { message: 'Enter a valid phone number (8–16 digits)' })
+  @ValidateIf((_object, value) => value !== '')
+  @Matches(/^[0-9]{10}$/, { message: 'Phone number must contain exactly 10 digits, with no spaces or special characters' })
   phone?: string;
 
   @ApiPropertyOptional({ example: 'Chittoor, Andhra Pradesh' })

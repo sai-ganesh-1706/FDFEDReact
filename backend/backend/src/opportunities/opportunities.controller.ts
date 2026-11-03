@@ -85,7 +85,7 @@ export class OpportunitiesController {
     this.assertCanManage(id, user);
     // Only the placement cell moves an opportunity through review; a recruiter edit never changes its status.
     delete (dto as any).status;
-    return this.service.update(id, dto);
+    return this.service.update(id, dto, this.actor(user));
   }
 
   @Patch(':id/approve')

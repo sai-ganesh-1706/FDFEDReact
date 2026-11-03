@@ -5,7 +5,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { parseStudentCsv } from './student-csv';
 import { validateOversightUser } from './oversight-validation';
 import { CollegesRepository } from '../colleges/colleges.repository';
-import { oversightPolicy } from './oversight-policy';
+import { collegeEmailDomain, oversightPolicy } from './oversight-policy';
 
 export type SafeUser = Omit<User, 'password'>;
 
@@ -97,6 +97,7 @@ export class UsersService {
 
   create(dto: CreateUserDto): SafeUser {
     dto = { ...dto, name: dto.name.trim(), email: dto.email.trim().toLowerCase() };
+    if (['candidate', 'placement_officer', 'college_admin'].includes(dto.role)) this.validateCollegeEmail(dto.email, dto.collegeId);
     if (['candidate', 'alumni'].includes(dto.role)) {
       const errors = validateOversightUser(dto, this.getOversightPolicy(dto.collegeId ?? 1));
       if (errors.length) throw new BadRequestException(errors);
@@ -122,18 +123,31 @@ export class UsersService {
   update(id: number, dto: UpdateUserDto): SafeUser {
     const current = this.repo.findById(id);
     if (!current) throw new NotFoundException(`User with id ${id} not found`);
+    const targetRole = dto.role ?? current.role;
+    const targetCollegeId = dto.collegeId ?? current.collegeId;
     if (dto.email !== undefined) {
       dto.email = dto.email.trim().toLowerCase();
       const existing = this.repo.findByEmail(dto.email);
       if (existing && existing.id !== id) throw new ConflictException('Email already belongs to another account');
     }
-    if (['candidate', 'alumni'].includes(current.role)) {
+    if (['candidate', 'placement_officer', 'college_admin'].includes(targetRole) &&
+        (dto.email !== undefined && dto.email !== current.email || targetRole !== current.role || targetCollegeId !== current.collegeId)) {
+      this.validateCollegeEmail(dto.email ?? current.email, targetCollegeId);
+    }
+    if (current.oversightVisible !== false && ['candidate', 'alumni'].includes(current.role)) {
       const errors = validateOversightUser({ ...current, ...dto, role: current.role } as CreateUserDto, this.getOversightPolicy(current.collegeId ?? 1));
       if (errors.length) throw new BadRequestException(errors);
     }
     const updated = this.repo.update(id, dto as Partial<User>);
     if (!updated) throw new NotFoundException(`User with id ${id} not found`);
     return toSafe(updated);
+  }
+
+  private validateCollegeEmail(email: string, collegeId?: number | null): void {
+    const college = collegeId ? this.colleges.findById(collegeId) : undefined;
+    if (!college) throw new BadRequestException('A valid college is required for this account');
+    const domain = collegeEmailDomain(college);
+    if (email.split('@')[1] !== domain) throw new BadRequestException(`Use an @${domain} email address`);
   }
 
   changePassword(id: number, currentPassword: string, newPassword: string): { message: string } {

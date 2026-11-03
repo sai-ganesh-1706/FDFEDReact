@@ -4,6 +4,10 @@ import { join } from 'path';
 
 export interface Opportunity {
   id: number;
+  jobId?: string;
+  changedAfterApproval?: boolean;
+  changedAfterApprovalAt?: string;
+  changedAfterApprovalFields?: string[];
   title: string;
   company: string;
   location: string;

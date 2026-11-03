@@ -7,6 +7,8 @@ import {
 const NAV_ITEMS = [
   { id: 'dashboard',      label: 'Dashboard',           icon: LayoutDashboard },
   { id: 'officers',       label: 'Placement Officers',  icon: ShieldCheck },
+  { id: 'alumni', label: 'Alumni', icon: GraduationCap },
+  { id: 'activity', label: 'Officer Activity', icon: BarChart2 },
   { id: 'students',       label: 'Students',            icon: GraduationCap },
   { id: 'announcements',  label: 'Announcements',       icon: Megaphone },
   { id: 'messages',       label: 'Messages',            icon: Mail },
@@ -22,7 +24,7 @@ export default function CollegeAdminSidebar({ activeTab, setActiveTab, collegeNa
       </div>
 
       <div className="sidebar-role-badge">
-        <span>🏫 College Administrator</span>
+        <span>College Administrator</span>
       </div>
 
       <nav className="sidebar-nav">
@@ -42,9 +44,6 @@ export default function CollegeAdminSidebar({ activeTab, setActiveTab, collegeNa
       </nav>
 
       <div className="sidebar-bottom">
-        <div className="sidebar-help-text">
-          You manage placement officers and student outcomes for your college.
-        </div>
         <button className="btn-signout" onClick={onSignOut}>
           <LogOut size={16} />
           Sign Out

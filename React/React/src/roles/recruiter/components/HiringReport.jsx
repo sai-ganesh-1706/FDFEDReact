@@ -4,7 +4,7 @@ import { BarChart3, TrendingUp, Users, Award, CheckCircle } from 'lucide-react';
 export default function HiringReport({ applications, opportunities }) {
   // Compute analytics
   const totalApps = applications.length;
-  const shortlisted = applications.filter(a => ['Shortlisted', 'Interview', 'Offered'].includes(a.status)).length;
+  const shortlisted = applications.filter(a => ['Shortlisted', 'Assessment', 'Interview', 'Offered'].includes(a.status)).length;
   const interviewRounds = applications.filter(a => ['Interview', 'Offered'].includes(a.status)).length;
   const interviews = applications.filter(a => ['Interview', 'Offered'].includes(a.status)).length;
   const offers = applications.filter(a => a.status === 'Offered').length;
@@ -116,7 +116,7 @@ export default function HiringReport({ applications, opportunities }) {
             {opportunities.map((opp) => (
               <div key={opp.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid #F3F4F6' }}>
                 <div>
-                  <div style={{ fontWeight: 600, fontSize: '13px' }}>{opp.title}</div>
+                  <div style={{ fontWeight: 600, fontSize: '13px' }}>{opp.title} ({opp.jobId})</div>
                   <div style={{ fontSize: '11px', color: '#6B7280' }}>{opp.location} - {opp.openings} Openings</div>
                 </div>
                 <div style={{ textAlign: 'right' }}>

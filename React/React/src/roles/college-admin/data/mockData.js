@@ -48,7 +48,7 @@ export const mockCollegeInfo = {
   name: 'IIIT Sri City',
   code: 'IIITSRICITY',
   email: 'admin@iiitsricity.ac.in',
-  phone: '+91 8626 252525',
+  phone: '8626252525',
   address: 'Chittoor, Andhra Pradesh',
   website: 'https://iiits.ac.in',
 };

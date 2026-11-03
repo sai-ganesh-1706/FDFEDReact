@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { OpportunitiesRepository, Opportunity } from './opportunities.repository';
+import { validateOpportunityTerms } from './opportunity-validation';
 import { CreateOpportunityDto } from './dto/create-opportunity.dto';
 import { UpdateOpportunityDto } from './dto/update-opportunity.dto';
 import { NotificationsService } from '../notifications/notifications.service';
@@ -18,7 +19,7 @@ export class OpportunitiesService {
   ) {}
 
   private withApplicationCount(opp: Opportunity): Opportunity {
-    return { ...opp, applications: this.applications.findByOpportunity(opp.id).length };
+    return { ...opp, jobId: opp.jobId || `JOB-${opp.id}`, applications: this.applications.findByOpportunity(opp.id).length };
   }
 
   findAll(collegeId?: number | null): Opportunity[] {
@@ -48,6 +49,9 @@ export class OpportunitiesService {
   }
 
   create(dto: CreateOpportunityDto, userId?: number, role?: string, collegeId?: number | null): Opportunity {
+    if (!dto.jobId?.trim()) throw new BadRequestException('Job ID is required');
+    if (this.repo.findAll().some(o => (o.jobId || `JOB-${o.id}`).toLowerCase() === dto.jobId.trim().toLowerCase())) throw new BadRequestException('Job ID already exists');
+    validateOpportunityTerms(dto);
     const poster = userId ? this.usersRepo.findById(userId) : undefined;
     // Officers post on behalf of the college and can publish straight away; recruiters wait for approval.
     const status = role === 'placement_officer' ? 'Published' : 'pending';
@@ -55,6 +59,7 @@ export class OpportunitiesService {
     const company = role === 'recruiter' && poster?.company ? poster.company : dto.company;
     const created = this.repo.create({
       ...dto,
+      duration: dto.type === 'Internship' ? dto.duration || 'Not specified' : undefined,
       company,
       status,
       applications: 0,
@@ -70,9 +75,35 @@ export class OpportunitiesService {
     return this.withApplicationCount(created);
   }
 
-  update(id: number, dto: UpdateOpportunityDto): Opportunity {
-    const { applications: _applications, ...changes } = dto;
-    const updated = this.repo.update(id, changes as Partial<Opportunity>);
+  update(id: number, dto: UpdateOpportunityDto, actor?: { name: string }): Opportunity {
+    const current = this.findOne(id);
+    const { applications: _applications, status: _status, rejectionRemark: _remark, ...changes } = dto;
+    validateOpportunityTerms(changes, current);
+    if ((changes.type ?? current.type) === 'Full-Time') {
+      if (current.duration) changes.duration = '';
+      else delete changes.duration;
+    }
+    if (changes.jobId && this.findAll().some(o => o.id !== id && o.jobId?.toLowerCase() === changes.jobId!.toLowerCase())) throw new BadRequestException('Job ID already exists');
+    if (['approved', 'published', 'closed'].includes(current.status.toLowerCase()) && changes.cgpa !== undefined && changes.cgpa > current.cgpa) throw new BadRequestException('After approval, CGPA can only be decreased');
+    if (['published', 'closed'].includes(current.status.toLowerCase())) {
+      const changed = Object.keys(changes).filter(key => JSON.stringify(changes[key]) !== JSON.stringify(current[key]));
+      if (changed.some(key => key !== 'cgpa')) throw new BadRequestException('After publication only the CGPA requirement can be lowered');
+    }
+    const changedFields = Object.keys(changes).filter(key => JSON.stringify(changes[key]) !== JSON.stringify(current[key]));
+    const approvalChange = current.status === 'approved' && changedFields.length > 0;
+    const updated = this.repo.update(id, {
+      ...changes,
+      ...(approvalChange ? {
+        changedAfterApproval: true,
+        changedAfterApprovalAt: new Date().toISOString(),
+        changedAfterApprovalFields: [...new Set([...(current.changedAfterApprovalFields ?? []), ...changedFields])],
+      } : {}),
+    } as Partial<Opportunity>);
+    if (updated && changedFields.length) this.activity.log({
+      action: approvalChange ? 'Approved Opportunity Edited' : 'Opportunity Edited',
+      detail: `${current.jobId}: ${current.title} changed (${changedFields.join(', ')})${approvalChange ? ' after approval and before publication' : ''}`,
+      actor: actor?.name ?? 'Recruiter', actorRole: 'recruiter', collegeId: current.collegeId, type: 'opportunity',
+    });
     if (!updated) throw new NotFoundException(`Opportunity with id ${id} not found`);
     return this.withApplicationCount(updated);
   }
@@ -86,9 +117,9 @@ export class OpportunitiesService {
     if (opp.status !== 'pending') {
       throw new BadRequestException('Only pending opportunities can be approved');
     }
-    const updated = this.repo.update(id, { status: 'approved' })!;
+    const updated = this.repo.update(id, { status: 'approved', changedAfterApproval: false, changedAfterApprovalAt: undefined, changedAfterApprovalFields: [] })!;
     this.tell(opp, 'Opportunity approved', `${opp.title} was approved by the placement cell and will go live shortly.`);
-    this.activity.log({ action: 'Opportunity Approved', detail: `${opp.title} at ${opp.company} was approved`, actor: actor?.name ?? 'Placement officer', actorRole: 'placement_officer', collegeId: opp.collegeId, type: 'opportunity' });
+    this.activity.log({ action: 'Opportunity Approved', detail: `${opp.jobId}: ${opp.title} at ${opp.company} was approved`, actor: actor?.name ?? 'Placement officer', actorRole: 'placement_officer', collegeId: opp.collegeId, type: 'opportunity' });
     return this.withApplicationCount(updated);
   }
 
@@ -98,8 +129,8 @@ export class OpportunitiesService {
     if (opp.status !== 'approved') {
       throw new BadRequestException('Only approved, unpublished opportunities can return to review');
     }
-    const updated = this.repo.update(id, { status: 'pending' })!;
-    this.activity.log({ action: 'Opportunity Approval Undone', detail: `${opp.title} at ${opp.company} was returned to pending review`, actor: actor?.name ?? 'Placement officer', actorRole: 'placement_officer', collegeId: opp.collegeId, type: 'opportunity' });
+    const updated = this.repo.update(id, { status: 'pending', changedAfterApproval: false, changedAfterApprovalAt: undefined, changedAfterApprovalFields: [] })!;
+    this.activity.log({ action: 'Opportunity Approval Undone', detail: `${opp.jobId}: ${opp.title} at ${opp.company} was returned to pending review`, actor: actor?.name ?? 'Placement officer', actorRole: 'placement_officer', collegeId: opp.collegeId, type: 'opportunity' });
     return this.withApplicationCount(updated);
   }
 
@@ -119,7 +150,7 @@ export class OpportunitiesService {
         message: `${opp.company} is hiring for ${opp.title} (${opp.type}, ${opp.salary}). Apply before ${opp.deadline}.`,
         href: 'opportunities', isRead: false,
       }, u.id));
-    this.activity.log({ action: 'Opportunity Published', detail: `${opp.title} at ${opp.company} is now live for candidates`, actor: actor?.name ?? 'Placement officer', actorRole: 'placement_officer', collegeId: opp.collegeId, type: 'opportunity' });
+    this.activity.log({ action: 'Opportunity Published', detail: `${opp.jobId}: ${opp.title} at ${opp.company} is now live for candidates`, actor: actor?.name ?? 'Placement officer', actorRole: 'placement_officer', collegeId: opp.collegeId, type: 'opportunity' });
     return this.withApplicationCount(updated);
   }
 
@@ -134,7 +165,7 @@ export class OpportunitiesService {
     }
     const updated = this.repo.update(id, { status: 'rejected', rejectionRemark: cleanRemark })!;
     this.tell(opp, 'Opportunity not approved', `${opp.title} was not approved. Reason: ${cleanRemark}`);
-    this.activity.log({ action: 'Opportunity Rejected', detail: `${opp.title} at ${opp.company} was rejected`, actor: actor?.name ?? 'Placement officer', actorRole: 'placement_officer', collegeId: opp.collegeId, type: 'opportunity' });
+    this.activity.log({ action: 'Opportunity Rejected', detail: `${opp.jobId}: ${opp.title} at ${opp.company} was rejected`, actor: actor?.name ?? 'Placement officer', actorRole: 'placement_officer', collegeId: opp.collegeId, type: 'opportunity' });
     return this.withApplicationCount(updated);
   }
 

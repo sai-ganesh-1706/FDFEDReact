@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useMemo, useCallback } from 'react';
+﻿import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
 import Dashboard from './components/Dashboard';
@@ -12,7 +12,7 @@ import Profile from './components/Profile';
 import SignOutModal from './components/SignOutModal';
 import api, { clearSession, errorMessage, readSession } from '../../services/api.js';
 import { fetchRecruiterData, fromOpportunity } from './data/api.js';
-import { CheckCircle2 } from 'lucide-react';
+import { infoDialog } from '../../shared/components/AppDialog.jsx';
 import { readSavedPage, savePage } from '../../shared/utils/navigationState.js';
 import './styles/Recruiter.css';
 
@@ -24,7 +24,6 @@ export default function RecruiterApp() {
   // Navigation State
   const [activeTab, setActiveTabState] = useState(() => readSavedPage(RECRUITER_TAB_KEY, 'dashboard', RECRUITER_TABS));
   const [selectedRoleFilter, setSelectedRoleFilter] = useState('All Roles');
-  const [toastMessage, setToastMessage] = useState('');
   const [scheduleFor, setScheduleFor] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [isSignOutOpen, setIsSignOutOpen] = useState(false);
@@ -40,7 +39,7 @@ export default function RecruiterApp() {
     const parsed = readSession() || {};
     return {
       name: parsed.name || '',
-      role: 'Recruiter',
+      role: parsed.headline || 'Recruiter',
       email: parsed.email || '',
       avatar: parsed.avatar || initialsOf(parsed.name),
       company: parsed.company || '',
@@ -56,8 +55,11 @@ export default function RecruiterApp() {
   const [applications, setApplications] = useState([]);
   const [assessments, setAssessments] = useState([]);
 
+  const reloadVersion = useRef(0);
   const reload = async () => {
+    const version = ++reloadVersion.current;
     const data = await fetchRecruiterData();
+    if (version !== reloadVersion.current) return;
     setOpportunities(data.opportunities);
     setApplications(data.applications);
     setAssessments(data.assessments);
@@ -73,6 +75,7 @@ export default function RecruiterApp() {
           ...prev,
           name: user.name,
           email: user.email,
+          role: user.headline || 'Recruiter',
           avatar: user.avatar || initialsOf(user.name),
           company: user.company || '',
           department: user.department || '',
@@ -98,10 +101,7 @@ export default function RecruiterApp() {
 
   // Toast Helper
   const showToast = (msg) => {
-    setToastMessage(msg);
-    setTimeout(() => {
-      setToastMessage('');
-    }, 3200);
+    infoDialog(msg);
   };
 
   // Action Handlers ΓÇö each one writes to the API and then refreshes from it.
@@ -130,7 +130,7 @@ export default function RecruiterApp() {
   };
 
   const handleUpdateOpportunity = (updatedOpp) => run(
-    () => api.put(`/opportunities/${updatedOpp.id}`, fromOpportunity(updatedOpp, { status: updatedOpp.status })),
+    () => api.put(`/opportunities/${updatedOpp.id}`, ['published', 'closed'].includes(updatedOpp.status.toLowerCase()) ? { cgpa: Number(updatedOpp.cgpa) } : fromOpportunity(updatedOpp)),
     `Opportunity "${updatedOpp.title}" updated successfully!`,
     'Could not update the opportunity.'
   );
@@ -148,7 +148,7 @@ export default function RecruiterApp() {
   );
 
   const handleUpdateApplicationRound = (id, roundKey, val) => run(
-    () => api.patch(`/applications/${id}/status`, { rounds: { [roundKey]: val } }),
+    () => api.patch(`/applications/${id}/status`, typeof roundKey === 'object' ? { rounds: roundKey, status: val } : { rounds: { [roundKey]: val } }),
     `Round evaluation updated to "${val}"`,
     'Could not update the round.'
   );
@@ -200,12 +200,15 @@ export default function RecruiterApp() {
         location: updatedData.location,
         department: updatedData.department,
         company: updatedData.company,
+        headline: updatedData.role,
       });
       setRecruiter((prev) => ({ ...prev, ...updatedData, avatar: user.avatar || initialsOf(user.name) }));
       localStorage.setItem('loggedInUser', JSON.stringify({ ...session, name: user.name, company: user.company }));
       showToast('Profile information saved successfully!');
+      return true;
     } catch (error) {
       showToast(errorMessage(error, 'Could not save your profile.'));
+      return false;
     }
   };
 
@@ -267,6 +270,7 @@ export default function RecruiterApp() {
         {activeTab === 'post' && (
           <PostOpportunity 
             onAddOpportunity={handleAddOpportunity}
+            existingOpportunities={opportunities}
             setActiveTab={setActiveTab}
           />
         )}
@@ -330,12 +334,7 @@ export default function RecruiterApp() {
       </main>
 
       {/* TOAST NOTIFICATION */}
-      {toastMessage && (
-        <div className="toast-success">
-          <CheckCircle2 size={18} />
-          <span>{toastMessage}</span>
-        </div>
-      )}
+
       <SignOutModal isOpen={isSignOutOpen} onClose={() => setIsSignOutOpen(false)} onConfirm={confirmSignOut} />
     </div>
     </div>

@@ -1,3 +1,4 @@
+import { infoDialog } from '../../../shared/components/AppDialog.jsx';
 import React, { useState } from 'react';
 import Sidebar from './Sidebar';
 import Header from './Header';
@@ -24,7 +25,7 @@ export default function ReviewOpportunities({ onNavigate, activePage = 'p2' }) {
       await refresh();
       return true;
     } catch (error) {
-      window.alert(errorMessage(error, 'That action could not be completed.'));
+      infoDialog(errorMessage(error, 'That action could not be completed.'));
       return false;
     }
   };
@@ -128,11 +129,12 @@ export default function ReviewOpportunities({ onNavigate, activePage = 'p2' }) {
             const typeLabel = submission.type === 'internship' ? 'Internship' : 'Full-time';
             return (
               <div className={`opp-card${isOpen ? ' open' : ''}`} data-status={submission.status} key={submission.id}>
+                {submission.status === 'approved' && submission.changedAfterApproval && <div role="status" style={{padding:'12px 18px',background:'#fffbeb',color:'#92400e',borderBottom:'1px solid #fde68a',borderRadius:'12px 12px 0 0'}}><strong>Changed after approval</strong><p style={{margin:'4px 0 0'}}>The recruiter updated {submission.changedAfterApprovalFields?.map(field => ({jobId:'Job ID',title:'title',location:'location',salary:'compensation',openings:'openings',cgpa:'minimum CGPA',branches:'eligible branches',type:'opportunity type',tags:'skills',description:'description',deadline:'deadline',duration:'duration'})[field] || field).join(', ')} on {new Date(submission.changedAfterApprovalAt).toLocaleString('en-IN')}. Review the updated details before publishing.</p></div>}
                 <button type="button" className="opp-header" onClick={() => toggleCard(submission.id)} aria-expanded={Boolean(isOpen)} style={{ width: '100%', textAlign: 'left', border: 0, background: 'transparent' }}>
                   <div className="opp-left">
                     <div className="opp-avatar" style={{ background: submission.avatarBg, color: '#fff' }}>{submission.avatar}</div>
                     <div className="opp-info">
-                      <div className="opp-title">{submission.title} <span className={`type-badge ${submission.type}`}>{typeLabel}</span></div>
+                      <div className="opp-title">{submission.title} ({submission.jobId}) <span className={`type-badge ${submission.type}`}>{typeLabel}</span></div>
                       <div className="opp-company">{submission.company} • {submission.location} • {submission.pkg}</div>
                       <div className="opp-meta">Submitted by: {submission.submitter} ({submission.company}) • {submission.submitted} • Deadline: {submission.deadline}</div>
                     </div>

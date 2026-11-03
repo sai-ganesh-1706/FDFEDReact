@@ -254,7 +254,7 @@ export default function Statistics({ onNavigate, activePage = 'p3' }) {
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ background: '#fafafa' }}>
-                    {['#', 'Company', 'Full-time Offers', 'Avg Offered Package'].map((h) => (
+                    {['#', 'Company', 'Full-time Offers'].map((h) => (
                       <th key={h} style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '.5px', color: '#94a3b8', fontWeight: 600, padding: '12px 18px', textAlign: 'left', borderBottom: '1px solid #f1f5f9' }}>{h}</th>
                     ))}
                   </tr>
@@ -267,7 +267,6 @@ export default function Statistics({ onNavigate, activePage = 'p3' }) {
                       </td>
                       <td style={{ padding: '14px 18px', fontWeight: 700, color: '#1e293b', fontSize: '14px' }}>{c.company}</td>
                       <td style={{ padding: '14px 18px', color: '#059669', fontWeight: 600, fontSize: '13px' }}>{c.offers} students</td>
-                      <td style={{ padding: '14px 18px', fontWeight: 700, color: '#7c3aed', fontSize: '13px' }}>{c.avgPackage} LPA</td>
                     </tr>
                   ))}
                 </tbody>

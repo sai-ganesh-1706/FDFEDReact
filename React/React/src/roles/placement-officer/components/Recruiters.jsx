@@ -1,5 +1,7 @@
+import { infoDialog } from '../../../shared/components/AppDialog.jsx';
 import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
+import RecruiterOpportunitiesModal from '../../../shared/components/RecruiterOpportunitiesModal.jsx';
 import Header from './Header';
 import './styles/p4.css';
 import api, { errorMessage } from '../../../services/api.js';
@@ -17,11 +19,12 @@ export default function Recruiters({ onNavigate, activePage = 'p4' }) {
       await refresh();
       return true;
     } catch (error) {
-      window.alert(errorMessage(error, 'That action could not be completed.'));
+      infoDialog(errorMessage(error, 'That action could not be completed.'));
       return false;
     }
   };
 
+  const [selectedRecruiter, setSelectedRecruiter] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [openProfileIdx, setOpenProfileIdx] = useState(null);
   const [openVerifyIdx, setOpenVerifyIdx] = useState(null);
@@ -79,7 +82,7 @@ export default function Recruiters({ onNavigate, activePage = 'p4' }) {
       setCredentials({ name: recruiter.name, company: recruiter.company, ...result.credentials });
       setCopied(false);
     } catch (error) {
-      window.alert(errorMessage(error, 'That action could not be completed.'));
+      infoDialog(errorMessage(error, 'That action could not be completed.'));
     }
     setOpenVerifyIdx(null);
   };
@@ -110,6 +113,7 @@ export default function Recruiters({ onNavigate, activePage = 'p4' }) {
       <Sidebar activePage={activePage} onNavigate={onNavigate} />
 
       <Header title="Recruiter Management" onNavigate={onNavigate} />
+      {selectedRecruiter && <RecruiterOpportunitiesModal key={selectedRecruiter.id} recruiter={selectedRecruiter} onClose={() => setSelectedRecruiter(null)} />}
 
       <main className="main-content" id="mainContent">
         {loadError && <p role="alert" style={{ color: '#b91c1c', marginBottom: 12 }}>{loadError}</p>}
@@ -234,7 +238,7 @@ export default function Recruiters({ onNavigate, activePage = 'p4' }) {
                   </tr>}
                   <React.Fragment key={realIdx}>
                     {/* Main Row */}
-                    <tr className="rec-row" data-i={realIdx}>
+                    <tr className="rec-row" data-i={realIdx} style={{cursor:'pointer'}} onClick={() => setSelectedRecruiter(r)}>
                       <td>
                         <div className="rec-name">
                           <div className="rec-avatar">{r.name[0]}</div>
@@ -243,14 +247,14 @@ export default function Recruiters({ onNavigate, activePage = 'p4' }) {
                       </td>
                       <td>{r.company}</td>
                       <td>{r.role}</td>
-                      <td>{r.opps} published {r.opps === 1 ? 'opportunity' : 'opportunities'}</td>
+                      <td><button type="button" className="btn-profile" onClick={() => setSelectedRecruiter(r)}>View Opportunities ({r.opps} published)</button></td>
                       <td>
                         <span className={`badge-status badge-${r.status}`}>
                           {r.status.charAt(0).toUpperCase() + r.status.slice(1)}
                         </span>
                       </td>
                       <td>
-                        <div className="action-btns">
+                        <div className="action-btns" onClick={event => event.stopPropagation()}>
                           <button className="btn-profile" onClick={() => toggleProfile(realIdx)}>
                             View Profile <span className="chev" style={{ transform: isProfileOpen ? 'rotate(180deg)' : '' }}>▼</span>
                           </button>

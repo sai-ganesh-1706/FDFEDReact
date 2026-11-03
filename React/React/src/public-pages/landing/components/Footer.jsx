@@ -1,3 +1,4 @@
+import { infoDialog } from '../../../shared/components/AppDialog.jsx';
 import { useState } from "react";
 
 function Footer() {
@@ -11,7 +12,7 @@ function Footer() {
       setEmail("");
       setTimeout(() => setSubscribed(false), 5000);
     } else {
-      alert("Please enter a valid email address.");
+      infoDialog("Please enter a valid email address.");
     }
   };
 
@@ -65,7 +66,7 @@ function Footer() {
                 <span className="contact-icon">✉️</span> hello@careernest.com
               </div>
               <div>
-                <span className="contact-icon">📞</span> +91 123 456 7890
+                <span className="contact-icon">📞</span> 1234567890
               </div>
               <div>
                 <span className="contact-icon">📍</span> Hyderabad, India

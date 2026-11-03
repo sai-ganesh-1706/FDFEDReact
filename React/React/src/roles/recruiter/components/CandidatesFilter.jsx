@@ -7,24 +7,24 @@ import { Search, UserCheck, Sparkles } from 'lucide-react';
  */
 export default function CandidatesFilter({ applications = [], opportunities = [], onBulkShortlist, onBulkReject }) {
   const [role, setRole] = useState('All Roles');
-  const [dept, setDept] = useState('All');
+  const [dept, setDept] = useState([]);
   const [minCgpa, setMinCgpa] = useState('0');
   const [referredOnly, setReferredOnly] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedIds, setSelectedIds] = useState([]);
 
   const queue = useMemo(() => applications.filter((a) => a.status === 'Applied'), [applications]);
-  const roles = ['All Roles', ...new Set(queue.map((a) => a.role))];
-  const depts = ['All', ...new Set(queue.map((a) => a.branch).filter(Boolean))];
+  const roles = [...new Map(queue.map(a => [String(a.opportunityId), { id: String(a.opportunityId), label: `${a.role} (${a.jobId})` }])).values()];
+  const depts = [...new Set(queue.map((a) => a.branch).filter(Boolean))];
 
   const filtered = queue.filter((a) => {
     const q = searchTerm.toLowerCase();
     return (
-      (role === 'All Roles' || a.role === role) &&
-      (dept === 'All' || a.branch === dept) &&
+      (role === 'All Roles' || String(a.opportunityId) === role) &&
+      (dept.length === 0 || dept.includes(a.branch)) &&
       Number(a.cgpa) >= parseFloat(minCgpa || 0) &&
       (!referredOnly || a.isReferred) &&
-      (!q || a.name.toLowerCase().includes(q) || (a.email || '').toLowerCase().includes(q) || a.role.toLowerCase().includes(q))
+      (!q || a.name.toLowerCase().includes(q) || (a.email || '').toLowerCase().includes(q) || `${a.role} ${a.jobId || ''}`.toLowerCase().includes(q))
     );
   });
 
@@ -59,15 +59,13 @@ export default function CandidatesFilter({ applications = [], opportunities = []
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B7280' }}>Role:</label>
           <select className="form-select" value={role} onChange={(e) => setRole(e.target.value)}>
-            {roles.map((r) => <option key={r}>{r}</option>)}
+            <option value="All Roles">All Roles</option>{roles.map(r => <option key={r.id} value={r.id}>{r.label}</option>)}
           </select>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B7280' }}>Dept:</label>
-          <select className="form-select" value={dept} onChange={(e) => setDept(e.target.value)}>
-            {depts.map((d) => <option key={d}>{d}</option>)}
-          </select>
+          <details><summary className="form-select">{dept.length ? `${dept.length} departments` : 'All departments'}</summary><div style={{padding: 12, background: 'white'}}>{depts.map(d => <label key={d} style={{display:'block'}}><input type="checkbox" checked={dept.includes(d)} onChange={() => setDept(prev => prev.includes(d) ? prev.filter(x => x !== d) : [...prev,d])} /> {d}</label>)}<button type="button" onClick={() => setDept([])}>Clear</button></div></details>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -132,7 +130,7 @@ export default function CandidatesFilter({ applications = [], opportunities = []
                     <strong>{a.name}</strong>
                     <div style={{ fontSize: '11px', color: '#9CA3AF' }}>{a.email}</div>
                   </td>
-                  <td>{a.role}</td>
+                  <td>{a.role} ({a.jobId})</td>
                   <td>{a.branch || '—'}</td>
                   <td><span className={`pill-cgpa ${cgpaClass}`}>{a.cgpa}</span></td>
                   <td>{a.appliedDate}</td>

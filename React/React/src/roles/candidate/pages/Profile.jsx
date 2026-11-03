@@ -1,3 +1,5 @@
+import { phoneError, phoneInputProps } from '../../../shared/utils/phone.js';
+import { infoDialog } from '../../../shared/components/AppDialog.jsx';
 import { useEffect, useRef, useState } from 'react';
 import { Camera, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useStore } from '../context/StoreContext.jsx';
@@ -127,6 +129,7 @@ export default function Profile() {
 
     function saveIntro(e) {
         e.preventDefault();
+        if (phoneError(introForm.phone)) { showSuccess('Check phone number', phoneError(introForm.phone)); return; }
         updateStore((s) => {
             s.currentUser.name = introForm.name;
             s.currentUser.email = introForm.email;
@@ -467,7 +470,7 @@ export default function Profile() {
                                         </div>
                                     </div>
                                     <div className="file-actions">
-                                        <i className="bx bx-trash" onClick={() => window.alert('Delete functionality coming soon!')} />
+                                        <i className="bx bx-trash" onClick={() => infoDialog('Delete functionality coming soon!')} />
                                     </div>
                                 </div>
 
@@ -631,8 +634,7 @@ export default function Profile() {
                         <label>Phone</label>
                         <input
                             type="tel"
-                            pattern="[0-9\+\-\s]{10,15}"
-                            title="Please enter a valid 10-15 digit phone number"
+                            {...phoneInputProps}
                             value={introForm.phone}
                             onChange={(e) => setIntroForm((f) => ({ ...f, phone: e.target.value }))}
                         />

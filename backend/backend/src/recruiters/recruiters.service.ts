@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
-import { randomInt } from 'crypto';
 import { RecruitersRepository, Recruiter } from './recruiters.repository';
 import { CreateRecruiterDto } from './dto/create-recruiter.dto';
 import { UpdateRecruiterDto } from './dto/update-recruiter.dto';
@@ -10,11 +9,6 @@ import { OpportunitiesRepository } from '../opportunities/opportunities.reposito
 
 export interface Credentials { email: string; password: string; }
 
-/** Readable one-time password, e.g. Cn@4821kd */
-function generatePassword(): string {
-  const letters = 'abcdefghjkmnpqrstuvwxyz';
-  return `Cn@${randomInt(1000, 9999)}${letters[randomInt(letters.length)]}${letters[randomInt(letters.length)]}`;
-}
 
 @Injectable()
 export class RecruitersService {
@@ -47,6 +41,15 @@ export class RecruitersService {
     const r = this.repo.findById(id);
     if (!r) throw new NotFoundException(`Recruiter with id ${id} not found`);
     return this.enrich(r);
+  }
+
+  postedOpportunities(id: number) {
+    const recruiter = this.findOne(id);
+    if (!recruiter.userId) return [];
+    return this.opportunities.findAll()
+      .filter(o => o.recruiterId === recruiter.userId && (o.collegeId ?? 1) === (recruiter.collegeId ?? 1))
+      .map(o => ({ id: o.id, jobId: o.jobId || `JOB-${o.id}`, title: o.title, status: o.status, type: o.type, deadline: o.deadline, location: o.location }))
+      .sort((a, b) => b.id - a.id);
   }
 
   findByStatus(status: string, collegeId?: number | null): Recruiter[] {
@@ -99,7 +102,7 @@ export class RecruitersService {
     return updated;
   }
 
-  /** Verify the recruiter and create their login. The generated password is shown once to the officer. */
+  /** Verify the recruiter and create their login with the requested initial password. */
   approve(id: number, actorName = 'Placement officer'): { recruiter: Recruiter; credentials: Credentials } {
     const r = this.findOne(id);
     if (r.status !== 'pending') throw new ConflictException('Only pending requests can be approved');
@@ -107,7 +110,7 @@ export class RecruitersService {
     if (existing && existing.role !== 'recruiter') {
       throw new ConflictException(`This email already belongs to a ${existing.role.replace('_', ' ')} account`);
     }
-    const password = r.isDemo ? '12345678' : generatePassword();
+    const password = '12345678';
     let user = existing;
     if (user) user = this.usersRepo.update(user.id, { password, status: 'active', company: r.company })!;
     else {

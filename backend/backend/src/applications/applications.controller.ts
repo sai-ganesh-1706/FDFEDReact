@@ -1,7 +1,10 @@
 import {
   Controller, Get, Post, Patch, Delete, Param, Body,
-  ParseIntPipe, UseGuards, Headers, HttpCode, HttpStatus, Query, ForbiddenException,
+  ParseIntPipe, UseGuards, Headers, HttpCode, HttpStatus, Query, ForbiddenException, Res, NotFoundException,
 } from '@nestjs/common';
+import type { Response } from 'express';
+import { existsSync } from 'fs';
+import { join } from 'path';
 import { ApiTags, ApiOperation, ApiParam, ApiBody, ApiSecurity, ApiResponse, ApiHeader, ApiQuery } from '@nestjs/swagger';
 import { ApplicationsService } from './applications.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
@@ -47,6 +50,18 @@ export class ApplicationsController {
   @ApiQuery({ name: 'candidateId', required: false, type: Number })
   getStats(@CurrentUser() user: RequestUser) {
     return this.service.getStats(user.userId ?? 0);
+  }
+
+  @Get(':id/resume')
+  @Roles('candidate', 'recruiter', 'placement_officer', 'college_admin')
+  resume(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: RequestUser, @Res() res: Response) {
+    const app = this.findOne(id, user);
+    if (['placement_officer', 'college_admin'].includes(user.role) && app.collegeId !== user.collegeId) throw new ForbiddenException('Not your college');
+    if (!app.resumeUrl || !/^resume-\d+-[a-f0-9-]+\.(pdf|doc|docx)$/.test(app.resumeUrl)) throw new NotFoundException('No resume document is available');
+    const path = join(process.cwd(), 'uploads', 'resumes', app.resumeUrl);
+    if (!existsSync(path)) throw new NotFoundException('Resume document is unavailable');
+    res.setHeader('Content-Disposition', 'inline');
+    return res.sendFile(path);
   }
 
   @Get(':id')

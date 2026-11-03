@@ -53,12 +53,11 @@ export function PlatformDataProvider({ children }) {
       setStats(platformStats.data);
 
     } else if (role === 'college_admin' && collegeId != null) {
-      const [college, officers, students, alumni, recruiters, applications] = await Promise.all([
+      const [college, officers, students, alumni, applications] = await Promise.all([
         api.get(`/colleges/${collegeId}`),
         api.get('/users', { params: { role: 'placement_officer' } }),
         api.get('/users', { params: { role: 'candidate' } }),
         api.get('/users', { params: { role: 'alumni' } }),
-        api.get('/users', { params: { role: 'recruiter' } }),
         // The dashboard can still load if applications are temporarily unavailable.
         api.get('/applications').catch(() => ({ data: [] })),
       ]);
@@ -67,7 +66,7 @@ export function PlatformDataProvider({ children }) {
         officersByCollege:   { [collegeId]: officers.data },
         studentsByCollege:   { [collegeId]: students.data },
         alumniByCollege:     { [collegeId]: alumni.data },
-        recruitersByCollege: { [collegeId]: recruiters.data },
+        recruitersByCollege: {},
         applicationsByCollege: { [collegeId]: applications.data },
       });
     }

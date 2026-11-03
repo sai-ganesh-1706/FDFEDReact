@@ -1,3 +1,5 @@
+import { toOversightUser } from '../../../shared/utils/accountDirectory.js';
+export { toOversightUser } from '../../../shared/utils/accountDirectory.js';
 import { useCallback, useEffect, useState } from 'react';
 import api from '../../../services/api.js';
 import { MOCK } from '../data/mockdata';
@@ -48,6 +50,10 @@ export const OFFER_STATUSES = ['Offer', 'Offered'];
 export function toSubmission(o, applicantCount) {
   return {
     id: o.id,
+    jobId: o.jobId,
+    changedAfterApproval: o.changedAfterApproval,
+    changedAfterApprovalAt: o.changedAfterApprovalAt,
+    changedAfterApprovalFields: o.changedAfterApprovalFields,
     title: o.title,
     company: o.company,
     status: o.status === 'Published' ? 'published' : o.status,
@@ -119,26 +125,6 @@ export const fromTrackedStatus = (status) => ({
   Selected: 'Offered',
 }[status] || status);
 
-export function toOversightUser(u) {
-  return {
-    id: u.id,
-    name: u.name,
-    email: u.email,
-    role: u.role,
-    roll: u.rollNumber || '',
-    branch: u.department || '',
-    cgpa: u.cgpa ?? 0,
-    backlogs: u.backlogs ?? 0,
-    status: u.status || 'active',
-    company: u.company || '',
-    batch: u.batch || '',
-    referrals: u.referrals ?? 0,
-    recCompany: u.company || '',
-    recDesignation: u.headline || '',
-    recPhone: u.phone || '',
-    recLocation: u.location || '',
-  };
-}
 
 export function fromOversightUser(u) {
   const base = { name: u.name, email: u.email, status: u.status };

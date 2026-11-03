@@ -19,7 +19,7 @@ export default function Dashboard({
   // Calculate real-time stats from data
   const totalOpportunities = opportunities.length;
   const totalApplications = applications.length;
-  const shortlistedCount = applications.filter(a => a.status === 'Shortlisted' || a.status === 'Interview' || a.status === 'Offered').length;
+  const shortlistedCount = applications.filter(a => a.status === 'Shortlisted' || a.status === 'Assessment' || a.status === 'Interview' || a.status === 'Offered').length;
   const referredCount = applications.filter(a => a.isReferred).length;
 
   return (
@@ -102,7 +102,7 @@ export default function Dashboard({
             {opportunities.slice(0, 3).map((opp) => (
               <div key={opp.id} className="job-item">
                 <div className="job-info-left">
-                  <div className="job-title">{opp.title}</div>
+                  <div className="job-title">{opp.title} ({opp.jobId})</div>
                   <div className="job-meta">
                     {opp.applications} applicants - Deadline: {opp.deadline}
                   </div>

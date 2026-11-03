@@ -1,3 +1,4 @@
+import { infoDialog, confirmDialog } from '../../../shared/components/AppDialog.jsx';
 import React, { useEffect, useState } from 'react';
 import {
   Megaphone, Plus, Clock, CheckCircle, Info, AlertTriangle,
@@ -123,12 +124,12 @@ export default function Announcements({ collegeName }) {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Remove this announcement?')) return;
+    if (!await confirmDialog('Remove this announcement?')) return;
     try {
       await deleteAnnouncement(id);
       load();
     } catch (e) {
-      alert(errorMessage(e, 'Could not remove announcement.'));
+      infoDialog(errorMessage(e, 'Could not remove announcement.'));
     }
   };
 

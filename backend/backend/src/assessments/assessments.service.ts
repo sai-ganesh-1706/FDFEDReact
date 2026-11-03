@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, Inject, forwardRef } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException, Inject, forwardRef } from '@nestjs/common';
 import { AssessmentsRepository, Assessment } from './assessments.repository';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
@@ -64,7 +64,7 @@ export class AssessmentsService {
         ? a.candidateIds.includes(candidateId)
         : a.opportunityId !== undefined && mine.some((app) => app.opportunityId === a.opportunityId))
       .map((a) => {
-        const app = mine.find((m) => m.id === a.applicationId) ?? mine.find((m) => m.opportunityId === a.opportunityId);
+        const app = mine.find(m => a.applicationIds?.includes(m.id)) ?? mine.find((m) => m.id === a.applicationId) ?? mine.find((m) => m.opportunityId === a.opportunityId);
         const opp = a.opportunityId ? this.oppsService.findOne(a.opportunityId) : undefined;
         return { ...a, applicationId: app?.id, company: a.company ?? opp?.company, jobTitle: app?.title ?? opp?.title ?? a.role };
       })
@@ -76,21 +76,37 @@ export class AssessmentsService {
     const opportunityId = dto.opportunityId ?? (dto.applicationId ? this.appsService.findOne(dto.applicationId).opportunityId : undefined);
     const opp = opportunityId ? this.oppsService.findOne(opportunityId) : undefined;
     const single = dto.applicationId ? this.appsService.findOne(dto.applicationId) : undefined;
-    const targets = single
-      ? [single]
+    const targets = dto.applicationIds
+      ? [...new Set(dto.applicationIds)].map(id => this.appsService.findOne(id))
+      : single ? [single]
       : opportunityId
-        ? this.appsService.findByOpportunity(opportunityId).filter((a) => !['Rejected', 'Withdrawn'].includes(a.status))
+        ? this.appsService.findByOpportunity(opportunityId).filter((a) => ['Shortlisted', 'Assessment', 'Interview'].includes(a.status))
         : [];
 
+    if (!targets.length) throw new BadRequestException('Select at least one eligible candidate');
+    if (dto.opportunityId && targets.some(target => target.opportunityId !== dto.opportunityId)) throw new BadRequestException('Selected candidates must belong to the selected Job ID');
+    for (const target of targets) {
+      if (!this.appsService.ownsApplication(target, recruiterId ?? 0)) throw new ForbiddenException('You can only schedule for your own opportunities');
+      if (!['Shortlisted', 'Assessment', 'Interview'].includes(target.status)) throw new BadRequestException('Only shortlisted candidates or candidates in assessment or interview can be scheduled');
+    }
+    if (new Set(targets.map(t => t.opportunityId)).size > 1) {
+      const groups = new Map<number, number[]>();
+      targets.forEach(t => groups.set(t.opportunityId, [...(groups.get(t.opportunityId) ?? []), t.id]));
+      const created = [...groups].map(([id, applicationIds]) => this.create({ ...dto, opportunityId: id, applicationIds }, recruiterId));
+      return created[0];
+    }
+    const targetOpportunity = this.oppsService.findOne(targets[0].opportunityId);
     const assessment = this.repo.create({
       ...dto,
-      opportunityId,
+      opportunityId: targetOpportunity.id,
+      role: targetOpportunity.title,
       isDraft: dto.isDraft ?? false,
       recruiterId,
-      company: recruiter?.company ?? opp?.company,
+      company: targetOpportunity.company,
       candidateIds: targets.map((t) => t.candidateId),
       candidateName: single?.candidateName,
-      candidates: targets.length || dto.candidates,
+      candidates: targets.length,
+      applicationIds: targets.map(t => t.id),
       createdAt: new Date().toISOString(),
     });
 
@@ -98,7 +114,7 @@ export class AssessmentsService {
       const isInterview = /interview|discussion/i.test(assessment.type);
       for (const app of targets) {
         // Scheduling for one candidate also moves their application forward.
-        if (single) {
+        if (targets.length) {
           const target = isInterview ? 'Interview' : 'Assessment';
           const order = ['Applied', 'Shortlisted', 'Assessment', 'Interview'];
           if (order.indexOf(app.status) !== -1 && order.indexOf(app.status) < order.indexOf(target)) {

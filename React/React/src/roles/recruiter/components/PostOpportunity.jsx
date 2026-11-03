@@ -1,196 +1,9 @@
+import { infoDialog } from '../../../shared/components/AppDialog.jsx';
 import React, { useState } from 'react';
-import { X } from 'lucide-react';
+import { LocationAdder, SkillAdder, BranchSelector } from './OpportunityFields.jsx';
+import { getTodayStr, getMaxDeadlineStr, validateTitle, validateCtcLpa, validateInternComp, validateCgpa, validateDeadline } from '../data/opportunityValidation.js';
 
 // ── Shared helpers ────────────────────────────────────────────────────────────
-
-const allBranches = ['CSE', 'ECE', 'IT', 'EEE', 'MECH', 'CIVIL'];
-
-const getTodayStr = () => new Date().toISOString().split('T')[0];
-
-const getMaxDeadlineStr = () => {
-  const d = new Date();
-  d.setMonth(d.getMonth() + 3);
-  return d.toISOString().split('T')[0];
-};
-
-// ── Validators ────────────────────────────────────────────────────────────────
-
-const validateTitle = (v) => {
-  const t = v.trim();
-  if (!t) return 'Job title is required.';
-  if (/[^a-zA-Z0-9 \-]/.test(t)) return 'Job title may only contain letters, numbers, spaces and hyphens.';
-  if (/^[\d\s]+$/.test(t)) return 'Job title cannot be all numbers.';
-  if (/^[-\s]+$/.test(t)) return 'Job title cannot be all hyphens.';
-  return '';
-};
-
-const validateCtcLpa = (v) => {
-  if (!v && v !== 0) return '';
-  const n = parseFloat(v);
-  if (isNaN(n) || n <= 0) return 'CTC must be a positive number (in LPA).';
-  if (n > 500) return 'CTC cannot exceed 500 LPA.';
-  return '';
-};
-
-const validateInternComp = (v) => {
-  if (!v && v !== 0) return '';
-  const n = parseFloat(v);
-  if (isNaN(n) || n <= 0) return 'Compensation must be a positive number.';
-  if (n > 200000) return 'Compensation cannot exceed Rs.2,00,000 per month.';
-  return '';
-};
-
-const validateCgpa = (v) => {
-  if (!v && v !== 0) return '';
-  const n = parseFloat(v);
-  if (isNaN(n) || n < 2) return 'CGPA must be at least 2.0.';
-  if (n > 10) return 'CGPA cannot exceed 10.0.';
-  return '';
-};
-
-const validateDeadline = (v) => {
-  if (!v) return 'Application deadline is required.';
-  const today = new Date(); today.setHours(0, 0, 0, 0);
-  const sel = new Date(v);
-  if (sel < today) return 'Deadline cannot be a past date.';
-  const max = new Date(); max.setMonth(max.getMonth() + 3);
-  if (sel > max) return 'Deadline cannot be more than 3 months from today.';
-  return '';
-};
-
-const validateSkill = (v) => {
-  if (/[^a-zA-Z0-9 ]/.test(v)) return 'Skills may only contain letters and numbers.';
-  return '';
-};
-
-const validateLocation = (v) => {
-  const t = v.trim();
-  if (!t) return 'Please enter a location.';
-  if (/\d/.test(t)) return 'Location cannot contain numbers.';
-  if (/[^a-zA-Z ,.\-]/.test(t)) return 'Location may only contain letters, spaces, commas and hyphens.';
-  return '';
-};
-
-// ── Shared sub-components ─────────────────────────────────────────────────────
-
-function LocationAdder({ locations, setLocations }) {
-  const [cur, setCur] = useState('');
-  const [err, setErr] = useState('');
-
-  const add = () => {
-    const t = cur.trim();
-    const e = validateLocation(t);
-    if (e) { setErr(e); return; }
-    if (locations.includes(t)) { setErr('Already added.'); return; }
-    setLocations([...locations, t]);
-    setCur(''); setErr('');
-  };
-
-  return (
-    <div className="form-group">
-      <label>Work Location *</label>
-      <div className="skills-input-row">
-        <input
-          type="text"
-          className={`form-input${err ? ' input-error' : ''}`}
-          placeholder="e.g. Bangalore, Remote, Hyderabad"
-          value={cur}
-          onChange={(e) => { setCur(e.target.value); if (err) setErr(''); }}
-          onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); add(); } }}
-        />
-        <button type="button" className="btn-secondary-action" onClick={add} style={{ padding: '9px 16px' }}>
-          Add
-        </button>
-      </div>
-      {err && <span className="field-error">{err}</span>}
-      {locations.length > 0 && (
-        <div className="skills-tags-list" style={{ marginTop: '8px' }}>
-          {locations.map((loc) => (
-            <span key={loc} className="skill-tag-item">
-              {loc}
-              <button type="button" className="skill-remove-btn" onClick={() => setLocations(locations.filter((l) => l !== loc))}>
-                <X size={14} />
-              </button>
-            </span>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function SkillAdder({ skills, setSkills }) {
-  const [cur, setCur] = useState('');
-  const [err, setErr] = useState('');
-
-  const add = (e) => {
-    e?.preventDefault();
-    const t = cur.trim();
-    if (!t) return;
-    const e2 = validateSkill(t);
-    if (e2) { setErr(e2); return; }
-    if (!skills.includes(t)) setSkills([...skills, t]);
-    setCur(''); setErr('');
-  };
-
-  return (
-    <div className="form-group full-width">
-      <label>Required Skills &amp; Technologies</label>
-      <div className="skills-input-row">
-        <input
-          type="text"
-          className={`form-input${err ? ' input-error' : ''}`}
-          placeholder="Type skill and press Enter or Add (e.g. React, Docker)"
-          value={cur}
-          onChange={(e) => { const v = e.target.value; const er = validateSkill(v); if (!er) setCur(v); setErr(er); }}
-          onKeyDown={(e) => { if (e.key === 'Enter') add(e); }}
-        />
-        <button type="button" className="btn-secondary-action" onClick={add} style={{ padding: '9px 16px' }}>
-          Add
-        </button>
-      </div>
-      {err && <span className="field-error">{err}</span>}
-      <div className="skills-tags-list">
-        {skills.map((s) => (
-          <span key={s} className="skill-tag-item">
-            {s}
-            <button type="button" className="skill-remove-btn" onClick={() => setSkills(skills.filter((x) => x !== s))}>
-              <X size={14} />
-            </button>
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function BranchSelector({ selectedBranches, setSelectedBranches }) {
-  const toggle = (b) =>
-    setSelectedBranches(
-      selectedBranches.includes(b)
-        ? selectedBranches.filter((x) => x !== b)
-        : [...selectedBranches, b]
-    );
-  return (
-    <div className="form-group full-width">
-      <label>Eligible Engineering Branches *</label>
-      <div className="branches-container">
-        {allBranches.map((b) => (
-          <button
-            key={b}
-            type="button"
-            className={`branch-chip ${selectedBranches.includes(b) ? 'selected' : ''}`}
-            onClick={() => toggle(b)}
-          >
-            {b} {selectedBranches.includes(b) && '✓'}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ── Duplicate checker ─────────────────────────────────────────────────────────
 
 /**
  * Returns true if an opportunity with the same title (case-insensitive)
@@ -208,6 +21,7 @@ function isDuplicate(existingOpportunities, title, type) {
 // ── Full-Time Form ────────────────────────────────────────────────────────────
 
 function FullTimeForm({ onAddOpportunity, setActiveTab, existingOpportunities }) {
+  const [jobId, setJobId] = useState('');
   const [title, setTitle] = useState('');
   const [locations, setLocations] = useState([]);
   const [ctcLpa, setCtcLpa] = useState('');
@@ -221,6 +35,7 @@ function FullTimeForm({ onAddOpportunity, setActiveTab, existingOpportunities })
   const handleSubmit = (e) => {
     e.preventDefault();
     const errs = {
+      jobId: /^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$/.test(jobId.trim()) ? '' : 'Enter a Job ID using letters, numbers, dots, underscores or hyphens.',
       title: validateTitle(title),
       ctcLpa: validateCtcLpa(ctcLpa),
       cgpa: validateCgpa(cgpa),
@@ -228,8 +43,8 @@ function FullTimeForm({ onAddOpportunity, setActiveTab, existingOpportunities })
     };
     setErrors(errs);
     if (Object.values(errs).some(Boolean)) return;
-    if (locations.length === 0) { alert('Please add at least one work location.'); return; }
-    if (selectedBranches.length === 0) { alert('Please select at least one eligible branch.'); return; }
+    if (locations.length === 0) { infoDialog('Please add at least one work location.'); return; }
+    if (selectedBranches.length === 0) { infoDialog('Please select at least one eligible branch.'); return; }
 
     // Duplicate check — same title + same type
     if (isDuplicate(existingOpportunities, title, 'Full-Time')) {
@@ -242,6 +57,7 @@ function FullTimeForm({ onAddOpportunity, setActiveTab, existingOpportunities })
 
     onAddOpportunity({
       id: Date.now(),
+      jobId: jobId.trim(),
       title: title.trim(),
       location: locations.join(' | '),
       locations,
@@ -260,6 +76,7 @@ function FullTimeForm({ onAddOpportunity, setActiveTab, existingOpportunities })
   return (
     <form onSubmit={handleSubmit}>
       <div className="form-grid">
+        <div className="form-group"><label>Job ID *</label><input className="form-input" required maxLength={80} value={jobId} onChange={e => setJobId(e.target.value)} placeholder="e.g. ENG-2026-001" />{errors.jobId && <span className="field-error">{errors.jobId}</span>}</div>
         {/* Title */}
         <div className="form-group">
           <label>Job Title *</label>
@@ -342,7 +159,7 @@ function FullTimeForm({ onAddOpportunity, setActiveTab, existingOpportunities })
           Cancel
         </button>
         <button type="submit" className="btn-primary-action">
-          Publish Full-Time Role
+          Submit Full-Time Role
         </button>
       </div>
     </form>
@@ -352,6 +169,7 @@ function FullTimeForm({ onAddOpportunity, setActiveTab, existingOpportunities })
 // ── Internship Form ───────────────────────────────────────────────────────────
 
 function InternshipForm({ onAddOpportunity, setActiveTab, existingOpportunities }) {
+  const [jobId, setJobId] = useState('');
   const [title, setTitle] = useState('');
   const [locations, setLocations] = useState([]);
   const [duration, setDuration] = useState('');
@@ -366,6 +184,7 @@ function InternshipForm({ onAddOpportunity, setActiveTab, existingOpportunities 
   const handleSubmit = (e) => {
     e.preventDefault();
     const errs = {
+      jobId: /^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$/.test(jobId.trim()) ? '' : 'Enter a Job ID using letters, numbers, dots, underscores or hyphens.',
       title: validateTitle(title),
       compensation: validateInternComp(compensation),
       cgpa: validateCgpa(cgpa),
@@ -373,8 +192,8 @@ function InternshipForm({ onAddOpportunity, setActiveTab, existingOpportunities 
     };
     setErrors(errs);
     if (Object.values(errs).some(Boolean)) return;
-    if (locations.length === 0) { alert('Please add at least one work location.'); return; }
-    if (selectedBranches.length === 0) { alert('Please select at least one eligible branch.'); return; }
+    if (locations.length === 0) { infoDialog('Please add at least one work location.'); return; }
+    if (selectedBranches.length === 0) { infoDialog('Please select at least one eligible branch.'); return; }
 
     // Duplicate check — same title + same type
     if (isDuplicate(existingOpportunities, title, 'Internship')) {
@@ -387,6 +206,7 @@ function InternshipForm({ onAddOpportunity, setActiveTab, existingOpportunities 
 
     onAddOpportunity({
       id: Date.now(),
+      jobId: jobId.trim(),
       title: title.trim(),
       location: locations.join(' | '),
       locations,
@@ -406,6 +226,7 @@ function InternshipForm({ onAddOpportunity, setActiveTab, existingOpportunities 
   return (
     <form onSubmit={handleSubmit}>
       <div className="form-grid">
+        <div className="form-group"><label>Job ID *</label><input className="form-input" required maxLength={80} value={jobId} onChange={e => setJobId(e.target.value)} placeholder="e.g. ENG-2026-001" />{errors.jobId && <span className="field-error">{errors.jobId}</span>}</div>
         {/* Title */}
         <div className="form-group">
           <label>Internship Title *</label>
@@ -500,7 +321,7 @@ function InternshipForm({ onAddOpportunity, setActiveTab, existingOpportunities 
           Cancel
         </button>
         <button type="submit" className="btn-primary-action">
-          Publish Internship
+          Submit Internship
         </button>
       </div>
     </form>
