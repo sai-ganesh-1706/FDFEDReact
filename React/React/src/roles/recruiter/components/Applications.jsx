@@ -5,8 +5,6 @@ import CandidateModal from './CandidateModal';
 export default function Applications({ 
   applications, 
   onUpdateStatus, 
-  onUpdateRound,
-  onUpdateEvaluation,
   selectedRoleFilter,
   setSelectedRoleFilter,
   onSchedule
@@ -14,9 +12,10 @@ export default function Applications({
   const [searchTerm, setSearchTerm] = useState('');
   const [filterReferred, setFilterReferred] = useState(false);
   const [statusFilter, setStatusFilter] = useState('All');
-  const [selectedCandidate, setSelectedCandidate] = useState(null);
+  const [selectedCandidateId, setSelectedCandidateId] = useState(null);
+  const selectedCandidate = applications.find((app) => app.id === selectedCandidateId);
 
-  const statuses = ['All', 'Applied', 'Shortlisted', 'Assessment', 'Interview', 'Offered', 'Rejected', 'Withdrawn'];
+  const statuses = ['All', 'Applied', 'Shortlisted', 'Interview', 'Offered', 'Rejected', 'Withdrawn'];
 
   // Extract unique roles from applications
   const uniqueRoles = [...new Map(applications.map(a => [String(a.opportunityId), { id: String(a.opportunityId), label: `${a.role} (${a.jobId || a.opportunityId})` }])).values()];
@@ -128,7 +127,7 @@ export default function Applications({
           const statusClass = (app.status || 'applied').toLowerCase();
           return (
             <div key={app.id} className="app-card-detailed">
-              <div className="app-card-left" onClick={() => setSelectedCandidate(app)}>
+              <div className="app-card-left" onClick={() => setSelectedCandidateId(app.id)}>
                 <div className="app-card-avatar">{app.initials}</div>
                 <div className="app-card-content">
                   <h4>
@@ -177,7 +176,7 @@ export default function Applications({
               </div>
 
  <div className="app-card-right" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                {onSchedule && ['Shortlisted', 'Assessment', 'Interview'].includes(app.status) && (
+                {onSchedule && ['Shortlisted', 'Interview'].includes(app.status) && (
                   <button
                     className="btn-secondary-action"
                     style={{ padding: '6px 12px', fontSize: 12 }}
@@ -189,7 +188,7 @@ export default function Applications({
                 )}
                 <button 
                   className={`badge-status ${statusClass}`}
-                  onClick={() => setSelectedCandidate(app)}
+                  onClick={() => setSelectedCandidateId(app.id)}
                   style={{ cursor: 'pointer', border: 'none' }}
                 >
                   {app.status}
@@ -206,14 +205,12 @@ export default function Applications({
         )}
       </div>
 
-      {/* Candidate Evaluation Modal */}
+      {/* Application details and stage advancement */}
       {selectedCandidate && (
         <CandidateModal 
-          candidate={applications.find(a => a.id === selectedCandidate.id) || selectedCandidate}
-          onClose={() => setSelectedCandidate(null)}
+          candidate={selectedCandidate}
+          onClose={() => setSelectedCandidateId(null)}
           onUpdateStatus={onUpdateStatus}
-          onUpdateRound={onUpdateRound}
-          onUpdateEvaluation={onUpdateEvaluation}
         />
       )}
     </div>

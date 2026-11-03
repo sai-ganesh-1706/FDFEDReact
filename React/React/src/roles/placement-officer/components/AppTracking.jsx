@@ -6,11 +6,11 @@ import './styles/p1.css';
 import './styles/p6.css';
 import { useOfficerData } from '../services/officerApi';
 
-const STATUS_CLASS = { Applied: 'app-status--applied', 'Under Review': 'app-status--review', Shortlisted: 'app-status--shortlisted', 'Interview Scheduled': 'app-status--interview', Selected: 'app-status--selected', Rejected: 'app-status--rejected' };
+const STATUS_CLASS = { Applied: 'app-status--applied', Shortlisted: 'app-status--shortlisted', Interview: 'app-status--interview', Offered: 'app-status--selected', Rejected: 'app-status--rejected', Withdrawn: 'app-status--rejected' };
 const initials = (name = '') => name.split(' ').filter(Boolean).slice(0, 2).map((part) => part[0]).join('').toUpperCase() || 'C';
 const placementStatus = (applications) => {
-  if (applications.some((app) => app.status === 'Selected')) return 'Placed';
-  if (applications.some((app) => ['Shortlisted', 'Interview Scheduled'].includes(app.status))) return 'In progress';
+  if (applications.some((app) => app.status === 'Offered')) return 'Placed';
+  if (applications.some((app) => ['Shortlisted', 'Interview'].includes(app.status))) return 'In progress';
   if (applications.length) return 'Applying';
   return 'No applications';
 };

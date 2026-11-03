@@ -1,4 +1,4 @@
-import { IsBoolean, IsIn, IsOptional, IsString, IsDateString, IsObject } from 'class-validator';
+import { IsBoolean, IsIn, IsOptional, IsString, IsDateString, IsObject, IsInt, Min, Max } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateApplicationDto {
@@ -24,6 +24,13 @@ export class UpdateApplicationDto {
   @IsString()
   recruiterFeedback?: string;
 
+  @ApiPropertyOptional({ example: 4, minimum: 1, maximum: 5 })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Max(5)
+  recruiterRating?: number;
+
   @IsOptional()
   @IsBoolean()
   feedbackSent?: boolean;
@@ -43,9 +50,9 @@ export class UpdateApplicationDto {
 
   @ApiPropertyOptional({
     example: 'Interview',
-    enum: ['Applied', 'Shortlisted', 'Assessment', 'Interview', 'Offered', 'Rejected', 'Withdrawn'],
+    enum: ['Applied', 'Shortlisted', 'Interview', 'Offered', 'Rejected', 'Withdrawn'],
   })
   @IsOptional()
-  @IsIn(['Applied', 'Shortlisted', 'Assessment', 'Interview', 'Offered', 'Rejected', 'Withdrawn'])
+  @IsIn(['Applied', 'Shortlisted', 'Interview', 'Offered', 'Rejected', 'Withdrawn'])
   status?: string;
 }

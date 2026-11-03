@@ -80,14 +80,14 @@ export class AssessmentsService {
       ? [...new Set(dto.applicationIds)].map(id => this.appsService.findOne(id))
       : single ? [single]
       : opportunityId
-        ? this.appsService.findByOpportunity(opportunityId).filter((a) => ['Shortlisted', 'Assessment', 'Interview'].includes(a.status))
+        ? this.appsService.findByOpportunity(opportunityId).filter((a) => ['Shortlisted', 'Interview'].includes(a.status))
         : [];
 
     if (!targets.length) throw new BadRequestException('Select at least one eligible candidate');
     if (dto.opportunityId && targets.some(target => target.opportunityId !== dto.opportunityId)) throw new BadRequestException('Selected candidates must belong to the selected Job ID');
     for (const target of targets) {
       if (!this.appsService.ownsApplication(target, recruiterId ?? 0)) throw new ForbiddenException('You can only schedule for your own opportunities');
-      if (!['Shortlisted', 'Assessment', 'Interview'].includes(target.status)) throw new BadRequestException('Only shortlisted candidates or candidates in assessment or interview can be scheduled');
+      if (!['Shortlisted', 'Interview'].includes(target.status)) throw new BadRequestException('Only shortlisted candidates or candidates in interview can be scheduled');
     }
     if (new Set(targets.map(t => t.opportunityId)).size > 1) {
       const groups = new Map<number, number[]>();
@@ -115,8 +115,8 @@ export class AssessmentsService {
       for (const app of targets) {
         // Scheduling for one candidate also moves their application forward.
         if (targets.length) {
-          const target = isInterview ? 'Interview' : 'Assessment';
-          const order = ['Applied', 'Shortlisted', 'Assessment', 'Interview'];
+          const target = 'Interview';
+          const order = ['Applied', 'Shortlisted', 'Interview'];
           if (order.indexOf(app.status) !== -1 && order.indexOf(app.status) < order.indexOf(target)) {
             this.appsService.updateStatus(app.id, { status: target, interviewDate: dto.date, remarks: `${assessment.type} on ${assessment.date} at ${assessment.time}` }, { silent: true });
           }
@@ -127,7 +127,7 @@ export class AssessmentsService {
             title: `${isInterview ? 'Interview' : 'Assessment'} scheduled: ${assessment.title}`,
             message:
               `${app.company} scheduled a ${assessment.type.toLowerCase()} for your ${app.title} application. ` +
-              `Platform: ${assessment.platform} · Date: ${assessment.date} at ${assessment.time} · ` +
+              `Platform: ${assessment.platform} | Date: ${assessment.date} at ${assessment.time} | ` +
               `Duration: ${assessment.duration}. Join here: ${assessment.link}`,
             href: 'applications', isRead: false,
           },

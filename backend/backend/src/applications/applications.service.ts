@@ -11,8 +11,12 @@ import { ReferralsRepository, Referral } from '../referrals/referrals.repository
 import { ActivityService } from '../activity/activity.service';
 import { BulkStatusDto } from './dto/bulk-status.dto';
 
-const STAGES = ['Applied', 'Shortlisted', 'Assessment', 'Interview', 'Offered'];
+const STAGES = ['Applied', 'Shortlisted', 'Interview', 'Offered'];
 const norm = (v?: string) => String(v ?? '').toLowerCase();
+const canonicalStatus = (status: string) => ({
+  Offer: 'Offered', Selected: 'Offered', Assessment: 'Interview',
+  'Interview Scheduled': 'Interview', 'Under Review': 'Shortlisted',
+}[status] ?? status);
 
 @Injectable()
 export class ApplicationsService {
@@ -29,11 +33,11 @@ export class ApplicationsService {
 
   /** Normalise status, stage position and referral details so every role sees the same truth. */
   enrich(app: Application): Application {
-    const status = app.status === 'Offer' ? 'Offered' : app.status;
+    const status = canonicalStatus(app.status);
     let idx = STAGES.indexOf(status);
     if (idx === -1) {
       // Rejected / withdrawn: stop at the furthest stage actually reached.
-      idx = Math.max(0, ...app.timeline.map((t) => STAGES.indexOf(t.stage === 'Offer' ? 'Offered' : t.stage)));
+      idx = Math.max(0, ...app.timeline.map((t) => STAGES.indexOf(canonicalStatus(t.stage))));
     }
     const user = this.usersRepo.findById(app.candidateId);
     let opp: ReturnType<OpportunitiesService['findOne']> | undefined;
@@ -49,6 +53,7 @@ export class ApplicationsService {
     const out: Application = {
       ...app,
       status,
+      timeline: app.timeline.map((entry) => ({ ...entry, stage: canonicalStatus(entry.stage) })),
       currentStageIndex: idx,
       candidateName: user?.name ?? app.candidateName,
       branch: user?.department ?? app.branch,
@@ -94,6 +99,16 @@ export class ApplicationsService {
   ownsApplication(app: Application, userId: number): boolean {
     const company = this.usersRepo.findById(userId)?.company;
     return this.oppsService.owns(this.oppsService.findOne(app.opportunityId), userId, company);
+  }
+
+  /** The referral recipient may read only the resume submitted for that job. */
+  findResumeForReferral(referralId: number, alumniId: number): Application {
+    const referral = this.referralsRepo.findById(referralId);
+    if (!referral || referral.alumniId !== alumniId) throw new ForbiddenException('This referral was not addressed to you');
+    const application = this.repo.findByCandidate(referral.candidateId)
+      .find((app) => app.opportunityId === referral.opportunityId);
+    if (!application) throw new NotFoundException('No application is available for this referral');
+    return application;
   }
 
   /** Shortlist candidates for an opportunity, creating an application when they never applied. */
@@ -177,7 +192,7 @@ export class ApplicationsService {
   findByCandidate(candidateId: number): Application[] {
     return this.repo.findByCandidate(candidateId).map((a) => {
       const e = this.enrich(a);
-      if (!e.feedbackSent) { delete e.evaluation; delete e.recruiterFeedback; }
+      if (!e.feedbackSent) { delete e.evaluation; delete e.recruiterFeedback; delete e.recruiterRating; }
       return e;
     });
   }
@@ -193,6 +208,11 @@ export class ApplicationsService {
   }
 
   apply(dto: CreateApplicationDto, candidateId: number, collegeId?: number): Application {
+    const user = this.usersRepo.findById(candidateId);
+    if (!user) throw new NotFoundException('Candidate account not found');
+    if (user.status === 'placed' || this.repo.hasOffer(candidateId)) {
+      throw new ConflictException('You are already placed and cannot apply to another opportunity');
+    }
     const opp = this.oppsService.findOne(dto.opportunityId);
     if (opp.status !== 'Published') {
       throw new ConflictException('This opportunity is not open for applications');
@@ -202,8 +222,6 @@ export class ApplicationsService {
       throw new ConflictException('You have already applied to this opportunity');
     }
 
-    const user = this.usersRepo.findById(candidateId);
-    if (!user) throw new NotFoundException('Candidate account not found');
     if ((opp.collegeId ?? 1) !== (user.collegeId ?? 1)) {
       throw new ConflictException('This opportunity is not open to your college');
     }
@@ -277,6 +295,7 @@ export class ApplicationsService {
     }
     if (dto.evaluation) updates.evaluation = { ...app.evaluation, ...dto.evaluation };
     if (dto.recruiterFeedback !== undefined) updates.recruiterFeedback = dto.recruiterFeedback;
+    if (dto.recruiterRating !== undefined) updates.recruiterRating = dto.recruiterRating;
     if (dto.feedbackSent !== undefined) updates.feedbackSent = dto.feedbackSent;
     if (dto.feedbackSent && !app.feedbackSent) {
       this.notificationsService.create(
@@ -355,10 +374,10 @@ export class ApplicationsService {
     const apps = this.repo.findByCandidate(candidateId);
     return {
       total: apps.length,
-      applied: apps.filter((a) => a.status === 'Applied').length,
-      shortlisted: apps.filter((a) => a.status === 'Shortlisted').length,
-      interviews: apps.filter((a) => a.status === 'Interview').length,
-      offers: apps.filter((a) => ['Offer', 'Offered'].includes(a.status)).length,
+      applied: apps.filter((a) => canonicalStatus(a.status) === 'Applied').length,
+      shortlisted: apps.filter((a) => canonicalStatus(a.status) === 'Shortlisted').length,
+      interviews: apps.filter((a) => canonicalStatus(a.status) === 'Interview').length,
+      offers: apps.filter((a) => canonicalStatus(a.status) === 'Offered').length,
       rejected: apps.filter((a) => a.status === 'Rejected').length,
     };
   }

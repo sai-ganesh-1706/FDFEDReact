@@ -1,17 +1,19 @@
 import React, { useMemo, useState } from 'react';
-import { Search, UserCheck, Sparkles } from 'lucide-react';
+import { Search, UserCheck, Sparkles, Eye } from 'lucide-react';
+import CandidateModal from './CandidateModal';
 
 /**
  * Screening queue: only candidates who actually applied to this recruiter's
  * opportunities and are still in the "Applied" stage. Pick several and shortlist them in one go.
  */
-export default function CandidatesFilter({ applications = [], opportunities = [], onBulkShortlist, onBulkReject }) {
+export default function CandidatesFilter({ applications = [], opportunities = [], onBulkShortlist, onUpdateStatus }) {
   const [role, setRole] = useState('All Roles');
   const [dept, setDept] = useState([]);
   const [minCgpa, setMinCgpa] = useState('0');
   const [referredOnly, setReferredOnly] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedIds, setSelectedIds] = useState([]);
+  const [viewingCandidateId, setViewingCandidateId] = useState(null);
 
   const queue = useMemo(() => applications.filter((a) => a.status === 'Applied'), [applications]);
   const roles = [...new Map(queue.map(a => [String(a.opportunityId), { id: String(a.opportunityId), label: `${a.role} (${a.jobId})` }])).values()];
@@ -31,6 +33,7 @@ export default function CandidatesFilter({ applications = [], opportunities = []
   const visibleIds = filtered.map((a) => a.id);
   const chosen = selectedIds.filter((id) => visibleIds.includes(id));
   const allChosen = filtered.length > 0 && chosen.length === filtered.length;
+  const viewingCandidate = applications.find((application) => application.id === viewingCandidateId);
 
   const toggle = (id) => setSelectedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   const toggleAll = () => setSelectedIds(allChosen ? [] : visibleIds);
@@ -83,21 +86,13 @@ export default function CandidatesFilter({ applications = [], opportunities = []
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
           <button
-            className="btn-secondary-action"
-            style={{ whiteSpace: 'nowrap' }}
-            disabled={chosen.length === 0}
-            onClick={() => act((ids) => onBulkReject(ids))}
-          >
-            Reject ({chosen.length})
-          </button>
-          <button
             className="btn-primary-action"
             style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '9px 18px', whiteSpace: 'nowrap' }}
             disabled={chosen.length === 0}
             onClick={() => act((ids) => onBulkShortlist(ids))}
           >
             <UserCheck size={16} />
-            <span>Shortlist ({chosen.length})</span>
+            <span>Move to Shortlisted ({chosen.length})</span>
           </button>
         </div>
       </div>
@@ -115,6 +110,7 @@ export default function CandidatesFilter({ applications = [], opportunities = []
               <th>CGPA</th>
               <th>Applied on</th>
               <th>Referral</th>
+              <th>Resume</th>
             </tr>
           </thead>
           <tbody>
@@ -141,12 +137,17 @@ export default function CandidatesFilter({ applications = [], opportunities = []
                       </span>
                     ) : <span style={{ color: '#9CA3AF' }}>—</span>}
                   </td>
+                  <td onClick={(e) => e.stopPropagation()}>
+                    <button type="button" className="btn-secondary-action" onClick={() => setViewingCandidateId(a.id)} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '6px 10px', whiteSpace: 'nowrap' }}>
+                      <Eye size={14} /> View resume
+                    </button>
+                  </td>
                 </tr>
               );
             })}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={7} style={{ textAlign: 'center', padding: '40px', color: '#9CA3AF' }}>
+                <td colSpan={8} style={{ textAlign: 'center', padding: '40px', color: '#9CA3AF' }}>
                   {queue.length === 0
                     ? 'No new applications waiting for screening.'
                     : 'No applicants match these filters.'}
@@ -156,6 +157,7 @@ export default function CandidatesFilter({ applications = [], opportunities = []
           </tbody>
         </table>
       </div>
+      {viewingCandidate && <CandidateModal candidate={viewingCandidate} onClose={() => setViewingCandidateId(null)} onUpdateStatus={onUpdateStatus} initialShowResumePreview />}
     </div>
   );
 }

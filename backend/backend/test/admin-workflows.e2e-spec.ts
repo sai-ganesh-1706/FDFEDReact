@@ -250,6 +250,10 @@ describe('College administration and placement review', () => {
       jobId: payload.jobId,
       status: 'approved',
     });
+    const directory = (
+      await request(server).get('/recruiters').set(auth(officer)).expect(200)
+    ).body;
+    expect(directory.find((item) => item.id === 1).opps).toBe(posted.length);
     const someoneElse = (
       await request(server)
         .get('/recruiters/2/opportunities')
@@ -314,5 +318,50 @@ describe('College administration and placement review', () => {
       .get('/activity/placement-officers')
       .set(auth(recruiter))
       .expect(403);
+  });
+
+  it('lets the college admin remove its students, alumni, and recruiters', async () => {
+    const server = app.getHttpServer();
+    const student = (await request(server).post('/users').set(auth(admin)).send({
+      role: 'candidate', name: 'Remove Test Student', email: 'remove.student@iiits.in',
+      rollNumber: 'B26CS944', department: 'Computer Science', cgpa: 8, backlogs: 0,
+    }).expect(201)).body;
+    const alumni = (await request(server).post('/users').set(auth(admin)).send({
+      role: 'alumni', name: 'Remove Test Alumni', email: 'remove.alumni@example.com',
+      company: 'Example Company', batch: '2022', referrals: 0,
+    }).expect(201)).body;
+    for (const user of [student, alumni]) {
+      await request(server).delete(`/users/${user.id}`).set(auth(otherAdmin)).expect(403);
+      await request(server).delete(`/users/${user.id}`).set(auth(officer)).expect(403);
+      await request(server).delete(`/users/${user.id}`).set(auth(admin)).expect(200);
+      await request(server).get(`/users/${user.id}`).set(auth(admin)).expect(404);
+    }
+
+    const recruiterRecord = (await request(server).post('/recruiters').set(auth(officer)).send({
+      name: 'Remove Test Recruiter', email: 'remove.recruiter@example.com',
+      role: 'Hiring Manager', company: 'Example Company', collegeId: 1,
+    }).expect(201)).body;
+    const approved = (await request(server).patch(`/recruiters/${recruiterRecord.id}/approve`)
+      .set(auth(officer)).expect(200)).body;
+    await request(server).delete(`/recruiters/${recruiterRecord.id}`).set(auth(otherAdmin)).expect(403);
+    await request(server).delete(`/recruiters/${recruiterRecord.id}`).set(auth(admin)).expect(200);
+    await request(server).get(`/recruiters/${recruiterRecord.id}`).set(auth(officer)).expect(404);
+    await request(server).get(`/users/${approved.recruiter.userId}`).set(auth(admin)).expect(404);
+    await request(server).post('/users/login').send({
+      email: 'remove.recruiter@example.com', password: '12345678',
+    }).expect(401);
+  });
+
+  it('does not invent a location for Contact Us recruiter requests', async () => {
+    const server = app.getHttpServer();
+    const created = (await request(server).post('/contact/recruiter').send({
+      name: 'Contact Location Test', email: 'contact.location@example.com',
+      company: 'Example Company', role: 'Hiring Manager', collegeId: 1,
+      location: 'Injected City',
+    }).expect(201)).body;
+    const recruiter = (await request(server).get(`/recruiters/${created.id}`)
+      .set(auth(officer)).expect(200)).body;
+    expect(recruiter.source).toBe('contact-form');
+    expect(recruiter.location).toBeUndefined();
   });
 });

@@ -2,11 +2,8 @@ import { toOversightUser } from '../../../shared/utils/accountDirectory.js';
 export { toOversightUser } from '../../../shared/utils/accountDirectory.js';
 import { useCallback, useEffect, useState } from 'react';
 import api from '../../../services/api.js';
-import { MOCK } from '../data/mockdata';
 
-// Everything the placement officer screens show comes from the API. The screens
-// still read the shapes they always did (MOCK.stats, MOCK.submissions, ...), so
-// this module fills that object from the backend and clears the sample values.
+// Placement officer screens consume a shared live snapshot built from backend APIs.
 
 const BRANCH_COLORS = [
   { color: '#00c950', colorClass: 'green' },
@@ -37,11 +34,6 @@ const EMPTY = () => ({
   applications: [],
   notifications: [],
 });
-
-function resetMock() {
-  Object.assign(MOCK, EMPTY());
-}
-resetMock();
 
 const hash = (text = '') => [...text].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
 
@@ -98,11 +90,6 @@ export function fromSubmissionEdit(form) {
 }
 
 export function toTrackedApplication(a) {
-  let status = a.status;
-  if (OFFER_STATUSES.includes(status)) status = 'Selected';
-  else if (status === 'Shortlisted') status = 'Shortlisted';
-  else if (status === 'Interview') status = 'Interview Scheduled';
-  else if (status === 'Withdrawn') status = 'Rejected';
   return {
     id: a.id,
     candidateId: a.candidateId,
@@ -110,7 +97,7 @@ export function toTrackedApplication(a) {
     role: a.title,
     company: a.company,
     date: a.appliedDate,
-    status,
+    status: a.status,
     branch: a.branch || '',
     email: a.email || '',
     cgpa: a.cgpa,
@@ -118,13 +105,6 @@ export function toTrackedApplication(a) {
     remarks: a.remarks || '',
   };
 }
-
-export const fromTrackedStatus = (status) => ({
-  'Under Review': 'Shortlisted',
-  'Interview Scheduled': 'Interview',
-  Selected: 'Offered',
-}[status] || status);
-
 
 export function fromOversightUser(u) {
   const base = { name: u.name, email: u.email, status: u.status };
@@ -259,12 +239,11 @@ let inflight = null;
 // components (the header and the current page) read the same dashboard data.
 // Keep one live snapshot and notify every consumer after a mutation so an
 // approve/publish/reject action never leaves another part of the portal stale.
-let currentData = MOCK;
+let currentData = EMPTY();
 const subscribers = new Set();
 
 function publish(data) {
   currentData = data;
-  Object.assign(MOCK, data); // Compatibility for the two legacy report views.
   subscribers.forEach((subscriber) => subscriber(data));
 }
 

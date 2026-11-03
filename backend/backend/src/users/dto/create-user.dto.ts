@@ -1,5 +1,6 @@
 import { ValidateIf, Matches, IsString, IsEmail, IsNumber, IsOptional, IsIn, Min, Max, IsInt, MinLength } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { DEFAULT_INITIAL_PASSWORD, MIN_PASSWORD_LENGTH } from '../../common/auth/password-policy';
 
 export class CreateUserDto {
   @ApiProperty({ example: 'Sai Ganesh' })
@@ -27,10 +28,11 @@ export class CreateUserDto {
   @IsIn(['active', 'inactive', 'placed'])
   status?: string;
 
-  @ApiPropertyOptional({ example: 'Welcome@123', description: 'Initial password. Defaults to 123 when omitted.' })
+  @ApiPropertyOptional({ example: 'Welcome@123', description: `Initial password, at least ${MIN_PASSWORD_LENGTH} characters. Defaults to ${DEFAULT_INITIAL_PASSWORD} when omitted.` })
   @IsOptional()
   @IsString()
-  @MinLength(3)
+  @MinLength(MIN_PASSWORD_LENGTH)
+  @Matches(/^\S(?:.*\S)?$/, { message: 'Password cannot start or end with whitespace' })
   password?: string;
 
   // ── Candidate fields ─────────────────────────────────────────────

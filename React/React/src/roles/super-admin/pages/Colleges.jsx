@@ -1,9 +1,7 @@
 import { phoneError, phoneInputProps } from '../../../shared/utils/phone.js';
 import React, { useState } from 'react';
 import { errorMessage } from '../../../services/api.js';
-import { Plus, Ban, CheckCircle, ShieldCheck, AlertTriangle, Building2 } from 'lucide-react';
-
-const STATUS_OPTIONS = ['active', 'inactive', 'suspended'];
+import { Plus, ShieldCheck, Building2 } from 'lucide-react';
 
 const FIELD_META = [
   { key: 'name', label: 'College name', required: true, placeholder: 'e.g. IIT Bombay' },
@@ -102,22 +100,19 @@ function AddCollegeModal({ onClose, onSave, existing }) {
 }
 
 function StatusModal({ college, onClose, onSave }) {
-  const [status, setStatus] = useState(college.status);
+  const willDeactivate = college.status === 'active';
   return (
     <div className="modal-backdrop open">
       <div className="modal">
-        <h3>Update Status — {college.name}</h3>
-        <div className="form-group">
-          <label>Status</label>
-          <select value={status} onChange={e => setStatus(e.target.value)}>
-            {STATUS_OPTIONS.map(s => (
-              <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
-            ))}
-          </select>
-        </div>
+        <h3>{willDeactivate ? 'Deactivate' : 'Reactivate'} {college.name}?</h3>
+        <p className="form-hint">{willDeactivate
+          ? 'Members linked to this college will be blocked from signing in and using the portal.'
+          : 'Members linked to this college will be able to sign in and use the portal again.'}</p>
         <div className="modal-actions">
           <button className="btn btn-outline" onClick={onClose}>Cancel</button>
-          <button className="btn btn-primary" onClick={() => { onSave(college.id, status); onClose(); }}>Save</button>
+          <button className="btn btn-primary" onClick={() => { onSave(college.id, willDeactivate ? 'inactive' : 'active'); onClose(); }}>
+            {willDeactivate ? 'Deactivate college' : 'Reactivate college'}
+          </button>
         </div>
       </div>
     </div>
@@ -146,9 +141,9 @@ export default function Colleges({ colleges, platform, showToast, setActiveTab, 
   const handleStatusChange = async (id, status) => {
     try {
       await platform.setCollegeStatus(id, status);
-      showToast('College status updated.', 'success');
+      showToast('College access updated.', 'success');
     } catch (error) {
-      showToast(errorMessage(error, 'Could not update the status.'), 'error');
+      showToast(errorMessage(error, 'Could not update college access.'), 'error');
     }
   };
 
@@ -175,14 +170,13 @@ export default function Colleges({ colleges, platform, showToast, setActiveTab, 
               <th>Contact</th>
               <th>Students</th>
               <th>Placed</th>
-              <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {colleges.length === 0 ? (
               <tr>
-                <td colSpan={7}>
+                <td colSpan={6}>
                   <div className="empty-state">
                     <Building2 />
                     <p>No colleges yet. Add one to get started.</p>
@@ -207,15 +201,6 @@ export default function Colleges({ colleges, platform, showToast, setActiveTab, 
                 </td>
                 <td>{c.stats?.students ?? 0}</td>
                 <td><strong style={{ color: '#16a34a' }}>{c.stats?.placed ?? 0}</strong></td>
-                <td>
-                  <button
-                    className={`badge ${c.status === 'active' ? 'badge-green' : c.status === 'suspended' ? 'badge-red' : 'badge-gray'}`}
-                    style={{ cursor: 'pointer', border: 'none' }}
-                    onClick={() => setStatusTarget(c)}
-                  >
-                    {c.status}
-                  </button>
-                </td>
                 <td style={{ whiteSpace: 'nowrap' }}>
                   <button
                     className="btn btn-outline btn-sm"
@@ -224,6 +209,14 @@ export default function Colleges({ colleges, platform, showToast, setActiveTab, 
                     style={{ gap: 5 }}
                   >
                     <ShieldCheck size={13} /> Admin
+                  </button>
+                  <button
+                    className="btn btn-outline btn-sm"
+                    title={c.status === 'active' ? 'Deactivate college and block its members' : 'Reactivate college'}
+                    onClick={() => setStatusTarget(c)}
+                    style={{ gap: 5, marginLeft: 6 }}
+                  >
+                    {c.status === 'active' ? 'Deactivate' : 'Reactivate'}
                   </button>
                 </td>
               </tr>

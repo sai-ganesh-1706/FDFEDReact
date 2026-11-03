@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import api, { clearSession } from '../../../services/api.js';
+import api, { clearSession, readSession } from '../../../services/api.js';
 import { useOfficerData } from '../services/officerApi';
+import { officerInitials } from '../utils/officerIdentity.js';
 import SignOutModal from './SignOutModal';
 
 const PAGES = [
@@ -15,7 +16,21 @@ const PAGES = [
   { title: 'Department Report', page: 'dept-report', badge: 'Standard' },
 ];
 
-export default function Header({ title = 'Dashboard', onNavigate }) {
+export default function Header({ title = 'Dashboard', onNavigate, profile }) {
+  const session = readSession() || {};
+  const [officer, setOfficer] = useState(session);
+  useEffect(() => {
+    if (!session.id) return;
+    let active = true;
+    api.get(`/users/${session.id}`).then(({ data: user }) => {
+      if (active) setOfficer(user);
+    }).catch(() => {});
+    return () => { active = false; };
+  }, [session.id]);
+  const officerName = profile?.name || officer.name || session.name || 'Placement Officer';
+  const officerEmail = profile?.email || officer.email || session.email || '';
+  const officerRole = profile?.role || officer.headline || 'Placement Officer';
+  const initials = officerInitials(officerName);
   const [profileOpen, setProfileOpen] = useState(false);
   const [isSignOutOpen, setIsSignOutOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
@@ -297,15 +312,15 @@ export default function Header({ title = 'Dashboard', onNavigate }) {
               setSearchResultsOpen(false);
             }}
           >
-            RN
+            {initials}
           </div>
 
           <div className={`profile-dropdown${profileOpen ? ' open' : ''}`}>
             <div className="profile-dd-header">
-              <div className="profile-dd-avatar">RN</div>
+              <div className="profile-dd-avatar">{initials}</div>
               <div>
-                <div className="profile-dd-name">Dr. Rajesh Nair</div>
-                <div className="profile-dd-email">rajesh@college.edu</div>
+                <div className="profile-dd-name">{officerName}</div>
+                <div className="profile-dd-email">{officerEmail}</div>
               </div>
             </div>
 
@@ -314,7 +329,7 @@ export default function Header({ title = 'Dashboard', onNavigate }) {
                 <rect x="2" y="7" width="20" height="14" rx="2" />
                 <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
               </svg>
-              Senior Placement Officer
+              {officerRole}
             </div>
 
             <div className="profile-dd-divider" />

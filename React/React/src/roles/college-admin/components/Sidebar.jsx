@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  LayoutDashboard, ShieldCheck, GraduationCap,
+  LayoutDashboard, ShieldCheck, GraduationCap, UsersRound,
   Megaphone, BarChart2, Building2, LogOut, Mail
 } from 'lucide-react';
 
@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { id: 'alumni', label: 'Alumni', icon: GraduationCap },
   { id: 'activity', label: 'Officer Activity', icon: BarChart2 },
   { id: 'students',       label: 'Students',            icon: GraduationCap },
+  { id: 'recruiters',     label: 'Recruiters',          icon: UsersRound },
   { id: 'announcements',  label: 'Announcements',       icon: Megaphone },
   { id: 'messages',       label: 'Messages',            icon: Mail },
   { id: 'reports',        label: 'Reports',             icon: BarChart2 },

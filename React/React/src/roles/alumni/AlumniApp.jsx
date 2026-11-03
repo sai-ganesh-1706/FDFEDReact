@@ -60,6 +60,7 @@ export default function AlumniApp() {
   const [pageProps, setPageProps] = useState({});
   const [alumniData, setAlumniData] = useState(() => emptyProfile(session));
   const [referrals, setReferrals] = useState([]);
+  const [loadError, setLoadError] = useState('');
   const [isSignOutOpen, setIsSignOutOpen] = useState(false);
 
   // ---- Lifted profile state (persists across page navigation) ----
@@ -77,7 +78,7 @@ export default function AlumniApp() {
   };
 
   useEffect(() => {
-    Promise.all([api.get(`/users/${session.id}`).catch(() => ({ data: session || {} })), loadReferrals().catch(() => [])])
+    Promise.all([api.get(`/users/${session.id}`), loadReferrals()])
       .then(([{ data: user }, refs]) => {
         setAlumniData({
           initials: user?.avatar || initialsOf(user?.name),
@@ -102,9 +103,12 @@ export default function AlumniApp() {
         });
         setSkillsList(user?.skills || []);
       })
-      .catch(() => {});
+      .then(() => setLoadError(''))
+      .catch((error) => setLoadError(errorMessage(error, 'Could not load your alumni workspace from the server.')));
     // Pick up new requests while the alumnus has the portal open.
-    const timer = setInterval(() => { if (!document.hidden) loadReferrals().catch(() => {}); }, 20000);
+    const timer = setInterval(() => {
+      if (!document.hidden) loadReferrals().then(() => setLoadError('')).catch((error) => setLoadError(errorMessage(error, 'Could not refresh referral requests.')));
+    }, 20000);
     return () => clearInterval(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -183,6 +187,7 @@ export default function AlumniApp() {
         onOpenSignOut={() => setIsSignOutOpen(true)}
         alumni={alumniData}
       />
+      {loadError && <div role="alert" style={{ margin: '12px 20px', padding: 12, borderRadius: 8, background: '#fef2f2', color: '#b91c1c' }}>{loadError}</div>}
       <ActivePageComponent
         alumniData={alumniData}
         referrals={referrals}

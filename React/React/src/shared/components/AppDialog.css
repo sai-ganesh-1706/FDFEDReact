@@ -15,6 +15,18 @@
 .cn-app-dialog::backdrop {
   background: #0f172a80;
 }
+.cn-placement .cn-recruiter-jobs-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  padding: 26px;
+  max-height: 85vh;
+  overflow-y: auto;
+}
 .cn-app-dialog h2 {
   margin: 0 0 12px;
   font-size: 20px;

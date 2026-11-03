@@ -22,8 +22,12 @@ function AssignAdminModal({ college, onClose, onSave }) {
       setError(collegeEmailError(form.email, emailDomain));
       return;
     }
-    if (form.password && form.password.length < 3) {
-      setError('Password must be at least 3 characters.');
+    if (form.password && form.password.length < 8) {
+      setError('Password must be at least 8 characters.');
+      return;
+    }
+    if (form.password !== form.password.trim()) {
+      setError('Password cannot start or end with spaces.');
       return;
     }
     onSave(college.id, {
@@ -53,9 +57,9 @@ function AssignAdminModal({ college, onClose, onSave }) {
         </div>
         <div className="form-group">
           <label>Password</label>
-          <input type="password" placeholder="Leave blank for default (123)" value={form.password} onChange={e => set('password', e.target.value)} />
+          <input type="password" minLength={8} autoComplete="new-password" placeholder="Leave blank for default (12345678)" value={form.password} onChange={e => set('password', e.target.value)} />
         </div>
-        <p className="form-hint">Default password is <strong>123</strong>. The admin can change it after first login.</p>
+        <p className="form-hint">Use at least 8 characters with no leading or trailing spaces. Default password is <strong>12345678</strong>.</p>
         {error && <p className="form-error">{error}</p>}
         <div className="modal-actions">
           <button className="btn btn-outline" onClick={onClose}>Cancel</button>
@@ -92,11 +96,6 @@ function CollegeAdminPanel({ college, onAssign, onToggleStatus }) {
               <div className="chip-info">
                 <div className="chip-name" style={{ fontSize: 15, fontWeight: 700 }}>{admin.name}</div>
                 <div className="chip-sub">{admin.email}</div>
-                <div style={{ marginTop: 6 }}>
-                  <span className={`badge ${admin.status === 'active' ? 'badge-green' : 'badge-yellow'}`}>
-                    {admin.status}
-                  </span>
-                </div>
               </div>
             </div>
             <div style={{ display: 'flex', gap: 8 }}>
@@ -221,11 +220,6 @@ export default function CollegeAdmins({ colleges, platform, showToast, adminColl
             <div className="college-card-name">{c.name}</div>
             <div className="college-card-sub" style={{ marginTop: 4 }}>
               {c.admin ? `Admin: ${c.admin.name}` : ' No admin assigned'}
-            </div>
-            <div style={{ marginTop: 8 }}>
-              <span className={`badge ${c.status === 'active' ? 'badge-green' : 'badge-red'}`}>
-                {c.status}
-              </span>
             </div>
           </button>
         ))}

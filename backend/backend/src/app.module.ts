@@ -49,7 +49,7 @@ export class AppModule implements NestModule {
   /**
    * configure() wires router-level middleware using MiddlewareConsumer.
    *
-   * 1. SecurityMiddleware  — applied to ALL routes (security headers + rate limit)
+   * 1. SecurityMiddleware  — applied to ALL routes (security headers)
    * 2. LoggerMiddleware    — applied to ALL routes (request/response logging)
    * 3. FileUploadMiddleware — applied only to POST /users/:id/profile-picture
    */

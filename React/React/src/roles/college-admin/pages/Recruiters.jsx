@@ -1,30 +1,41 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import api, { errorMessage } from "../../../services/api.js";
 import RecruiterOpportunitiesModal from "../../../shared/components/RecruiterOpportunitiesModal.jsx";
+import { confirmDialog, infoDialog } from "../../../shared/components/AppDialog.jsx";
 
 export default function Recruiters() {
   const [recruiters, setRecruiters] = useState([]);
   const [selected, setSelected] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    let active = true;
-    api
-      .get("/recruiters")
-      .then(({ data }) => {
-        if (active) setRecruiters(data);
-      })
-      .catch((failure) => {
-        if (active)
-          setError(errorMessage(failure, "Could not load recruiters."));
-      })
-      .finally(() => {
-        if (active) setLoading(false);
-      });
-    return () => {
-      active = false;
-    };
+  const [removingId, setRemovingId] = useState(null);
+  const loadRecruiters = useCallback(async () => {
+    try {
+      const { data } = await api.get('/recruiters');
+      setRecruiters(data);
+      setError('');
+    } catch (failure) {
+      setError(errorMessage(failure, 'Could not load recruiters.'));
+    } finally {
+      setLoading(false);
+    }
   }, []);
+  useEffect(() => {
+    loadRecruiters();
+  }, [loadRecruiters]);
+  const removeRecruiter = async (recruiter) => {
+    if (!await confirmDialog(`Remove recruiter ${recruiter.name} (${recruiter.email})? Their login access will be removed. This cannot be undone.`)) return;
+    setRemovingId(recruiter.id);
+    try {
+      await api.delete(`/recruiters/${recruiter.id}`);
+      await loadRecruiters();
+      infoDialog(`${recruiter.name} was removed.`);
+    } catch (failure) {
+      infoDialog(errorMessage(failure, 'Could not remove this recruiter.'));
+    } finally {
+      setRemovingId(null);
+    }
+  };
   return (
     <section>
       <div className="section-header">
@@ -43,6 +54,7 @@ export default function Recruiters() {
                 <th>Company</th>
                 <th>Status</th>
                 <th>Opportunities</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -63,14 +75,15 @@ export default function Recruiters() {
                       className="btn btn-outline"
                       onClick={() => setSelected(recruiter)}
                     >
-                      View Opportunities
+                      View Opportunities ({recruiter.opps})
                     </button>
                   </td>
+                  <td><button type="button" className="btn btn-danger btn-sm" disabled={removingId === recruiter.id} onClick={() => removeRecruiter(recruiter)}>{removingId === recruiter.id ? 'Removing…' : 'Remove'}</button></td>
                 </tr>
               ))}
               {!recruiters.length && (
                 <tr>
-                  <td colSpan={4}>No recruiters found.</td>
+                  <td colSpan={5}>No recruiters found.</td>
                 </tr>
               )}
             </tbody>

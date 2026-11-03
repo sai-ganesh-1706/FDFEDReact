@@ -11,12 +11,6 @@ const STAGES = ['Applied', 'Shortlisted', 'Interview', 'Offered'];
 const FILTERS = ['All', 'Applied', 'Shortlisted', 'Interview', 'Offered', 'Rejected', 'Withdrawn'];
 const TERMINAL = ['Rejected', 'Withdrawn', 'Offered', 'Offer'];
 
-const ROUND_LABELS = {
-    resume:    'Resume screening',
-    technical: 'Technical interview',
-    hr:        'Interview',
-};
-
 // ── Ask an alumnus of the company for a referral ────────────────────────────────
 function GetReferralModal({ app, requestedAlumniIds, onClose, onSent }) {
     const { fetchAlumniForCompany, requestReferral } = useStore();
@@ -97,7 +91,6 @@ function AppDetails({ app, referrals, schedule, onGetReferral, onCancel }) {
     const failed = ['Rejected', 'Withdrawn'].includes(app.status);
     const canCancel = ['Applied', 'Shortlisted', 'Interview'].includes(app.status);
 
-    const rounds = Object.entries(app.rounds || {});
     const upcoming = schedule.filter((s) => s.applicationId === app.id || (s.opportunityId === app.opportunityId));
 
     const mine = referrals.filter((r) => r.opportunityId === app.opportunityId);
@@ -157,18 +150,6 @@ function AppDetails({ app, referrals, schedule, onGetReferral, onCancel }) {
                             {r.alumniResponse
                                 ? <div className="cx-quote">“{r.alumniResponse}”</div>
                                 : normReferralStatus(r.status) === 'pending' && <div className="cx-muted" style={{ marginTop: 6 }}>Waiting for {r.alumniName} to respond.</div>}
-                        </div>
-                    ))}
-                </div>
-            )}
-
-            {rounds.length > 0 && (
-                <div className="cx-panel">
-                    <div className="cx-panel__title">Round results</div>
-                    {rounds.map(([key, result]) => (
-                        <div className="cx-row" key={key}>
-                            <span>{ROUND_LABELS[key] || key}</span>
-                            <span className={`cx-pill cx-pill--${result === 'Pass' ? 'ok' : result === 'Fail' ? 'bad' : 'mute'}`}>{result}</span>
                         </div>
                     ))}
                 </div>

@@ -1,12 +1,7 @@
 import React from 'react';
 
 export default function Sidebar({ activePage, onNavigate, onOpenSignOut, alumni }) {
-  const currentAlumni = alumni || {
-    initials: 'SR',
-    name: 'Sneha Reddy',
-    email: 'sneha@google.com',
-    company: 'Google',
-  };
+  const currentAlumni = alumni || {};
 
   const handleNav = (page, e) => {
     if (onNavigate) {
@@ -28,7 +23,7 @@ export default function Sidebar({ activePage, onNavigate, onOpenSignOut, alumni 
         title="My Profile"
         onClick={(e) => handleNav('profile', e)}
       >
-        <div className="avatar avatar--light">{currentAlumni.initials || 'SR'}</div>
+        <div className="avatar avatar--light">{currentAlumni.initials || ''}</div>
         <div className="profile-info">
           <div className="profile-name">{currentAlumni.name}</div>
           <div className="profile-email">{currentAlumni.email}</div>

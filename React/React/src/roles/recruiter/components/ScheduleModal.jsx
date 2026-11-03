@@ -4,7 +4,7 @@ import { X, AlertCircle } from 'lucide-react';
 export default function ScheduleModal({ onClose, onAddAssessment, opportunities = [], applications = [], preselectApplicationId }) {
   const [title, setTitle] = useState('');
   // Who this round is for: one application ("app:12") or everyone who applied to a role ("opp:3")
-  const schedulable = applications.filter((a) => ['Shortlisted', 'Assessment', 'Interview'].includes(a.status));
+  const schedulable = applications.filter((a) => ['Shortlisted', 'Interview'].includes(a.status));
   const isPreselectedValid = preselectApplicationId && schedulable.some((a) => a.id === Number(preselectApplicationId));
   const [jobId, setJobId] = useState(isPreselectedValid ? String(schedulable.find(a => a.id === Number(preselectApplicationId)).opportunityId) : '');
   const [selectedIds, setSelectedIds] = useState(isPreselectedValid ? [Number(preselectApplicationId)] : []);

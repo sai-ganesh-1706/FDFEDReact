@@ -42,10 +42,11 @@ export default function Opportunities() {
     // Multi-step apply modal
     const [applyStep, setApplyStep] = useState(1); // 1=Info, 2=Resume, 3=Questions, 4=Review
     const [selectedResume, setSelectedResume] = useState(null);
+    const [selectedResumeUrl, setSelectedResumeUrl] = useState(null);
     const [uploadedFile, setUploadedFile] = useState(null);
     const resumeInputRef = useRef(null);
 
-    const resumeHistory = store.profileResumeData?.resumeHistory || [];
+    const resumeHistory = (store.profileResumeData?.resumeHistory || []).filter((resume) => !!resume.resumeUrl);
 
     const eligibilityRef = useRef(null);
     const termsRef = useRef(null);
@@ -120,12 +121,12 @@ export default function Opportunities() {
 
     const activeJob = store.recruiterJobs.find((j) => j.id === activeJobId);
 
-    async function applyJob(jobId, resumeFile) {
+    async function applyJob(jobId, resumeFile, resumeUrl) {
         const job = store.recruiterJobs.find((j) => j.id === jobId);
         if (!job) return false;
         setApplyError('');
         try {
-            await applyToJob(job, resumeFile);
+            await applyToJob(job, resumeFile, resumeUrl);
             return true;
         } catch (error) {
             setApplyError(errorMessage(error, 'Could not submit your application.'));
@@ -158,8 +159,9 @@ export default function Opportunities() {
         setTermsChecked(false);
         setApplyStep(1);
         // Pre-select the most recent resume if available
-        const history = store.profileResumeData?.resumeHistory || [];
+        const history = resumeHistory;
         setSelectedResume(history.length > 0 ? history[0].name : null);
+        setSelectedResumeUrl(history.length > 0 ? history[0].resumeUrl : null);
         setUploadedFile(null);
         setPendingApplyJobId(jobId);
         setTermsOpen(true);
@@ -167,7 +169,7 @@ export default function Opportunities() {
 
     async function finalizeApplication() {
         setTermsOpen(false);
-        const applied = pendingApplyJobId != null ? await applyJob(pendingApplyJobId, selectedResume) : false;
+        const applied = pendingApplyJobId != null ? await applyJob(pendingApplyJobId, selectedResume, selectedResumeUrl) : false;
         if (applied) setTimeout(() => setSuccessOpen(true), 300);
     }
 
@@ -187,6 +189,7 @@ export default function Opportunities() {
         });
         setUploadedFile(newEntry);
         setSelectedResume(file.name);
+        setSelectedResumeUrl(saved.resumeUrl);
         e.target.value = '';
     }
 
@@ -309,6 +312,7 @@ export default function Opportunities() {
                                     try { await toggleSaved(activeJob.id, store.savedDriveIds.includes(activeJob.id)); }
                                     catch (error) { setApplyError(errorMessage(error, 'Could not update saved drives.')); }
                                 }}
+                                isPlaced={store.currentUser.status === 'placed'}
                                 onGoToApplications={() => navigate('/candidate/applications')}
                             />
                         )}
@@ -483,15 +487,15 @@ export default function Opportunities() {
 
                             {/* Resume list */}
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                                {(store.profileResumeData?.resumeHistory || []).map((resume, idx) => {
-                                    const isSelected = selectedResume === resume.name;
+                                {resumeHistory.map((resume, idx) => {
+                                    const isSelected = selectedResumeUrl === resume.resumeUrl;
                                     const displayDate = resume.date
                                         ? new Date(resume.date).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' })
                                         : '';
                                     return (
                                         <div
                                             key={idx}
-                                            onClick={() => setSelectedResume(resume.name)}
+                                            onClick={() => { setSelectedResume(resume.name); setSelectedResumeUrl(resume.resumeUrl); }}
                                             style={{
                                                 display: 'flex', alignItems: 'center', gap: 12,
                                                 border: isSelected ? '1.5px solid #374151' : '1px solid #e5e7eb',
@@ -540,7 +544,7 @@ export default function Opportunities() {
 
                             <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, marginTop: 28 }}>
                                 <button className="btn-secondary" onClick={() => setApplyStep(1)}>← Back</button>
-                                <button className="btn-primary" disabled={!selectedResume} style={{ opacity: selectedResume ? 1 : 0.5 }} onClick={() => setApplyStep(3)}>Next &gt; </button>
+                                <button className="btn-primary" disabled={!selectedResume || !selectedResumeUrl} style={{ opacity: selectedResume && selectedResumeUrl ? 1 : 0.5 }} onClick={() => setApplyStep(3)}>Next &gt; </button>
                             </div>
                         </div>
                     )}
@@ -666,7 +670,7 @@ export default function Opportunities() {
     );
 }
 
-function ActiveJobDetails({ job, store, onApply, onCheckEligibility, onAskQuery, onGoToApplications, isSaved, onToggleSave }) {
+function ActiveJobDetails({ job, store, onApply, onCheckEligibility, onAskQuery, onGoToApplications, isSaved, onToggleSave, isPlaced }) {
     const jobIsJob = job.type.includes('Full-Time') || job.type.includes('Full-time');
     const badgeClass = jobIsJob ? 'type-job' : 'type-intern';
     const badgeText = jobIsJob ? 'Full-time Job' : 'Intern';
@@ -690,6 +694,9 @@ function ActiveJobDetails({ job, store, onApply, onCheckEligibility, onAskQuery,
             </button>
         );
         warning = <div className="cgpa-warning" style={{ color: '#64748b', fontSize: 13 }}>You have already submitted an application for this role.</div>;
+    } else if (isPlaced) {
+        actionButton = <button type="button" disabled className="btn-applied-state" style={{ width: '100%', borderRadius: 'var(--radius-md)', padding: 16, fontWeight: 600, background: '#dcfce7', color: '#166534', border: 'none', marginBottom: 20, cursor: 'not-allowed' }}>Already placed</button>;
+        warning = <div className="cgpa-warning" style={{ color: '#166534', fontSize: 13 }}>You have received an offer and cannot apply to additional opportunities.</div>;
     } else if (job.eligibilityChecked) {
         if (cgpaPass && branchPass) {
             actionButton = (

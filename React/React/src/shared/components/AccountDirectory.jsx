@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import StudentCsvImport from "./AccountCsvImport.jsx";
-import { infoDialog } from "./AppDialog.jsx";
+import { confirmDialog, infoDialog } from "./AppDialog.jsx";
 import api, { errorMessage } from "../../services/api.js";
 import {
   toOversightUser,
@@ -82,6 +82,7 @@ export default function AccountDirectory({
   const [csvOpen, setCsvOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
+  const [removingId, setRemovingId] = useState(null);
   const [formError, setFormError] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
@@ -101,8 +102,24 @@ export default function AccountDirectory({
   };
   const columns =
     role === "candidate"
-      ? ["Name", "Email", "Roll No", "Branch", "CGPA", "Backlogs", "Status"]
-      : ["Name", "Email", "Company", "Batch", "Referrals", "Status"];
+      ? ["Name", "Email", "Roll No", "Branch", "CGPA", "Backlogs", "Status", ...(canCreate ? ["Actions"] : [])]
+      : ["Name", "Email", "Company", "Batch", "Referrals", "Status", ...(canCreate ? ["Actions"] : [])];
+
+  const removeUser = async (user) => {
+    const label = role === "candidate" ? "student" : "alumni";
+    if (!await confirmDialog(`Remove ${label} ${user.name} (${user.email})? This will remove their account and cannot be undone.`)) return;
+    setRemovingId(user.id);
+    try {
+      await api.delete(`/users/${user.id}`);
+      await refresh();
+      await onChanged?.();
+      setNotice(`${user.name} was removed.`);
+    } catch (error) {
+      setNotice(errorMessage(error, `Could not remove this ${label} account.`));
+    } finally {
+      setRemovingId(null);
+    }
+  };
 
   const saveUser = async (event) => {
     event.preventDefault();
@@ -370,6 +387,11 @@ export default function AccountDirectory({
                       </>
                     )}
                     <td style={cellStyle}>{user.status}</td>
+                    {canCreate && <td style={cellStyle}>
+                      <button type="button" className="btn btn-danger btn-sm" disabled={removingId === user.id} onClick={() => removeUser(user)}>
+                        {removingId === user.id ? "Removing…" : "Remove"}
+                      </button>
+                    </td>}
                   </tr>
                 ))}
               </tbody>

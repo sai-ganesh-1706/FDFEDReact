@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 export interface Notification {
   id: number;
@@ -13,40 +15,15 @@ export interface Notification {
 
 @Injectable()
 export class NotificationsRepository {
-  private notifications: Notification[] = [
-    {
-      id: 1, candidateId: 100, type: 'offer',
-      title: 'Offer extended — CloudBase Inc',
-      message: 'Congratulations! CloudBase Inc has extended an offer for the DevOps Intern role. Please accept it before February 15th.',
-      href: 'applications', isRead: false, createdAt: '2026-10-12T10:00:00Z',
-    },
-    {
-      id: 2, candidateId: 100, type: 'status',
-      title: 'Application shortlisted — Analytics Hub',
-      message: 'You have been shortlisted for Data Analyst Intern at Analytics Hub. Watch this space for the assessment link.',
-      href: 'applications', isRead: false, createdAt: '2026-10-11T09:00:00Z',
-    },
-    {
-      id: 3, candidateId: 100, type: 'general',
-      title: 'New opportunity: Software Engineer',
-      message: 'Google is hiring for Software Engineer (Full-Time, 32 LPA). Apply before 2026-07-31.',
-      href: 'opportunities', isRead: false, createdAt: '2026-10-10T11:00:00Z',
-    },
-    {
-      id: 4, candidateId: 100, type: 'general',
-      title: 'Pre-placement talk — Google',
-      message: 'Google India will run a pre-placement talk for final-year students next week in the Main Auditorium.',
-      href: '#', isRead: true, createdAt: '2026-10-08T09:00:00Z',
-    },
-    {
-      id: 5, candidateId: 101, type: 'referral',
-      title: 'New referral request',
-      message: 'Isha Gupta asked you for a referral for Software Engineer at Google.',
-      href: '#', isRead: false, createdAt: '2026-10-13T09:00:00Z',
-    },
-  ];
+  private notifications: Notification[] = [];
 
-  private nextId = 6;
+  private nextId = 1;
+
+  constructor() {
+    this.notifications = JSON.parse(readFileSync(join(process.cwd(), 'data', 'notifications.demo.json'), 'utf8'));
+    if (!Array.isArray(this.notifications)) throw new Error('Invalid demo notifications file');
+    this.nextId = Math.max(0, ...this.notifications.map((item) => item.id)) + 1;
+  }
 
   findByCandidate(candidateId: number): Notification[] {
     return this.notifications

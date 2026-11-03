@@ -29,6 +29,7 @@ export default function Dashboard() {
                         <p>
                             {currentUser.department} - CGPA: {currentUser.cgpa} - {currentUser.batch}
                         </p>
+                        {currentUser.status === 'placed' && <strong style={{ display: 'inline-block', marginTop: 12, padding: '6px 12px', borderRadius: 999, background: 'rgba(255,255,255,.18)' }}>Placement status: Placed</strong>}
                     </div>
                 </section>
 

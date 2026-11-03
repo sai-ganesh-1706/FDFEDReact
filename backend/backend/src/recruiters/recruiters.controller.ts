@@ -92,11 +92,13 @@ export class RecruitersController {
   }
 
   @Delete(':id')
-  @Roles('placement_officer')
+  @Roles('placement_officer', 'college_admin')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Remove a recruiter (placement_officer only)' })
+  @ApiOperation({ summary: 'Remove a recruiter (placement officer or college admin)' })
   @ApiParam({ name: 'id', type: Number })
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.service.remove(id);
+  remove(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: RequestUser) {
+    const recruiter = this.service.findOne(id);
+    if ((recruiter.collegeId ?? 1) !== user.collegeId) throw new ForbiddenException('Not your college');
+    return this.service.remove(id, this.name(user), user.role);
   }
 }

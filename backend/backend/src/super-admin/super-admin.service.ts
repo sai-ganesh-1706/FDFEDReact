@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { collegeEmailDomain } from '../users/oversight-policy';
+import { assertPasswordPolicy, DEFAULT_INITIAL_PASSWORD } from '../common/auth/password-policy';
 import { UsersRepository, User } from '../users/users.repository';
 import { CollegesRepository, College } from '../colleges/colleges.repository';
 import { ApplicationsRepository } from '../applications/applications.repository';
@@ -181,6 +182,7 @@ export class SuperAdminService {
 
   /** Create or assign a new college admin for a college */
   createCollegeAdmin(collegeId: number, data: { name: string; email: string; password?: string }): Omit<User, 'password'> {
+    assertPasswordPolicy(data.password);
     const college = this.collegesRepo.findById(collegeId);
     if (!college) throw new NotFoundException(`College ${collegeId} not found`);
     const email = data.email.trim().toLowerCase();
@@ -208,7 +210,7 @@ export class SuperAdminService {
       role: 'college_admin',
       collegeId,
       status: 'active',
-      password: data.password ?? '123',
+      password: data.password ?? DEFAULT_INITIAL_PASSWORD,
       avatar: data.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase(),
     });
 

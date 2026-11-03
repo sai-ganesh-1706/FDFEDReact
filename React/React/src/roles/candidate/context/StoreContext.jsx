@@ -62,6 +62,7 @@ function toCurrentUser(user, resumeData = {}) {
         university: user.university || '',
         email: user.email || '',
         phone: user.phone || '',
+        status: user.status || 'active',
         about: user.about || '',
         socialLinks: { github: '', linkedin: '', portfolio: '', ...(user.socialLinks || {}) },
     };
@@ -76,6 +77,7 @@ const toAnnouncement = (a) => ({
 });
 
 function buildStore({ user, jobs, applications, notifications, savedIds, schedule, referrals, announcements }) {
+    const isPlaced = user.status === 'placed' || applications.some((application) => ['Offer', 'Offered'].includes(application.status));
     const savedProfile = user.resumeData?.profileResumeData || {};
     // Older accounts store skills directly on the user. Once a candidate edits
     // their profile, resumeData becomes the source of truth (even for an
@@ -105,7 +107,7 @@ function buildStore({ user, jobs, applications, notifications, savedIds, schedul
             link: s.link,
         }));
     return {
-        currentUser: toCurrentUser(user, user.resumeData),
+        currentUser: toCurrentUser({ ...user, status: isPlaced ? 'placed' : user.status }, user.resumeData),
         profileResumeData: {
             ...EMPTY_RESUME,
             ...savedProfile,
@@ -143,9 +145,6 @@ function emptyStore() {
 
 const StoreContext = createContext(null);
 
-// A feature that is not available for this account answers with an error; treat that as "nothing yet".
-const optional = (request, fallback) => request.then((r) => r.data).catch(() => fallback);
-
 export function StoreProvider({ children }) {
     const session = readSession();
     const [store, setStore] = useState(emptyStore);
@@ -164,11 +163,11 @@ export function StoreProvider({ children }) {
                 api.get(`/users/${session.id}`).then((r) => r.data),
                 api.get('/opportunities').then((r) => r.data),
                 api.get('/applications/my').then((r) => r.data),
-                optional(api.get('/notifications'), []),
-                optional(api.get('/features/candidate/saved-drive-ids'), []),
-                optional(api.get('/assessments/my'), []),
-                optional(api.get('/referrals/my'), []),
-                optional(api.get('/announcements'), []),
+                api.get('/notifications').then((r) => r.data),
+                api.get('/features/candidate/saved-drive-ids').then((r) => r.data),
+                api.get('/assessments/my').then((r) => r.data),
+                api.get('/referrals/my').then((r) => r.data),
+                api.get('/announcements').then((r) => r.data),
             ]);
             const next = buildStore({
                 user,
@@ -229,9 +228,9 @@ export function StoreProvider({ children }) {
         reload: () => load(),
 
         // Throws on failure so the page can tell the candidate what went wrong.
-        async applyToJob(job, resumeFile) {
-            const resume = store.profileResumeData?.resumeHistory?.find(r => r.name === resumeFile);
-            await api.post('/applications', { opportunityId: job.id, resumeFile: resumeFile || undefined, resumeUrl: resume?.resumeUrl });
+        async applyToJob(job, resumeFile, resumeUrl) {
+            if (!resumeUrl) throw new Error('Select an uploaded resume before applying.');
+            await api.post('/applications', { opportunityId: job.id, resumeFile: resumeFile || undefined, resumeUrl });
             await load();
         },
 

@@ -1,65 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../../services/api.js';
-import { X, FileText, Mail, Phone, Calendar, Eye, Lock } from 'lucide-react';
+import { confirmDialog } from '../../../shared/components/AppDialog.jsx';
+import { X, FileText, Mail, Phone, Calendar, Eye } from 'lucide-react';
 
 // ── Round configuration ──────────────────────────────────────────────────────
-const ROUND_KEYS = [
-  { key: 'resume',    label: '1. Resume Screening' },
-  { key: 'technical', label: '2. Technical Interview' },
-  { key: 'hr',        label: '3. Interview' },
-];
-
-// Options per round
-const ROUND_OPTIONS = {
-  resume:    ['Pending', 'Pass', 'Fail'],
-  technical: ['Pending', 'Pass', 'Fail'],
-  hr:        ['Pending', 'Pass', 'Fail'],
-};
-
-// Ordered pipeline — each round requires the previous to be 'Pass' to unlock
-const ROUND_ORDER = ['resume', 'technical', 'hr'];
-
-/**
- * Returns true when a round is locked (previous round is not 'Pass').
- * The first round (resume) is never locked.
- */
-function isRoundLocked(roundKey, rounds = {}) {
-  const idx = ROUND_ORDER.indexOf(roundKey);
-  if (idx <= 0) return false; // resume is always editable
-  const prevKey = ROUND_ORDER[idx - 1];
-  return (rounds[prevKey] || 'Pending') !== 'Pass';
-}
-
-/**
- * Derives the pipeline status automatically from round results.
- *
- * Status rules:
- *   Any round Fail           -> Rejected
- *   HR Pass                  -> Offered
- *   Technical Pass           -> Interview
- *   Resume Pass              -> Shortlisted
- *   default                  -> Applied
- */
-function deriveStatus(rounds = {}) {
-  const { resume, technical, hr } = rounds;
-  if (resume === 'Fail' || technical === 'Fail' || hr === 'Fail') return 'Rejected';
-  if (hr === 'Pass') return 'Offered';
-  if (technical === 'Pass') return 'Interview';
-  if (resume === 'Pass') return 'Shortlisted';
-  return 'Applied';
-}
+const STAGES = ['Applied', 'Shortlisted', 'Interview', 'Offered'];
 
 export default function CandidateModal({
   candidate,
   onClose,
   onUpdateStatus,
-  onUpdateRound,
-  onUpdateEvaluation,
+  initialShowResumePreview = false,
 }) {
-  const [showResumePreview, setShowResumePreview] = useState(false);
-
-  // Local round state (synced from candidate.rounds)
-  const [localRounds, setLocalRounds] = useState(candidate?.rounds || {});
+  const [showResumePreview, setShowResumePreview] = useState(initialShowResumePreview);
 
   const [resumeBlob, setResumeBlob] = useState('');
   const [resumeError, setResumeError] = useState('');
@@ -70,7 +23,8 @@ export default function CandidateModal({
     return () => { active = false; if (url) URL.revokeObjectURL(url); setResumeBlob(''); setResumeError(''); };
   }, [showResumePreview, candidate?.id, candidate?.resumeUrl]);
   const [saving, setSaving] = useState(false);
-  useEffect(() => { setLocalRounds(candidate?.rounds || {}); }, [candidate?.rounds]);
+  const [feedback, setFeedback] = useState(candidate?.recruiterFeedback || '');
+  const [rating, setRating] = useState(candidate?.recruiterRating || 5);
   if (!candidate) return null;
 
   // Derived current status (read-only chip shown to recruiter)
@@ -87,22 +41,17 @@ export default function CandidateModal({
 
   // ── Handlers ──────────────────────────────────────────────────────────────
 
-  const handleRoundChange = async (roundKey, val) => {
-    const updated = { ...localRounds, [roundKey]: val };
-
-    // If a round is un-passed, reset all downstream rounds to Pending
-    // so they become locked and reflect the correct state.
-    if (val !== 'Pass') {
-      const idx = ROUND_ORDER.indexOf(roundKey);
-      ROUND_ORDER.slice(idx + 1).forEach((k) => {
-        updated[k] = 'Pending';
-      });
-    }
-
+  const stageIndex = STAGES.indexOf(derivedStatus);
+  const nextStatus = stageIndex >= 0 ? STAGES[stageIndex + 1] : null;
+  const updateStatus = async (status) => {
+    if (saving) return;
     setSaving(true);
-    const ok = await onUpdateRound(candidate.id, updated, deriveStatus(updated));
-    if (ok) setLocalRounds(updated);
-    setSaving(false);
+    try { await onUpdateStatus(candidate.id, status); }
+    finally { setSaving(false); }
+  };
+  const handleReject = async () => {
+    if (saving || !await confirmDialog(`Reject ${candidate.name} for ${candidate.role}?`)) return;
+    await updateStatus('Rejected');
   };
 
   return (
@@ -129,6 +78,17 @@ export default function CandidateModal({
             <X size={20} />
           </button>
         </div>
+
+        <section style={{ borderTop: '1px solid #e5e7eb', paddingTop: 16, marginBottom: 18 }}>
+          <h4 style={{ marginBottom: 8 }}>Candidate feedback</h4>
+          <label style={{ display: 'block', fontSize: 13, marginBottom: 8 }}>Rating
+            <select value={rating} onChange={(event) => setRating(Number(event.target.value))} style={{ marginLeft: 10, padding: 6 }}>
+              {[1, 2, 3, 4, 5].map((value) => <option key={value} value={value}>{value} / 5</option>)}
+            </select>
+          </label>
+          <textarea value={feedback} onChange={(event) => setFeedback(event.target.value)} rows={3} maxLength={2000} placeholder="Share feedback with the candidate" style={{ width: '100%', resize: 'vertical' }} />
+          <button type="button" className="btn-secondary-action" disabled={saving || !feedback.trim()} onClick={async () => { setSaving(true); try { await onUpdateStatus(candidate.id, { recruiterRating: rating, recruiterFeedback: feedback.trim(), feedbackSent: true }); } finally { setSaving(false); } }}>Send feedback</button>
+        </section>
 
         {/* ── REFERRAL INFO CARD ── */}
         {candidate.isReferred && candidate.referrerName && (
@@ -221,7 +181,7 @@ export default function CandidateModal({
         </div>
 
         {/* ── RESUME PREVIEW ── */}
-        {showResumePreview && <section style={{marginBottom:20}}><h4>Resume · {candidate.name}</h4>{candidate.resumeUrl ? resumeError ? <p>{resumeError}</p> : !resumeBlob ? <p>Loading resume…</p> : <>{candidate.resumeUrl.endsWith('.pdf') ? <iframe title={`${candidate.name} resume`} src={resumeBlob} style={{width:'100%',height:480,border:'1px solid #e5e7eb'}} /> : <p>This Word document is available to download. Upload a PDF for an in-window preview.</p>}<a href={resumeBlob} download>Download resume</a></> : <p>No resume document is available for this application. {candidate.resumeFile ? `Recorded filename: ${candidate.resumeFile}` : ''}</p>}</section>}
+        {showResumePreview && <section style={{marginBottom:20}}><h4>Resume · {candidate.name}</h4>{candidate.resumeUrl ? resumeError ? <p>{resumeError}</p> : !resumeBlob ? <p>Loading resume…</p> : <>{candidate.resumeUrl.toLowerCase().endsWith('.pdf') ? <iframe title={`${candidate.name} application resume`} src={resumeBlob} style={{width:'100%',height:480,border:'1px solid #e5e7eb'}} /> : <p>This application includes a Word document. Open or download the exact file submitted with this application.</p>}<a href={resumeBlob} target="_blank" rel="noreferrer" download={candidate.resumeUrl.toLowerCase().endsWith('.pdf') ? undefined : candidate.resumeFile || true}>Open / download application resume</a></> : <p>No resume was attached to this application. Ask the candidate to apply again with the selected resume.</p>}</section>}
 
         {/* ── AUTO-DERIVED PIPELINE STATUS (read-only) ── */}
         <div style={{ marginBottom: '20px' }}>
@@ -241,58 +201,30 @@ export default function CandidateModal({
               {derivedStatus}
             </span>
             <span style={{ fontSize: '12px', color: '#6B7280', fontStyle: 'italic' }}>
-              Auto-updated based on round results below
+              The same status is shown to the candidate and placement officer
             </span>
           </div>
         </div>
 
-        {/* ── ROUND-BY-ROUND EVALUATIONS ── */}
-        <div style={{ marginBottom: '16px' }}>
-          <label style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', color: '#6B7280', letterSpacing: '0.5px', marginBottom: '8px', display: 'block' }}>
-            Round-by-Round Results
-          </label>
-
-          {ROUND_KEYS.map((round) => {
-            const currentResult = localRounds[round.key] || 'Pending';
-            const locked = isRoundLocked(round.key, localRounds);
-            const opts = ROUND_OPTIONS[round.key];
-            const idx = ROUND_ORDER.indexOf(round.key);
-            const prevLabel = idx > 0 ? ROUND_KEYS[idx - 1].label : '';
-            return (
-              <div
-                key={round.key}
-                className="round-row-card"
-                style={{ opacity: locked ? 0.55 : 1 }}
-                title={locked ? `Unlock by marking "${prevLabel}" as Pass first` : undefined}
-              >
-                <span className="round-name" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  {locked && <Lock size={13} color="#9CA3AF" />}
-                  {round.label}
-                  {locked && (
-                    <span style={{ fontSize: '11px', color: '#9CA3AF', fontStyle: 'italic', fontWeight: 400 }}>
-                      — locked
-                    </span>
-                  )}
-                </span>
-                <select
-                  className="round-select"
-                  value={currentResult}
-                  disabled={locked || saving}
-                  onChange={(e) => handleRoundChange(round.key, e.target.value)}
-                  style={{
-                    color: locked ? '#9CA3AF' : currentResult === 'Pass' ? '#059669' : currentResult === 'Fail' ? '#DC2626' : '#2563EB',
-                    borderColor: locked ? '#E5E7EB' : currentResult === 'Pass' ? '#A7F3D0' : '#E5E7EB',
-                    background: locked ? '#F9FAFB' : undefined,
-                    cursor: locked ? 'not-allowed' : 'pointer',
-                  }}
-                >
-                  {opts.map((opt) => (
-                    <option key={opt} value={opt}>{opt}</option>
-                  ))}
-                </select>
-              </div>
-            );
-          })}
+        {/* Application stages */}
+        <div style={{ marginBottom: 20, display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+          {STAGES.map((stage, index) => (
+            <span key={stage} style={{ padding: '7px 12px', borderRadius: 20, background: stage === derivedStatus ? '#d1fae5' : index < STAGES.indexOf(derivedStatus) ? '#f0fdf4' : '#f3f4f6', color: stage === derivedStatus ? '#047857' : '#6b7280', fontWeight: stage === derivedStatus ? 700 : 500, fontSize: 12 }}>
+              {stage}
+            </span>
+          ))}
+        </div>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 16 }}>
+        {nextStatus && (
+          <button type="button" className="btn-primary-action" disabled={saving} onClick={() => updateStatus(nextStatus)}>
+            {saving ? 'Moving…' : `Move to next round: ${nextStatus}`}
+          </button>
+        )}
+        {!['Offered', 'Rejected', 'Withdrawn'].includes(derivedStatus) && (
+          <button type="button" className="btn-secondary-action" disabled={saving} onClick={handleReject} style={{ color: '#b91c1c', borderColor: '#fecaca' }}>
+            {saving ? 'Updating…' : 'Reject candidate'}
+          </button>
+        )}
         </div>
 
         <div style={{ marginTop: '4px', display: 'flex', justifyContent: 'flex-end' }}>

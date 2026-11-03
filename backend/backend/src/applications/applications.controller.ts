@@ -23,6 +23,14 @@ import { Roles } from '../common/decorators/roles.decorator';
 export class ApplicationsController {
   constructor(private readonly service: ApplicationsService) {}
 
+  private sendResume(app: { resumeUrl?: string }, res: Response) {
+    if (!app.resumeUrl || !/^resume-\d+-[a-f0-9-]+\.(pdf|doc|docx)$/.test(app.resumeUrl)) throw new NotFoundException('No resume document is available');
+    const path = join(process.cwd(), 'uploads', 'resumes', app.resumeUrl);
+    if (!existsSync(path)) throw new NotFoundException('Resume document is unavailable');
+    res.setHeader('Content-Disposition', 'inline');
+    return res.sendFile(path);
+  }
+
   @Get()
   @Roles('recruiter', 'placement_officer', 'college_admin')
   @ApiOperation({ summary: 'Get all applications (recruiter / placement_officer / college_admin)' })
@@ -57,11 +65,15 @@ export class ApplicationsController {
   resume(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: RequestUser, @Res() res: Response) {
     const app = this.findOne(id, user);
     if (['placement_officer', 'college_admin'].includes(user.role) && app.collegeId !== user.collegeId) throw new ForbiddenException('Not your college');
-    if (!app.resumeUrl || !/^resume-\d+-[a-f0-9-]+\.(pdf|doc|docx)$/.test(app.resumeUrl)) throw new NotFoundException('No resume document is available');
-    const path = join(process.cwd(), 'uploads', 'resumes', app.resumeUrl);
-    if (!existsSync(path)) throw new NotFoundException('Resume document is unavailable');
-    res.setHeader('Content-Disposition', 'inline');
-    return res.sendFile(path);
+    return this.sendResume(app, res);
+  }
+
+  @Get('referrals/:id/resume')
+  @Roles('alumni')
+  @ApiOperation({ summary: 'View the application resume for a referral addressed to this alumnus' })
+  referralResume(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: RequestUser, @Res() res: Response) {
+    const app = this.service.findResumeForReferral(id, user.userId ?? 0);
+    return this.sendResume(app, res);
   }
 
   @Get(':id')

@@ -9,10 +9,10 @@ import { UsersModule } from '../users/users.module';
 import { ReferralsModule } from '../referrals/referrals.module';
 
 @Module({
-  imports: [OpportunitiesModule, forwardRef(() => AssessmentsModule), NotificationsModule, UsersModule, ReferralsModule],
+  imports: [OpportunitiesModule, forwardRef(() => AssessmentsModule), NotificationsModule, UsersModule, forwardRef(() => ReferralsModule)],
   controllers: [ApplicationsController],
-  providers: [ApplicationsService],
-  exports: [ApplicationsService, OpportunitiesModule],
+  providers: [ApplicationsService, ApplicationsRepository],
+  exports: [ApplicationsService, ApplicationsRepository, OpportunitiesModule],
 })
 export class ApplicationsModule {}
 

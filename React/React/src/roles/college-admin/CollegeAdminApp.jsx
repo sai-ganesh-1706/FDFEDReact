@@ -4,6 +4,7 @@ import CollegeAdminSidebar from './components/Sidebar';
 import CATopbar from './components/Topbar';
 import CADashboard from './pages/Dashboard';
 import Officers from './pages/Officers';
+import Recruiters from './pages/Recruiters.jsx';
 import AccountDirectory from '../../shared/components/AccountDirectory.jsx';
 import ActivityLog from './pages/ActivityLog.jsx';
 import Announcements from './pages/Announcements';
@@ -26,6 +27,7 @@ function getTitle(tab) {
     case 'dashboard':     return 'College Dashboard';
     case 'officers':      return 'Placement Officers';
     case 'students':      return 'Students';
+    case 'recruiters':    return 'Recruiters';
     case 'alumni': return 'Alumni';
     case 'activity': return 'Placement Officer Activity';
     case 'announcements': return 'Announcements';
@@ -36,7 +38,7 @@ function getTitle(tab) {
   }
 }
 
-const COLLEGE_ADMIN_TABS = ['dashboard', 'officers', 'students', 'alumni', 'activity', 'announcements', 'messages', 'reports', 'profile'];
+const COLLEGE_ADMIN_TABS = ['dashboard', 'officers', 'students', 'alumni', 'recruiters', 'activity', 'announcements', 'messages', 'reports', 'profile'];
 const COLLEGE_ADMIN_TAB_KEY = 'cn_active_college_admin_tab';
 
 export default function CollegeAdminApp() {
@@ -133,6 +135,7 @@ export default function CollegeAdminApp() {
             {activeTab === 'officers'      && <Officers        {...sharedProps} />}
             {activeTab === 'students' && <AccountDirectory key="students" canCreate initialTab="candidates" showTabs={false} onChanged={platform.refresh} />}
             {activeTab === 'alumni' && <AccountDirectory key="alumni" canCreate initialTab="alumni" showTabs={false} onChanged={platform.refresh} />}
+            {activeTab === 'recruiters' && <Recruiters />}
             {activeTab === 'activity' && <ActivityLog />}
             {activeTab === 'announcements' && <Announcements   collegeName={collegeInfo.name} />}
             {activeTab === 'messages'      && <Messages        onSeen={markMessagesSeen} />}

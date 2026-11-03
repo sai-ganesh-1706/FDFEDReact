@@ -12,7 +12,7 @@ import { randomUUID } from 'crypto';
 import { extname, join } from 'path';
 import { mkdirSync } from 'fs';
 import type { Request } from 'express';
-import { IsEmail, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsString, Matches, MinLength } from 'class-validator';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -24,6 +24,7 @@ import { ActivityService } from '../activity/activity.service';
 import { CollegesRepository } from '../colleges/colleges.repository';
 import { Public } from '../common/decorators/public.decorator';
 import { AuthSessionService } from '../common/auth/auth-session.service';
+import { MIN_PASSWORD_LENGTH } from '../common/auth/password-policy';
 import { ImportStudentsDto } from './dto/import-students.dto';
 
 /** Which roles each administrator may create / manage. */
@@ -41,7 +42,7 @@ class LoginDto {
 /** DTO for password change */
 class ChangePasswordDto {
   @IsString() currentPassword: string;
-  @IsString() @MinLength(3) newPassword: string;
+  @IsString() @MinLength(MIN_PASSWORD_LENGTH) @Matches(/^\S(?:.*\S)?$/, { message: 'Password cannot start or end with whitespace' }) newPassword: string;
 }
 
 @ApiTags('Users')
@@ -279,6 +280,9 @@ export class UsersController {
   remove(@Param('id', ParseIntPipe) id: number, @CurrentUser() caller: RequestUser) {
     this.assertCanManage(caller, id);
     const target = this.usersService.findRaw(id);
+    if (caller.role === 'placement_officer' && target && ['candidate', 'alumni'].includes(target.role)) {
+      throw new ForbiddenException('Only college administrators can remove students and alumni');
+    }
     const result = this.usersService.remove(id);
     if (target) {
       this.activity.log({

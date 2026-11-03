@@ -6,6 +6,7 @@ import Header from './Header';
 import './styles/p1.css';
 import api, { errorMessage, readSession } from '../../../services/api.js';
 import { useOfficerData } from '../services/officerApi';
+import { officerInitials } from '../utils/officerIdentity.js';
 import ChangePasswordModal from '../../../shared/components/ChangePasswordModal';
 
 
@@ -274,7 +275,7 @@ function EditProfileModal({ userData, onSave, onClose }) {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 16px' }}>
             <FieldGroup label="Full Name" required error={fieldError('name')}>
               <StyledInput
-                type="text" placeholder="Dr. Rajesh Nair"
+                type="text" placeholder="Full name"
                 value={form.name} onChange={setField('name')} onBlur={handleBlur('name')}
                 hasError={!!fieldError('name')}
               />
@@ -419,7 +420,7 @@ function EditProfileModal({ userData, onSave, onClose }) {
 /* ── Main Profile Component ──────────────────────────── */
 export default function Profile({ onNavigate, activePage = 'profile' }) {
   const session = readSession() || {};
-  const initialsOf = (name = '') => name.split(' ').filter(Boolean).map(w => w[0]).slice(0, 2).join('').toUpperCase();
+  const initialsOf = officerInitials;
   const [userData, setUserData] = useState({
     name: session.name || '', email: session.email || '', initials: initialsOf(session.name),
     role: 'Placement Officer', phone: '', department: '', institution: '', employeeId: '', joined: '',
@@ -431,7 +432,7 @@ export default function Profile({ onNavigate, activePage = 'profile' }) {
     api.get(`/users/${session.id}`).then(({ data: user }) => {
       const extra = user.resumeData?.officerProfile || {};
       setUserData({
-        name: user.name, email: user.email, initials: user.avatar || initialsOf(user.name),
+        name: user.name, email: user.email, initials: initialsOf(user.name),
         role: user.headline || 'Placement Officer', phone: user.phone || '',
         department: user.department || '', institution: user.university || '',
         employeeId: extra.employeeId || '', joined: user.joinedDate || '',
@@ -540,7 +541,7 @@ export default function Profile({ onNavigate, activePage = 'profile' }) {
     <div className="frame">
       <Sidebar activePage={activePage} onNavigate={onNavigate} />
 
-      <Header title="Placement Officer Profile" onNavigate={onNavigate} />
+      <Header title="Placement Officer Profile" onNavigate={onNavigate} profile={userData} />
 
       <main className="main-content" id="mainContent">
         {/* Back navigation button */}
@@ -588,9 +589,9 @@ export default function Profile({ onNavigate, activePage = 'profile' }) {
         {/* Hero Card */}
         <div className="hero-card" style={{ marginBottom: '24px' }}>
           <div className="pm-header">
-            <div className="pm-avatar">{userData.initials || 'RN'}</div>
+            <div className="pm-avatar">{officerInitials(userData.name)}</div>
             <div className="pm-header-info">
-              <h1 className="pm-name">{userData.name || 'Dr. Rajesh Nair'}</h1>
+              <h1 className="pm-name">{userData.name || 'Placement Officer'}</h1>
               <div className="pm-role-badge">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <rect x="2" y="7" width="20" height="14" rx="2" />

@@ -10,6 +10,8 @@ import { UsersRepository } from '../users/users.repository';
 import { NotificationsService } from '../notifications/notifications.service';
 import { CollegesRepository } from '../colleges/colleges.repository';
 import { ActivityService } from '../activity/activity.service';
+import { ApplicationsService } from '../applications/applications.service';
+import { AssessmentsService } from '../assessments/assessments.service';
 
 /** Subscription plans no longer lock features: every college can use the whole toolset. */
 function checkTier(college: any, _required: 'standard' | 'premium'): void {
@@ -33,6 +35,8 @@ export class FeaturesController {
     private readonly usersRepo: UsersRepository,
     private readonly notificationsService: NotificationsService,
     private readonly activity: ActivityService,
+    private readonly applicationsService: ApplicationsService,
+    private readonly assessmentsService: AssessmentsService,
   ) {}
 
   /* ════════════════════════════════════════════════════════════════════
@@ -116,7 +120,13 @@ export class FeaturesController {
   ) {
     const college = this.collegesRepo.findById(getCollegeId(cid));
     checkTier(college, 'standard');
-    return this.featuresRepo.getAppStats(+uid);
+    const applications = this.applicationsService.findByCandidate(+uid);
+    return {
+      total: applications.length,
+      active: applications.filter((a) => ['Applied', 'Shortlisted', 'Interview'].includes(a.status)).length,
+      offers: applications.filter((a) => ['Offer', 'Offered'].includes(a.status)).length,
+      rejected: applications.filter((a) => ['Rejected', 'Withdrawn'].includes(a.status)).length,
+    };
   }
 
   /* ─── CANDIDATE — PREMIUM: Application Timeline & Interview Calendar ─── */
@@ -130,7 +140,12 @@ export class FeaturesController {
   ) {
     const college = this.collegesRepo.findById(getCollegeId(cid));
     checkTier(college, 'premium');
-    return this.featuresRepo.getApplicationStages(+uid);
+    return this.applicationsService.findByCandidate(+uid).map((application) => ({
+      appId: String(application.id), candidateId: application.candidateId,
+      driveId: String(application.opportunityId), driveTitle: application.title,
+      company: application.company, appliedAt: application.appliedDate,
+      stages: application.timeline,
+    }));
   }
 
   @Get('candidate/interviews')
@@ -142,7 +157,7 @@ export class FeaturesController {
   ) {
     const college = this.collegesRepo.findById(getCollegeId(cid));
     checkTier(college, 'premium');
-    return this.featuresRepo.getInterviewsForCandidate(+uid);
+    return this.assessmentsService.findForCandidate(+uid);
   }
 
   /* ════════════════════════════════════════════════════════════════════
@@ -173,19 +188,32 @@ export class FeaturesController {
   @ApiOperation({ summary: '[Standard] Bulk shortlist/reject candidates' })
   bulkShortlist(
     @Headers('x-college-id') cid: string,
+    @Headers('x-user-id') uid: string,
     @Body() body: { driveId: string; candidateIds: number[]; action: 'shortlist' | 'reject' },
   ) {
     const college = this.collegesRepo.findById(getCollegeId(cid));
     checkTier(college, 'standard');
     if (!body.candidateIds?.length) throw new HttpException('No candidates selected', 400);
+    const opportunityId = Number(body.driveId);
+    if (!Number.isInteger(opportunityId)) throw new HttpException('A valid opportunity ID is required', 400);
+    if (body.action === 'shortlist') {
+      const updated = this.applicationsService.shortlist({ opportunityId, candidateIds: body.candidateIds }, +uid);
+      return { success: true, driveId: body.driveId, action: body.action, count: updated.length, candidateIds: updated.map((a) => a.candidateId), applications: updated };
+    }
+    const recruiterApplications = this.applicationsService.findForRecruiter(+uid);
+    const updated = body.candidateIds.flatMap((candidateId) => {
+      const application = recruiterApplications.find((item) => item.candidateId === candidateId && item.opportunityId === opportunityId);
+      return application ? [this.applicationsService.updateStatus(application.id, { status: 'Rejected' })] : [];
+    });
     // Simulate bulk action — return confirmation
     return {
       success: true,
       driveId: body.driveId,
       action: body.action,
-      count: body.candidateIds.length,
-      candidateIds: body.candidateIds,
-      message: `${body.candidateIds.length} candidates ${body.action === 'shortlist' ? 'shortlisted' : 'rejected'} successfully`,
+      count: updated.length,
+      candidateIds: updated.map((a) => a.candidateId),
+      applications: updated,
+      message: `${updated.length} candidates rejected successfully`,
       timestamp: new Date().toISOString(),
     };
   }
@@ -201,11 +229,25 @@ export class FeaturesController {
     const collegeId = getCollegeId(cid);
     const college = this.collegesRepo.findById(collegeId);
     checkTier(college, 'standard');
-    return this.featuresRepo.scheduleInterview({
-      ...body,
-      recruiterId: +uid,
-      collegeId,
-    });
+    const opportunityId = Number(body.opportunityId ?? body.driveId);
+    const applicationIds: number[] = (body.applicationIds ?? (body.applicationId ? [body.applicationId] : [])).map(Number);
+    const candidateIds: number[] = (body.candidateIds ?? (body.candidateId ? [body.candidateId] : [])).map(Number);
+    if (!applicationIds.length && candidateIds.length) {
+      const applications = this.applicationsService.findForRecruiter(+uid);
+      applicationIds.push(...candidateIds.flatMap((candidateId) => {
+        const application = applications.find((a) => a.candidateId === candidateId && a.opportunityId === opportunityId);
+        return application ? [application.id] : [];
+      }));
+    }
+    if (!applicationIds.length) throw new HttpException('Choose an application before scheduling', 400);
+    return this.assessmentsService.create({
+      title: body.title ?? body.round ?? 'Interview', role: body.role ?? body.driveTitle ?? 'Opportunity interview',
+      date: body.date, time: body.time, duration: body.duration ?? '60 minutes', candidates: applicationIds.length,
+      platform: body.platform ?? (body.mode === 'offline' ? 'On campus' : 'Google Meet'),
+      link: body.link ?? body.meetLink ?? 'https://meet.google.com/demo-scheduling-room',
+      type: ['Online Test', 'Technical Interview', 'Interview', 'HR Interview', 'Group Discussion'].includes(body.type) ? body.type : 'Interview',
+      isDraft: false, opportunityId, applicationIds,
+    }, +uid);
   }
 
   @Get('recruiter/interviews')
@@ -217,7 +259,7 @@ export class FeaturesController {
   ) {
     const college = this.collegesRepo.findById(getCollegeId(cid));
     checkTier(college, 'standard');
-    return this.featuresRepo.getInterviewsForRecruiter(+uid);
+    return this.assessmentsService.findAll().filter((assessment) => assessment.recruiterId === +uid);
   }
 
   /* ─── RECRUITER — PREMIUM: Drive Reports ────────────────────────────── */

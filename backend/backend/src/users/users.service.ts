@@ -6,6 +6,7 @@ import { parseStudentCsv } from './student-csv';
 import { validateOversightUser } from './oversight-validation';
 import { CollegesRepository } from '../colleges/colleges.repository';
 import { collegeEmailDomain, oversightPolicy } from './oversight-policy';
+import { assertPasswordPolicy, DEFAULT_INITIAL_PASSWORD } from '../common/auth/password-policy';
 
 export type SafeUser = Omit<User, 'password'>;
 
@@ -97,6 +98,7 @@ export class UsersService {
 
   create(dto: CreateUserDto): SafeUser {
     dto = { ...dto, name: dto.name.trim(), email: dto.email.trim().toLowerCase() };
+    assertPasswordPolicy(dto.password);
     if (['candidate', 'placement_officer', 'college_admin'].includes(dto.role)) this.validateCollegeEmail(dto.email, dto.collegeId);
     if (['candidate', 'alumni'].includes(dto.role)) {
       const errors = validateOversightUser(dto, this.getOversightPolicy(dto.collegeId ?? 1));
@@ -111,7 +113,7 @@ export class UsersService {
       throw new ConflictException(`A user with email '${dto.email}' already exists`);
     }
     const initials = dto.name.split(' ').filter(Boolean).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
-    const data = { status: 'active', avatar: initials, ...dto, password: dto.password ?? (['candidate', 'alumni'].includes(dto.role) ? '12345678' : '123') };
+    const data = { status: 'active', avatar: initials, ...dto, password: dto.password ?? DEFAULT_INITIAL_PASSWORD };
     return toSafe(this.repo.create(data as Omit<User, 'id'>));
   }
 
@@ -156,6 +158,7 @@ export class UsersService {
     if ((user.password ?? '123') !== currentPassword) {
       throw new UnauthorizedException('Current password is incorrect');
     }
+    assertPasswordPolicy(newPassword);
     this.repo.update(id, { password: newPassword });
     return { message: 'Password updated successfully' };
   }
@@ -168,6 +171,12 @@ export class UsersService {
     // A deactivated account must not be able to sign in, whoever deactivated it.
     if (user.status === 'inactive' || user.status === 'suspended') {
       throw new UnauthorizedException('Your account has been deactivated. Please contact your administrator.');
+    }
+    if (user.collegeId != null) {
+      const college = this.colleges.findById(user.collegeId);
+      if (!college || college.status !== 'active') {
+        throw new UnauthorizedException('This college is deactivated. Please contact your college administrator.');
+      }
     }
     // Never return the password field to the client
     return toSafe(user);

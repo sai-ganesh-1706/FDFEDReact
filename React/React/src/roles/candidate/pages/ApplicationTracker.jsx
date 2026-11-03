@@ -3,10 +3,10 @@ import { useStore } from '../context/StoreContext.jsx';
 import '../styles/features.css';
 
 const STAGES_DEF = ['Applied', 'Shortlisted', 'Interview', 'Offered'];
-const FILTERS = ['All', 'Active', 'Offer', 'Rejected', 'Withdrawn'];
+const FILTERS = ['All', 'Active', 'Offered', 'Rejected', 'Withdrawn'];
 
 function statusChipFor(status) {
-    if (status === 'Offer') return { cls: 'status-offer', label: 'Offer' };
+    if (status === 'Offered') return { cls: 'status-offer', label: 'Offered' };
     if (status === 'Rejected') return { cls: 'status-rejected', label: 'Rejected' };
     if (status === 'Withdrawn') return { cls: 'status-pending', label: 'Withdrawn' };
     return { cls: 'status-active', label: status };
@@ -20,7 +20,7 @@ export default function ApplicationTracker() {
         const apps = store.myApplications;
         const total = apps.length;
         const active = apps.filter((a) => ['Applied', 'Shortlisted', 'Interview'].includes(a.status)).length;
-        const offers = apps.filter((a) => a.status === 'Offer').length;
+        const offers = apps.filter((a) => a.status === 'Offered').length;
         const rejected = apps.filter((a) => a.status === 'Rejected').length;
         return { total, active, offers, rejected };
     }, [store.myApplications]);
@@ -81,12 +81,13 @@ export default function ApplicationTracker() {
                                         <div>
                                             <div className="app-track-title">{app.title}</div>
                                             <div className="app-track-company">{app.company}</div>
+                                    {app.feedbackSent && (app.recruiterFeedback || app.recruiterRating != null) && <div style={{ marginTop: 10, padding: 12, background: '#f8fafc', borderRadius: 8 }}><strong>Recruiter feedback</strong>{app.recruiterRating != null && <div>Rating: {app.recruiterRating} / 5</div>}{app.recruiterFeedback && <div>{app.recruiterFeedback}</div>}</div>}
                                         </div>
                                         <span className={`status-chip ${chip.cls}`}>{chip.label}</span>
                                     </div>
                                     <div className="pipeline">
                                         {STAGES_DEF.map((stageName, index) => {
-                                            const timelineEntry = app.timeline?.[index];
+                                            const timelineEntry = app.timeline?.find((entry) => entry.stage === stageName);
                                             let stageCls = '';
                                             if (index < app.currentStageIndex) stageCls = 'passed';
                                             else if (index === app.currentStageIndex) stageCls = failed ? 'failed' : 'current';

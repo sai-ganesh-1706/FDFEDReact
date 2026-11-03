@@ -44,8 +44,12 @@ export class ApplicationsRepository {
   private syncPlacement(candidateId: number) {
     const user = this.users.findById(candidateId);
     if (!user || ['inactive', 'suspended'].includes(user.status ?? '')) return;
-    const placed = this.applications.some((a) => a.candidateId === candidateId && ['Offer', 'Offered'].includes(a.status) && /full/i.test(a.type));
+    const placed = this.hasOffer(candidateId);
     if (placed || user.status === 'placed') this.users.update(candidateId, { status: placed ? 'placed' : 'active' });
+  }
+
+  hasOffer(candidateId: number): boolean {
+    return this.applications.some((a) => a.candidateId === candidateId && ['Offer', 'Offered'].includes(a.status));
   }
 
   findAll(): Application[] {

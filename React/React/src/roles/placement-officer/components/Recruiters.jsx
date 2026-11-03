@@ -200,7 +200,7 @@ export default function Recruiters({ onNavigate, activePage = 'p4' }) {
                 <th>Recruiter</th>
                 <th>Company</th>
                 <th>Role</th>
-                <th>Published Opportunities</th>
+                <th>Submitted Opportunities</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
@@ -215,30 +215,9 @@ export default function Recruiters({ onNavigate, activePage = 'p4' }) {
 
                 return (
                   <React.Fragment key={r.id}>
-                  {false && <tr key={realIdx} className="rec-row" data-i={realIdx}>
-                    <td style={{ fontWeight: 600 }}>{r.name}</td>
-                    <td>{r.company}</td>
-                    <td>{r.role}</td>
-                    <td>{r.opps}</td>
-                    <td>
-                      <span className={`status-badge ${r.status}`}>
-                        {r.status.charAt(0).toUpperCase() + r.status.slice(1)}
-                      </span>
-                    </td>
-                    <td>
-                      {r.status === 'pending' && (
-                        <>
-                          <button className="btn-approve-sm" onClick={() => approveRecruiter(realIdx)}>Approve</button>
-                          <button className="btn-decline-sm" onClick={() => declineRecruiter(realIdx)}>Decline</button>
-                        </>
-                      )}
-                      {r.status === 'active' && <span style={{ color: '#059669', fontSize: '12px', fontWeight: 600 }}>Verified</span>}
-                      {r.status === 'declined' && <span style={{ color: '#ef4444', fontSize: '12px', fontWeight: 600 }}>Declined</span>}
-                    </td>
-                  </tr>}
                   <React.Fragment key={realIdx}>
                     {/* Main Row */}
-                    <tr className="rec-row" data-i={realIdx} style={{cursor:'pointer'}} onClick={() => setSelectedRecruiter(r)}>
+                    <tr className="rec-row" data-i={realIdx} tabIndex={0} aria-label={`View opportunities submitted by ${r.name}`} style={{cursor:'pointer'}} onClick={() => setSelectedRecruiter(r)} onKeyDown={(event) => { if (event.target === event.currentTarget && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); setSelectedRecruiter(r); } }}>
                       <td>
                         <div className="rec-name">
                           <div className="rec-avatar">{r.name[0]}</div>
@@ -247,7 +226,7 @@ export default function Recruiters({ onNavigate, activePage = 'p4' }) {
                       </td>
                       <td>{r.company}</td>
                       <td>{r.role}</td>
-                      <td><button type="button" className="btn-profile" onClick={() => setSelectedRecruiter(r)}>View Opportunities ({r.opps} published)</button></td>
+                      <td><button type="button" className="btn-profile" onClick={(event) => { event.stopPropagation(); setSelectedRecruiter(r); }}>View Opportunities ({r.opps})</button></td>
                       <td>
                         <span className={`badge-status badge-${r.status}`}>
                           {r.status.charAt(0).toUpperCase() + r.status.slice(1)}
@@ -297,13 +276,13 @@ export default function Recruiters({ onNavigate, activePage = 'p4' }) {
                                   <div className="profile-val">{r.phone}</div>
                                 </div>
                               </div>
-                              <div className="profile-item">
+                              {r.source !== 'contact-form' && r.location?.trim() && <div className="profile-item">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9810fa" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                                 <div>
                                   <div className="profile-lbl">Location</div>
                                   <div className="profile-val">{r.location}</div>
                                 </div>
-                              </div>
+                              </div>}
                               <div className="profile-item">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9810fa" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                                 <div>

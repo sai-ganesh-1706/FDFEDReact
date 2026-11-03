@@ -141,31 +141,15 @@ export default function RecruiterApp() {
     'Could not remove the opportunity.'
   );
 
-  const handleUpdateApplicationStatus = (id, newStatus) => run(
-    () => api.patch(`/applications/${id}/status`, { status: newStatus }),
-    `Application updated to "${newStatus}"`,
+  const handleUpdateApplicationStatus = (id, update) => run(
+    () => api.patch(`/applications/${id}/status`, typeof update === 'string' ? { status: update } : update),
+    typeof update === 'string' ? `Application updated to "${update}"` : 'Feedback sent to candidate.',
     'Could not update the application.'
-  );
-
-  const handleUpdateApplicationRound = (id, roundKey, val) => run(
-    () => api.patch(`/applications/${id}/status`, typeof roundKey === 'object' ? { rounds: roundKey, status: val } : { rounds: { [roundKey]: val } }),
-    `Round evaluation updated to "${val}"`,
-    'Could not update the round.'
-  );
-
-  const handleUpdateApplicationEvaluation = (id, evalMetrics, feedback, sent) => run(
-    () => api.patch(`/applications/${id}/status`, {
-      evaluation: evalMetrics,
-      ...(feedback !== undefined ? { recruiterFeedback: feedback } : {}),
-      ...(sent !== undefined ? { feedbackSent: sent } : {}),
-    }),
-    sent ? 'Feedback sent to the candidate successfully!' : 'Evaluation metrics saved!',
-    'Could not save the evaluation.'
   );
 
   const handleAddAssessment = (payload) => run(
     () => api.post('/assessments', payload),
-    `Scheduled "${payload.title}" ΓÇö the candidate can see the link now.`,
+    `Assessment "${payload.title}" scheduled. The candidate can access the link now.`,
     'Could not schedule the assessment.'
   );
 
@@ -184,7 +168,6 @@ export default function RecruiterApp() {
     return !!done;
   };
   const handleBulkShortlist = bulkMove('Shortlisted', 'shortlisted');
-  const handleBulkReject = bulkMove('Rejected', 'rejected');
 
   const openScheduleFor = (applicationId) => {
     setScheduleFor(applicationId);
@@ -289,8 +272,6 @@ export default function RecruiterApp() {
           <Applications 
             applications={applications}
             onUpdateStatus={handleUpdateApplicationStatus}
-            onUpdateRound={handleUpdateApplicationRound}
-            onUpdateEvaluation={handleUpdateApplicationEvaluation}
             selectedRoleFilter={selectedRoleFilter}
             setSelectedRoleFilter={setSelectedRoleFilter}
             onSchedule={openScheduleFor}
@@ -314,7 +295,7 @@ export default function RecruiterApp() {
             applications={applications}
             opportunities={opportunitiesWithCount}
             onBulkShortlist={handleBulkShortlist}
-            onBulkReject={handleBulkReject}
+            onUpdateStatus={handleUpdateApplicationStatus}
           />
         )}
 

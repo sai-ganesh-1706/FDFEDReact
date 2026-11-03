@@ -17,19 +17,6 @@ const ROLE_REDIRECT = {
 };
 
 /* =========================================================
-   DEMO ACCOUNTS (for the hint panel)
-   ========================================================= */
-
-const DEMO_ACCOUNTS = [
-  { role: "Candidate",         email: "shameer.basha.shaik@iiits.in", password: "12345678" },
-  { role: "Alumni",            email: "a@gmail.com",              password: "12345678" },
-  { role: "Recruiter",         email: "r@gmail.com",              password: "12345678" },
-  { role: "Placement Officer", email: "p@gmail.com",              password: "123" },
-  { role: "College Admin",     email: "ca@iiit.in",               password: "123" },
-  { role: "Super Admin",       email: "superadmin@platform.com",  password: "123" },
-];
-
-/* =========================================================
    APP
    ========================================================= */
 
@@ -40,7 +27,6 @@ function LoginPage() {
   const [message, setMessage] = useState("");
   const [messageColor, setMessageColor] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showDemoHints, setShowDemoHints] = useState(false);
 
   useEffect(() => {
     document.title = "Login — CareerNest";
@@ -234,39 +220,6 @@ function LoginPage() {
 
             <p id="msg-display" style={{ color: messageColor }}>{message}</p>
 
-
-            {/* DEMO HINT TOGGLE */}
-
-            <div className="demo-section">
-              <button
-                className="demo-toggle-btn"
-                onClick={() => setShowDemoHints((v) => !v)}
-                type="button"
-              >
-                <i className={`fa-solid ${showDemoHints ? "fa-chevron-up" : "fa-chevron-down"}`}></i>
-                &nbsp; Demo Accounts
-              </button>
-
-              {showDemoHints && (
-                <div className="demo-table">
-                  {DEMO_ACCOUNTS.map((d) => (
-                    <div
-                      key={d.role}
-                      className="demo-row"
-                      onClick={() => {
-                        setEmail(d.email);
-                        setPassword(d.password);
-                        setShowDemoHints(false);
-                      }}
-                      title={`Click to fill in ${d.role} credentials`}
-                    >
-                      <span className="demo-role">{d.role}</span>
-                      <span className="demo-cred">{d.email} / {d.password}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
 
           </div>
 

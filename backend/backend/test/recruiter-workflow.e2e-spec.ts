@@ -4,6 +4,7 @@ import request from 'supertest';
 import { join } from 'path';
 import { existsSync, unlinkSync } from 'fs';
 import { AppModule } from '../src/app.module';
+import { AuthSessionService } from '../src/common/auth/auth-session.service';
 
 describe('Recruiter workflow across actor APIs', () => {
   let app: INestApplication;
@@ -26,16 +27,16 @@ describe('Recruiter workflow across actor APIs', () => {
       }),
     );
     await app.init();
-    const login = async (email, password = '123') =>
+    const login = async (email, password = '12345678') =>
       (
         await request(app.getHttpServer())
           .post('/users/login')
           .send({ email, password })
           .expect(201)
       ).body.accessToken;
-    recruiter = await login('r@gmail.com', '12345678');
-    officer = await login('p@gmail.com');
-    candidate = await login('c@gmail.com');
+    recruiter = await login('priya@google.com', '12345678');
+    officer = await login('rajesh@iiits.in');
+    candidate = await login('shameer.basha.shaik@iiits.in');
   }, 30000);
 
   afterAll(async () => {
@@ -145,6 +146,14 @@ describe('Recruiter workflow across actor APIs', () => {
     ).body;
     expect(application.jobId).toBe('WORKFLOW-TEST-01');
     expect(application.title).toBe('Updated Engineer');
+    expect(application.status).toBe('Applied');
+    const expectStatusForEveryActor = async (status: string) => {
+      for (const [path, token] of [['/applications', recruiter], ['/applications', officer], ['/applications/my', candidate]]) {
+        const response = await request(server).get(path).set(auth(token)).expect(200);
+        expect(response.body.find((entry) => entry.id === application.id).status).toBe(status);
+      }
+    };
+    await expectStatusForEveryActor('Applied');
     const applications = (
       await request(server)
         .get('/applications')
@@ -153,7 +162,7 @@ describe('Recruiter workflow across actor APIs', () => {
     ).body;
     expect(applications.find((a) => a.id === application.id)).toMatchObject({
       candidateName: 'Shameer Basha Shaik',
-      email: 'c@gmail.com',
+      email: 'shameer.basha.shaik@iiits.in',
       branch: 'Computer Science',
       cgpa: 8.7,
       resumeUrl: resumeFile,
@@ -163,11 +172,57 @@ describe('Recruiter workflow across actor APIs', () => {
       .set(auth(recruiter))
       .expect(200);
     expect(preview.body).toEqual(pdf);
+    const sessions = app.get(AuthSessionService);
+    const alumni = sessions.create(101);
+    const referral = (
+      await request(server).post('/referrals').set(auth(candidate))
+        .send({ opportunityId: id, applicationId: application.id, alumniId: 101, userMessage: 'Please review my application.' })
+        .expect(201)
+    ).body;
+    const alumniInbox = (
+      await request(server).get('/referrals').set(auth(alumni)).expect(200)
+    ).body;
+    expect(alumniInbox.find((item) => item.id === referral.id).applicationId).toBe(application.id);
+    const alumniResume = await request(server)
+      .get(`/applications/referrals/${referral.id}/resume`)
+      .set(auth(alumni)).expect(200);
+    expect(alumniResume.body).toEqual(pdf);
+    const unrelatedAlumni = sessions.create(90);
+    await request(server).get(`/applications/referrals/${referral.id}/resume`)
+      .set(auth(unrelatedAlumni)).expect(403);
+    await request(server).get(`/applications/referrals/${referral.id}/resume`)
+      .set(auth(candidate)).expect(403);
+    await request(server).get(`/applications/referrals/${referral.id}/resume`)
+      .set(auth(recruiter)).expect(403);
+    const alumniReply = 'I reviewed your application and am happy to refer you.';
+    await request(server).patch(`/referrals/${referral.id}`).set(auth(alumni))
+      .send({ status: 'Approved', alumniResponse: alumniReply }).expect(200);
+    const candidateReferrals = (
+      await request(server).get('/referrals/my').set(auth(candidate)).expect(200)
+    ).body;
+    expect(candidateReferrals.find((item) => item.id === referral.id)).toMatchObject({ status: 'approved', alumniResponse: alumniReply });
+    const recruiterView = (
+      await request(server).get('/applications').set(auth(recruiter)).expect(200)
+    ).body.find((item) => item.id === application.id);
+    expect(recruiterView).toMatchObject({ hasReferral: true, referrerName: 'Sneha Reddy', referrerCompany: 'Google' });
     await request(server)
       .patch(`/applications/${application.id}/status`)
       .set(auth(recruiter))
       .send({ status: 'Shortlisted' })
       .expect(200);
+    await expectStatusForEveryActor('Shortlisted');
+    const recruiterFeedback = 'Strong fundamentals; move to the technical interview.';
+    await request(server).patch(`/applications/${application.id}/status`).set(auth(recruiter))
+      .send({ recruiterRating: 5, recruiterFeedback, feedbackSent: true }).expect(200);
+    const candidateApplications = (
+      await request(server).get('/applications/my').set(auth(candidate)).expect(200)
+    ).body;
+    expect(candidateApplications.find((item) => item.id === application.id)).toMatchObject({ recruiterRating: 5, recruiterFeedback, feedbackSent: true });
+    await request(server)
+      .patch(`/applications/${application.id}/status`)
+      .set(auth(recruiter))
+      .send({ status: 'Assessment' })
+      .expect(400);
     const schedule = (
       await request(server)
         .post('/assessments')
@@ -188,6 +243,11 @@ describe('Recruiter workflow across actor APIs', () => {
     ).body;
     expect(schedule.candidateIds).toEqual([100]);
     expect(schedule.opportunityId).toBe(id);
+    const scheduledForCandidate = (
+      await request(server).get('/assessments/my').set(auth(candidate)).expect(200)
+    ).body;
+    expect(scheduledForCandidate.find((item) => item.id === schedule.id)).toMatchObject({ link: 'https://meet.google.com/test', applicationId: application.id });
+    await expectStatusForEveryActor('Interview');
     const mine = (
       await request(server)
         .get('/applications/my')
@@ -195,5 +255,11 @@ describe('Recruiter workflow across actor APIs', () => {
         .expect(200)
     ).body;
     expect(mine.find((a) => a.id === application.id).status).toBe('Interview');
+    await request(server)
+      .patch(`/applications/${application.id}/status`)
+      .set(auth(recruiter))
+      .send({ status: 'Offered' })
+      .expect(200);
+    await expectStatusForEveryActor('Offered');
   });
 });

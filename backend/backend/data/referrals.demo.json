@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "opportunityId": 2001,
+    "applicationId": 5007,
+    "candidateId": 100,
+    "candidateName": "Shameer Basha Shaik",
+    "candidateInitials": "SB",
+    "alumniId": 101,
+    "alumniName": "Sneha Reddy",
+    "alumniInitials": "SR",
+    "alumniAvatarColor": "#d97706",
+    "alumniCompany": "Google",
+    "alumniBatch": "2021 Batch",
+    "status": "pending",
+    "appliedRole": "Graduate Software Engineer",
+    "appliedCompany": "Google",
+    "requestedDate": "2026-11-02",
+    "userMessage": "I am interviewing for this Google role. Could you review my application and consider referring me?",
+    "alumniResponse": null,
+    "department": "Computer Science",
+    "cgpa": 8.7,
+    "skills": [
+      "JavaScript",
+      "React",
+      "Python"
+    ]
+  },
+  {
+    "id": 2,
+    "opportunityId": 2001,
+    "applicationId": 5016,
+    "candidateId": 3103,
+    "candidateName": "Dev Patel",
+    "candidateInitials": "DP",
+    "alumniId": 101,
+    "alumniName": "Sneha Reddy",
+    "alumniInitials": "SR",
+    "alumniAvatarColor": "#d97706",
+    "alumniCompany": "Google",
+    "alumniBatch": "2021 Batch",
+    "status": "approved",
+    "appliedRole": "Graduate Software Engineer",
+    "appliedCompany": "Google",
+    "requestedDate": "2026-11-02",
+    "userMessage": "I am interviewing for this Google role. I would appreciate a referral if my profile fits.",
+    "alumniResponse": "I reviewed your application and am happy to refer you. Good luck with the next round.",
+    "department": "Computer Science",
+    "cgpa": 7.9,
+    "skills": [
+      "React",
+      "Node.js",
+      "JavaScript",
+      "PostgreSQL"
+    ]
+  }
+]

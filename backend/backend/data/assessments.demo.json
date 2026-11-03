@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "title": "Google Technical Interview",
+    "role": "Graduate Software Engineer",
+    "date": "2026-12-03",
+    "time": "10:00 AM",
+    "duration": "60 minutes",
+    "candidates": 1,
+    "platform": "Google Meet",
+    "link": "https://meet.google.com/demo-google-round",
+    "type": "Technical Interview",
+    "isDraft": false,
+    "opportunityId": 2001,
+    "recruiterId": 102,
+    "applicationId": 5007,
+    "applicationIds": [
+      5007
+    ],
+    "candidateIds": [
+      100
+    ],
+    "candidateName": "Shameer Basha Shaik",
+    "company": "Google",
+    "createdAt": "2026-11-02T10:00:00.000Z"
+  }
+]

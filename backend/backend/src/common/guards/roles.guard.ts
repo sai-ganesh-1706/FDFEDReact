@@ -4,6 +4,7 @@ import { AuthSessionService } from '../auth/auth-session.service';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 import { UsersRepository } from '../../users/users.repository';
+import { CollegesRepository } from '../../colleges/colleges.repository';
 
 export interface RequestUser {
   userId: number | null;
@@ -42,6 +43,12 @@ export class RolesGuard implements CanActivate {
     if (!account) throw new UnauthorizedException('Your account is no longer available. Please sign in again.');
     if (account.status === 'inactive' || account.status === 'suspended') {
       throw new UnauthorizedException('Your account has been deactivated. Please contact your administrator.');
+    }
+    if (account.collegeId != null) {
+      const college = CollegesRepository.current?.findById(account.collegeId);
+      if (!college || college.status !== 'active') {
+        throw new UnauthorizedException('This college is deactivated. Please contact your college administrator.');
+      }
     }
 
     const role = account.role;

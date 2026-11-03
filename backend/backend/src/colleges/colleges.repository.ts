@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 /**
  * CareerNest Revenue Model — College Subscription Only
@@ -126,102 +128,18 @@ export interface College {
 
 @Injectable()
 export class CollegesRepository {
-  private colleges: College[] = [
-    // ── Existing colleges ──────────────────────────────────────────────
-    {
-      id: 1,
-      name: 'IIIT Sri City',
-      code: 'IIITSRICITY',
-      email: 'admin@iiitsricity.ac.in',
-      phone: '8626252525',
-      address: 'Chittoor, Andhra Pradesh',
-      website: 'https://iiits.ac.in',
-      status: 'active',
-      subscriptionTier: 'premium',
-      subscriptionFee: 50000,
-      studentLimit: 99999,
-      createdAt: '2024-01-01',
-      updatedAt: '2024-01-01',
-    },
-    {
-      id: 2,
-      name: 'VIT University',
-      code: 'VIT',
-      email: 'admin@vit.ac.in',
-      phone: '4162202020',
-      address: 'Vellore, Tamil Nadu',
-      website: 'https://vit.ac.in',
-      status: 'active',
-      subscriptionTier: 'premium',
-      subscriptionFee: 50000,
-      studentLimit: 99999,
-      createdAt: '2024-01-01',
-      updatedAt: '2024-01-01',
-    },
-    {
-      id: 3,
-      name: 'SRM Institute',
-      code: 'SRM',
-      email: 'admin@srm.edu.in',
-      phone: '4427417000',
-      address: 'Kattankulathur, Tamil Nadu',
-      website: 'https://srmist.edu.in',
-      status: 'active',
-      subscriptionTier: 'standard',
-      subscriptionFee: 30000,
-      studentLimit: 500,
-      createdAt: '2024-01-01',
-      updatedAt: '2024-01-01',
-    },
-    {
-      id: 4,
-      name: 'BITS Pilani',
-      code: 'BITS',
-      email: 'admin@bits-pilani.ac.in',
-      phone: '1596242192',
-      address: 'Pilani, Rajasthan',
-      website: 'https://www.bits-pilani.ac.in',
-      status: 'active',
-      subscriptionTier: 'premium',
-      subscriptionFee: 50000,
-      studentLimit: 99999,
-      createdAt: '2024-03-01',
-      updatedAt: '2024-03-01',
-    },
-    {
-      id: 5,
-      name: 'Manipal Institute of Technology',
-      code: 'MIT',
-      email: 'admin@manipal.edu',
-      phone: '8202922222',
-      address: 'Manipal, Karnataka',
-      website: 'https://manipal.edu',
-      status: 'active',
-      subscriptionTier: 'standard',
-      subscriptionFee: 30000,
-      studentLimit: 500,
-      createdAt: '2024-04-01',
-      updatedAt: '2024-04-01',
-    },
-    {
-      id: 6,
-      name: 'Amity University',
-      code: 'AMITY',
-      email: 'admin@amity.edu',
-      phone: '1204392000',
-      address: 'Noida, Uttar Pradesh',
-      website: 'https://amity.edu',
-      status: 'inactive',
-      subscriptionTier: 'basic',
-      subscriptionFee: 15000,
-      studentLimit: 200,
-      createdAt: '2024-02-15',
-      updatedAt: '2024-06-01',
-    },
-    // ── Demo subscription tier colleges ────────────────────────────────
-  ];
+  /** Shared repository instance for request guards registered across feature modules. */
+  static current: CollegesRepository | null = null;
+  private colleges: College[] = [];
 
-  private nextId = 10;
+  private nextId = 1;
+
+  constructor() {
+    CollegesRepository.current = this;
+    this.colleges = JSON.parse(readFileSync(join(process.cwd(), 'data', 'colleges.demo.json'), 'utf8'));
+    if (!Array.isArray(this.colleges)) throw new Error('Invalid demo colleges file');
+    this.nextId = Math.max(0, ...this.colleges.map((item) => item.id)) + 1;
+  }
 
   findAll(): College[] {
     return this.colleges;

@@ -1,0 +1,94 @@
+{
+  "drives": [],
+  "savedDrives": [],
+  "applicationStages": [],
+  "interviewSchedules": [],
+  "notifications": [
+    {
+      "id": 1,
+      "collegeId": 1,
+      "sentBy": 103,
+      "title": "Interview preparation workshop",
+      "message": "A placement preparation workshop will be held in the seminar hall. Check the event calendar for details.",
+      "targetGroup": "students",
+      "sentAt": "2026-10-20T08:00:00.000Z",
+      "recipientCount": 33
+    },
+    {
+      "id": 2,
+      "collegeId": 1,
+      "sentBy": 103,
+      "title": "Alumni networking meetup",
+      "message": "Join alumni and current students for a networking meetup on campus.",
+      "targetGroup": "alumni",
+      "sentAt": "2026-10-22T10:30:00.000Z",
+      "recipientCount": 2
+    }
+  ],
+  "mentorshipRequests": [
+    {
+      "id": 1,
+      "studentId": 3103,
+      "studentName": "Dev Patel",
+      "alumniId": 101,
+      "collegeId": 1,
+      "status": "accepted",
+      "message": "Could you advise me on preparing for technical interviews?",
+      "topic": "Interview preparation",
+      "createdAt": "2026-10-12T10:00:00.000Z",
+      "respondedAt": "2026-10-13T12:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "studentId": 3105,
+      "studentName": "Rohan Deshmukh",
+      "alumniId": 101,
+      "collegeId": 1,
+      "status": "pending",
+      "message": "I would appreciate guidance on backend engineering roles.",
+      "topic": "Backend engineering career path",
+      "createdAt": "2026-10-28T09:30:00.000Z"
+    }
+  ],
+  "events": [
+    {
+      "id": 8,
+      "collegeId": 1,
+      "title": "Pre-Placement Talk",
+      "date": "2026-11-05",
+      "time": "10:00",
+      "type": "networking",
+      "description": "Hear from visiting recruiters about the upcoming campus hiring season.",
+      "host": "Placement Cell",
+      "registrations": [
+        100
+      ]
+    },
+    {
+      "id": 9,
+      "collegeId": 1,
+      "title": "Resume & Interview Workshop",
+      "date": "2026-11-12",
+      "time": "14:00",
+      "type": "workshop",
+      "description": "Hands-on resume review and mock interviews led by alumni mentors.",
+      "host": "Alumni Association",
+      "registrations": []
+    },
+    {
+      "id": 10,
+      "collegeId": 1,
+      "title": "Alumni Networking Meetup",
+      "date": "2026-11-20",
+      "time": "18:00",
+      "type": "networking",
+      "description": "Meet alumni working at leading companies and learn about referral opportunities.",
+      "host": "Alumni Association",
+      "registrations": [
+        101
+      ]
+    }
+  ],
+  "driveReports": [],
+  "placementDashboards": []
+}

@@ -12,16 +12,7 @@ export default function AlumniDashboard({
   const [isSignOutOpen, setIsSignOutOpen] = useState(false);
   const [fadingCardId, setFadingCardId] = useState(null);
 
-  const alumni = alumniData || {
-    initials: 'SR',
-    name: 'Sneha Reddy',
-    email: 'sneha@google.com',
-    company: 'Google',
-    batch: 2021,
-    role: 'Alumni',
-    totalReferrals: 6,
-    approved: 2,
-  };
+  const alumni = alumniData || {};
 
   const counts = {
     all: referrals.length,

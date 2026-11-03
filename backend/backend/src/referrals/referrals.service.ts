@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, BadRequestException, Inject, forwardRef, OnModuleInit } from '@nestjs/common';
 import { ReferralsRepository, Referral } from './referrals.repository';
 import { OpportunitiesService } from '../opportunities/opportunities.service';
 import { CreateReferralDto } from './dto/create-referral.dto';
@@ -6,6 +6,7 @@ import { UpdateReferralDto } from './dto/update-referral.dto';
 import { NotificationsService } from '../notifications/notifications.service';
 import { UsersRepository } from '../users/users.repository';
 import { ActivityService } from '../activity/activity.service';
+import { ApplicationsService } from '../applications/applications.service';
 
 // Keep referral eligibility stable when a profile uses a harmless company
 // suffix such as "Solutions" or "Technologies" while the opportunity uses
@@ -29,14 +30,29 @@ const referralCompanyKey = (company?: string): string => String(company ?? '')
   .join(' ');
 
 @Injectable()
-export class ReferralsService {
+export class ReferralsService implements OnModuleInit {
   constructor(
     private readonly repo: ReferralsRepository,
     private readonly oppsService: OpportunitiesService,
     private readonly notifications: NotificationsService,
     private readonly usersRepo: UsersRepository,
     private readonly activity: ActivityService,
+    @Inject(forwardRef(() => ApplicationsService)) private readonly applications: ApplicationsService,
   ) {}
+
+  onModuleInit(): void {
+    for (const referral of this.repo.findAll()) {
+      const application = this.applications.findByCandidate(referral.candidateId)
+        .find((item) => item.id === referral.applicationId && item.opportunityId === referral.opportunityId);
+      const alumni = this.usersRepo.findById(referral.alumniId);
+      const opportunity = this.oppsService.findOne(referral.opportunityId);
+      if (!application || !alumni || alumni.role !== 'alumni' || referral.appliedCompany !== opportunity.company
+        || referral.alumniCompany !== alumni.company
+        || referralCompanyKey(alumni.company) !== referralCompanyKey(opportunity.company)) {
+        throw new Error(`Invalid demo referral relationship: ${referral.id}`);
+      }
+    }
+  }
 
   /** Drop a message in a user's in-app inbox. Never lets a notification problem fail the referral action. */
   private notify(recipientId: number, title: string, message: string): void {
@@ -72,6 +88,9 @@ export class ReferralsService {
     const candidate = this.usersRepo.findById(candidateId);
     if (!alumni || alumni.role !== 'alumni') throw new BadRequestException('Choose an alumnus from the directory');
     if (!candidate) throw new NotFoundException('Candidate account not found');
+    const application = this.applications.findByCandidate(candidateId).find((item) => item.opportunityId === opp.id);
+    if (!application) throw new BadRequestException('Apply to this opportunity before requesting a referral');
+    if (dto.applicationId && dto.applicationId !== application.id) throw new BadRequestException('Referral must be linked to the matching application');
     // The alumnus must work at the company the candidate applied to, and be from the same college.
     const alumniCompanyKey = referralCompanyKey(alumni.company);
     if (!alumniCompanyKey || alumniCompanyKey !== referralCompanyKey(opp.company)) {
@@ -87,7 +106,7 @@ export class ReferralsService {
 
     const referral = this.repo.create({
       opportunityId:     opp.id,
-      applicationId:     dto.applicationId,
+      applicationId:     application.id,
       candidateId,
       candidateName:     candidate.name,
       candidateInitials: ini(candidate.name),

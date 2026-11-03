@@ -50,7 +50,7 @@ function AddOfficerModal({ onClose, onSave, emailDomain }) {
           <label>Phone</label>
           <input placeholder="9876543210" {...phoneInputProps} value={form.phone} onChange={e => set('phone', e.target.value)} />
         </div>
-        <p className="form-hint">Default login password: <strong>123</strong></p>
+        <p className="form-hint">Default login password: <strong>12345678</strong></p>
         {error && <p className="form-error">{error}</p>}
         <div className="modal-actions">
           <button className="btn btn-outline" onClick={onClose}>Cancel</button>

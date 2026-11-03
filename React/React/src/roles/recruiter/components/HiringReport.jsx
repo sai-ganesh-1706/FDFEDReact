@@ -4,7 +4,7 @@ import { BarChart3, TrendingUp, Users, Award, CheckCircle } from 'lucide-react';
 export default function HiringReport({ applications, opportunities }) {
   // Compute analytics
   const totalApps = applications.length;
-  const shortlisted = applications.filter(a => ['Shortlisted', 'Assessment', 'Interview', 'Offered'].includes(a.status)).length;
+  const shortlisted = applications.filter(a => ['Shortlisted', 'Interview', 'Offered'].includes(a.status)).length;
   const interviewRounds = applications.filter(a => ['Interview', 'Offered'].includes(a.status)).length;
   const interviews = applications.filter(a => ['Interview', 'Offered'].includes(a.status)).length;
   const offers = applications.filter(a => a.status === 'Offered').length;

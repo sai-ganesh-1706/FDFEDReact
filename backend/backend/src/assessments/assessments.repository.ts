@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 export interface Assessment {
   id: number;
@@ -24,66 +26,15 @@ export interface Assessment {
 
 @Injectable()
 export class AssessmentsRepository {
-  private assessments: Assessment[] = [
-    {
-      id: 1,
-      title: 'Coding Assessment — Round 1',
-      role: 'Software Engineer',
-      date: '2026-10-22',
-      time: '10:00 AM',
-      duration: '90 minutes',
-      candidates: 12,
-      platform: 'HackerRank',
-      link: 'https://hackerrank.com/test/x',
-      type: 'Online Test',
-      isDraft: false,
-      opportunityId: 1,
-    },
-    {
-      id: 2,
-      title: 'Technical Interview — Round 2',
-      role: 'Software Engineer',
-      date: '2026-10-29',
-      time: '2:00 PM',
-      duration: '60 minutes',
-      candidates: 5,
-      platform: 'Google Meet',
-      link: 'https://meet.google.com/x/y',
-      type: 'Technical Interview',
-      isDraft: false,
-      opportunityId: 1,
-    },
-    {
-      id: 3,
-      title: 'HR Interview — Final Round',
-      role: 'Software Engineer',
-      date: '2026-11-03',
-      time: '11:00 AM',
-      duration: '45 minutes',
-      candidates: 3,
-      platform: 'Zoom',
-      link: 'https://zoom.us/j/xy',
-      type: 'HR Interview',
-      isDraft: true,
-      opportunityId: 1,
-    },
-    {
-      id: 4,
-      title: 'Data Analysis Test',
-      role: 'Data Analyst Intern',
-      date: '2026-10-25',
-      time: '3:00 PM',
-      duration: '120 minutes',
-      candidates: 8,
-      platform: 'Codility',
-      link: 'https://codility.com/test/data',
-      type: 'Online Test',
-      isDraft: false,
-      opportunityId: 2,
-    },
-  ];
+  private assessments: Assessment[] = [];
 
-  private nextId = 5;
+  private nextId = 1;
+
+  constructor() {
+    this.assessments = JSON.parse(readFileSync(join(process.cwd(), 'data', 'assessments.demo.json'), 'utf8'));
+    if (!Array.isArray(this.assessments)) throw new Error('Invalid demo assessments file');
+    this.nextId = Math.max(0, ...this.assessments.map((item) => item.id)) + 1;
+  }
 
   findAll(): Assessment[] {
     return this.assessments;

@@ -7,7 +7,7 @@ import api, { errorMessage } from '../../services/api.js';
 // The backend answers 401 when the current password is wrong; the axios interceptor in
 // services/api.js deliberately does NOT treat that as an expired session.
 
-const MIN_LENGTH = 3; // mirrors ChangePasswordDto on the backend
+const MIN_LENGTH = 8; // mirrors the backend password policy
 
 const EMPTY = { currentPassword: '', newPassword: '', confirmPassword: '' };
 
@@ -51,6 +51,7 @@ export default function ChangePasswordModal({ isOpen, onClose, userId, accentCol
   const validate = () => {
     if (!form.currentPassword) return 'Enter your current password.';
     if (form.newPassword.length < MIN_LENGTH) return `New password must be at least ${MIN_LENGTH} characters.`;
+    if (form.newPassword !== form.newPassword.trim()) return 'Password cannot start or end with spaces.';
     if (form.newPassword === form.currentPassword) return 'New password must be different from the current one.';
     if (form.newPassword !== form.confirmPassword) return 'New password and confirmation do not match.';
     return '';

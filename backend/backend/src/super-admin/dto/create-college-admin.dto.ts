@@ -1,5 +1,6 @@
-import { IsString, IsEmail, IsOptional, Length, MinLength } from 'class-validator';
+import { IsString, IsEmail, IsOptional, Length, Matches, MinLength } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { DEFAULT_INITIAL_PASSWORD, MIN_PASSWORD_LENGTH } from '../../common/auth/password-policy';
 
 export class CreateCollegeAdminDto {
   @ApiProperty({ example: 'Dr. Ganesh Kumar' })
@@ -11,9 +12,10 @@ export class CreateCollegeAdminDto {
   @IsEmail()
   email: string;
 
-  @ApiPropertyOptional({ example: '123' })
+  @ApiPropertyOptional({ example: 'Welcome@123', description: `Minimum ${MIN_PASSWORD_LENGTH} characters. Defaults to ${DEFAULT_INITIAL_PASSWORD}.` })
   @IsOptional()
   @IsString()
-  @MinLength(3, { message: 'Password must be at least 3 characters' })
+  @MinLength(MIN_PASSWORD_LENGTH, { message: `Password must be at least ${MIN_PASSWORD_LENGTH} characters` })
+  @Matches(/^\S(?:.*\S)?$/, { message: 'Password cannot start or end with whitespace' })
   password?: string;
 }

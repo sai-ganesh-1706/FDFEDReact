@@ -2,7 +2,7 @@
   {
     "id": 102,
     "name": "Priya Kapoor",
-    "email": "r@gmail.com",
+    "email": "priya@google.com",
     "role": "recruiter",
     "collegeId": 1,
     "password": "12345678",
@@ -90,30 +90,9 @@
     ]
   },
   {
-    "id": 3003,
-    "name": "Meera Nair",
-    "email": "alumni.demo@careernest.test",
-    "role": "alumni",
-    "collegeId": 1,
-    "password": "12345678",
-    "company": "Microsoft",
-    "batch": "2022",
-    "headline": "Software Engineer",
-    "department": "Computer Science",
-    "referrals": 0,
-    "location": "Hyderabad, Telangana",
-    "status": "active",
-    "avatar": "MN",
-    "skills": [
-      "C#",
-      "Azure",
-      "SQL"
-    ]
-  },
-  {
     "id": 101,
     "name": "Sneha Reddy",
-    "email": "a@gmail.com",
+    "email": "sneha@google.com",
     "role": "alumni",
     "collegeId": 1,
     "password": "12345678",

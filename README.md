@@ -249,16 +249,16 @@ Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '.\5_CareerNes
 
 ## Demo Credentials
 
-All test accounts come pre-configured in the in-memory database with the default password: **`123`**
+Seeded demonstration accounts use the default password: **`12345678`**
 
 | Role | Email | Password | Persona / Details |
 |---|---|---|---|
-| **Candidate / Student** | `c@gmail.com` | `123` | Shameer Basha Shaik (CSE, 8.7 CGPA) |
-| **Recruiter** | `r@gmail.com` | `123` | Priya Kapoor (Google) |
-| **Placement Officer** | `p@gmail.com` | `123` | Dr. Rajesh Nair (Placement Cell) |
-| **Alumni** | `a@gmail.com` | `123` | Sneha Reddy (Software Engineer @ Google) |
-| **College Admin** | `ca@gmail.com` | `123` | College Administrator |
-| **Super Admin** | `sa@gmail.com` | `123` | Platform Super Administrator |
+| **Candidate / Student** | `shameer.basha.shaik@iiits.in` | `12345678` | Shameer Basha Shaik (CSE, 8.7 CGPA) |
+| **Recruiter** | `priya@google.com` | `12345678` | Priya Kapoor (Google) |
+| **Placement Officer** | `rajesh@iiits.in` | `12345678` | Dr. Rajesh Nair (Placement Cell) |
+| **Alumni** | `sneha@google.com` | `12345678` | Sneha Reddy (Software Engineer @ Google) |
+| **College Admin** | `ganesh@iiits.in` | `12345678` | Dr. Ganesh Kumar (IIIT Sri City) |
+| **Super Admin** | `anil@superadmin.com` | `12345678` | Anil Prasad (Platform Super Administrator) |
 
 ---
 

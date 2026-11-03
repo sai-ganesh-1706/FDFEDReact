@@ -45,8 +45,9 @@ async function bootstrap() {
     customCss: '.swagger-ui .topbar { display: none } .swagger-ui .info { margin: 20px 0 }',
   });
 
-  await app.listen(process.env.PORT ?? 3000);
-  console.log('🚀 CareerNest API running at http://localhost:3000');
-  console.log('📖 Swagger docs at http://localhost:3000/api');
+  const port = Number(process.env.PORT) || 3000;
+  await app.listen(port);
+  console.log(`🚀 CareerNest API running at http://localhost:${port}`);
+  console.log(`📖 Swagger docs at http://localhost:${port}/api`);
 }
 bootstrap();

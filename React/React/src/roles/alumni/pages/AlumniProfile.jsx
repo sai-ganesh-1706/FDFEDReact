@@ -30,14 +30,7 @@ export default function AlumniProfile({
   const [newSkill, setNewSkill] = useState('');
   const [showAddSkill, setShowAddSkill] = useState(false);
 
-  const alumni = alumniData || {
-    initials: 'SR',
-    name: 'Sneha Reddy',
-    email: 'sneha@google.com',
-    company: 'Google',
-    batch: 2021,
-    role: 'Alumni',
-  };
+  const alumni = alumniData || {};
 
   // Merge: personalInfo (lifted) overrides alumniData defaults
   const info = {
@@ -46,7 +39,7 @@ export default function AlumniProfile({
     company: personalInfo?.company || alumni.company,
     batch: personalInfo?.batch || alumni.batch,
     role: personalInfo?.role || 'Software Engineer',
-    location: personalInfo?.location || 'Hyderabad, India',
+    location: personalInfo?.location || alumni.location || '',
     linkedin: personalInfo?.linkedin ?? '',
     github: personalInfo?.github ?? '',
     portfolio: personalInfo?.portfolio ?? '',

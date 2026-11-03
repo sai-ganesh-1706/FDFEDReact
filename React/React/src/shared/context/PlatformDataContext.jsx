@@ -58,8 +58,7 @@ export function PlatformDataProvider({ children }) {
         api.get('/users', { params: { role: 'placement_officer' } }),
         api.get('/users', { params: { role: 'candidate' } }),
         api.get('/users', { params: { role: 'alumni' } }),
-        // The dashboard can still load if applications are temporarily unavailable.
-        api.get('/applications').catch(() => ({ data: [] })),
+        api.get('/applications'),
       ]);
       setData({
         colleges: [college.data],

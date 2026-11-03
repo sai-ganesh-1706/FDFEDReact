@@ -19,7 +19,7 @@ export default function Dashboard({
   // Calculate real-time stats from data
   const totalOpportunities = opportunities.length;
   const totalApplications = applications.length;
-  const shortlistedCount = applications.filter(a => a.status === 'Shortlisted' || a.status === 'Assessment' || a.status === 'Interview' || a.status === 'Offered').length;
+  const shortlistedCount = applications.filter(a => ['Shortlisted', 'Interview', 'Offered'].includes(a.status)).length;
   const referredCount = applications.filter(a => a.isReferred).length;
 
   return (

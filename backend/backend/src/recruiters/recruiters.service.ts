@@ -23,7 +23,7 @@ export class RecruitersService {
   private enrich(recruiter: Recruiter): Recruiter {
     const userId = recruiter.userId ?? this.usersRepo.findByEmail(recruiter.email)?.id;
     const opps = this.opportunities.findAll().filter((o) =>
-      o.status === 'Published' && o.recruiterId === userId && userId != null &&
+      o.recruiterId === userId && userId != null &&
       (o.collegeId ?? 1) === (recruiter.collegeId ?? 1),
     ).length;
     return { ...recruiter, userId, opps };
@@ -80,6 +80,7 @@ export class RecruitersService {
     const now = new Date();
     const created = this.repo.create({
       ...dto,
+      location: source === 'contact-form' ? undefined : dto.location,
       email,
       collegeId,
       status: 'pending',
@@ -116,7 +117,8 @@ export class RecruitersService {
     else {
       user = this.usersRepo.create({
         name: r.name, email: r.email, role: 'recruiter', collegeId: r.collegeId ?? 1, password,
-        company: r.company, headline: r.role, phone: r.phone, location: r.location, about: r.bio,
+        company: r.company, headline: r.role, phone: r.phone,
+        location: r.source === 'contact-form' ? undefined : r.location, about: r.bio,
         status: 'active', avatar: r.avatar,
       });
     }
@@ -138,9 +140,16 @@ export class RecruitersService {
     return updated;
   }
 
-  remove(id: number): { message: string } {
+  remove(id: number, actorName = 'Administrator', actorRole = 'placement_officer'): { message: string } {
+    const recruiter = this.findOne(id);
     const removed = this.repo.remove(id);
     if (!removed) throw new NotFoundException(`Recruiter with id ${id} not found`);
+    const user = recruiter.userId ? this.usersRepo.findById(recruiter.userId) : undefined;
+    if (user?.role === 'recruiter' && user.email.toLowerCase() === recruiter.email.toLowerCase()) this.usersRepo.remove(user.id);
+    this.activity.log({
+      action: 'Recruiter Removed', detail: `${recruiter.name} (${recruiter.company}) was removed`,
+      actor: actorName, actorRole, collegeId: recruiter.collegeId ?? null, type: 'recruiter',
+    });
     return { message: `Recruiter ${id} removed successfully` };
   }
 }

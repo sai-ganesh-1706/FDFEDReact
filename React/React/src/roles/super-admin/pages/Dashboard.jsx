@@ -58,7 +58,6 @@ export default function SADashboard({ colleges, stats, data, userName, setActive
                         || colleges.reduce((a, c) => a + (c.stats?.placementOfficers || 0), 0);
   const totalAdmins   = stats?.totalCollegeAdmins ?? colleges.filter(c => c.admin).length;
   const totalPlaced   = stats?.totalPlaced    || colleges.reduce((a, c) => a + (c.stats?.placed || 0), 0);
-  const activeCount   = colleges.filter(c => c.status === 'active').length;
   const placementRate = totalStudents > 0 ? Math.round((totalPlaced / totalStudents) * 100) : 0;
 
   // Alerts — SA only manages colleges + college admins, not placement officers
@@ -76,7 +75,7 @@ export default function SADashboard({ colleges, stats, data, userName, setActive
     });
 
   const kpis = [
-    { label: 'Total Colleges',     value: colleges.length, sub: `${activeCount} active`,              icon: Building2,   color: '#7c3aed', accent: true },
+    { label: 'Total Colleges',     value: colleges.length, sub: 'Across the platform',              icon: Building2,   color: '#7c3aed', accent: true },
     { label: 'Total Students',     value: totalStudents.toLocaleString('en-IN'), sub: 'Enrolled',     icon: GraduationCap, color: '#0ea5e9' },
     { label: 'Alumni',             value: totalAlumni.toLocaleString('en-IN'),   sub: 'Graduates',   icon: Users,       color: '#22c55e' },
     { label: 'Placement Officers', value: totalOfficers,  sub: 'Across all colleges',                 icon: ShieldCheck, color: '#f59e0b' },
@@ -245,13 +244,12 @@ export default function SADashboard({ colleges, stats, data, userName, setActive
               <th>Officers</th>
               <th>Placed</th>
               <th>Rate</th>
-              <th>Status</th>
             </tr>
           </thead>
           <tbody>
             {colleges.length === 0 ? (
               <tr>
-                <td colSpan={8} style={{ textAlign: 'center', padding: '32px', color: '#94a3b8' }}>
+                <td colSpan={7} style={{ textAlign: 'center', padding: '32px', color: '#94a3b8' }}>
                   No colleges found
                 </td>
               </tr>
@@ -299,11 +297,6 @@ export default function SADashboard({ colleges, stats, data, userName, setActive
                   <td>
                     <span className={`badge ${rate >= 80 ? 'badge-green' : rate >= 60 ? 'badge-yellow' : 'badge-red'}`}>
                       {rate}%
-                    </span>
-                  </td>
-                  <td>
-                    <span className={`badge ${c.status === 'active' ? 'badge-green' : c.status === 'suspended' ? 'badge-red' : 'badge-gray'}`}>
-                      {c.status}
                     </span>
                   </td>
                 </tr>

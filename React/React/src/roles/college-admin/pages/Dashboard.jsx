@@ -182,7 +182,7 @@ export default function CADashboard({
       <div className="welcome-banner">
         <div>
           <h2>
-            Welcome, <span>{userName?.split(" ")[0] || "Admin"}</span>
+            Welcome, <span>{userName || "Admin"}</span>
           </h2>
           <p>
             Managing{" "}

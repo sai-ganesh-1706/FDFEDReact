@@ -37,7 +37,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-05-07",
         "desc": "Assessment stage for Graduate Software Engineer",
         "status": "completed"
@@ -274,7 +274,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-05-31",
         "desc": "Assessment stage for Associate Software Engineer",
         "status": "completed"
@@ -305,12 +305,12 @@
     "title": "Graduate Software Engineer",
     "company": "Google",
     "type": "Full-Time",
-    "status": "Offered",
+    "status": "Interview",
     "appliedDate": "2026-06-08",
     "hasReferral": false,
     "currentStageIndex": 4,
     "initials": "SB",
-    "resumeFile": "shameer_basha_shaik_resume.pdf",
+    "resumeFile": "Shameer_Basha_Shaik_Resume.pdf",
     "rounds": {
       "resume": "Pass",
       "assessment": "Pass",
@@ -321,34 +321,26 @@
       {
         "stage": "Applied",
         "date": "2026-06-08",
-        "desc": "Applied stage for Graduate Software Engineer",
+        "desc": "Application submitted",
         "status": "completed"
       },
       {
         "stage": "Shortlisted",
         "date": "2026-06-11",
-        "desc": "Shortlisted stage for Graduate Software Engineer",
-        "status": "completed"
-      },
-      {
-        "stage": "Assessment",
-        "date": "2026-06-14",
-        "desc": "Assessment stage for Graduate Software Engineer",
+        "desc": "Shortlisted by the recruiter",
         "status": "completed"
       },
       {
         "stage": "Interview",
         "date": "2026-06-18",
-        "desc": "Interview stage for Graduate Software Engineer",
-        "status": "completed"
-      },
-      {
-        "stage": "Offered",
-        "date": "2026-06-22",
-        "desc": "Selected by Google after completing the interview rounds",
+        "desc": "Technical interview scheduled",
         "status": "active"
       }
-    ]
+    ],
+    "resumeUrl": "resume-100-0b2d6bc1-3312-4a18-a59e-4f97704f7ff5.pdf",
+    "recruiterRating": 4,
+    "recruiterFeedback": "Strong fundamentals and clear communication. Ready for the technical interview.",
+    "feedbackSent": true
   },
   {
     "id": 5008,
@@ -568,7 +560,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-06-27",
         "desc": "Assessment stage for Associate Software Engineer",
         "status": "completed"
@@ -625,7 +617,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-08-09",
         "desc": "Assessment stage for Graduate Software Engineer",
         "status": "completed"
@@ -676,7 +668,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-09-10",
         "desc": "Assessment stage for Cloud Engineering Intern",
         "status": "completed"
@@ -752,7 +744,7 @@
     "title": "Graduate Software Engineer",
     "company": "Google",
     "type": "Full-Time",
-    "status": "Assessment",
+    "status": "Interview",
     "appliedDate": "2026-09-05",
     "hasReferral": false,
     "currentStageIndex": 2,
@@ -778,12 +770,15 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-09-11",
         "desc": "Assessment stage for Graduate Software Engineer",
         "status": "active"
       }
-    ]
+    ],
+    "recruiterRating": 4,
+    "recruiterFeedback": "Good coding fundamentals. Continue to the next technical round.",
+    "feedbackSent": true
   },
   {
     "id": 5017,
@@ -895,7 +890,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-10-13",
         "desc": "Assessment stage for Graduate Software Engineer",
         "status": "completed"
@@ -1030,7 +1025,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-07-06",
         "desc": "Assessment stage for Associate Software Engineer",
         "status": "completed"
@@ -1267,7 +1262,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-07-14",
         "desc": "Assessment stage for Graduate Software Engineer",
         "status": "completed"
@@ -1324,7 +1319,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-07-28",
         "desc": "Assessment stage for Associate Software Engineer",
         "status": "completed"
@@ -1471,7 +1466,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-07-14",
         "desc": "Assessment stage for Associate Software Engineer",
         "status": "completed"
@@ -1522,7 +1517,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-08-08",
         "desc": "Assessment stage for Cloud Engineering Intern",
         "status": "completed"
@@ -1598,7 +1593,7 @@
     "title": "Associate Software Engineer",
     "company": "TechCorp Solutions",
     "type": "Full-Time",
-    "status": "Assessment",
+    "status": "Interview",
     "appliedDate": "2026-08-03",
     "hasReferral": false,
     "currentStageIndex": 2,
@@ -1624,7 +1619,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-08-09",
         "desc": "Assessment stage for Associate Software Engineer",
         "status": "active"
@@ -1741,7 +1736,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-08-04",
         "desc": "Assessment stage for Embedded Software Engineer",
         "status": "completed"
@@ -1978,7 +1973,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-08-09",
         "desc": "Assessment stage for Industrial Automation Engineer",
         "status": "completed"
@@ -2035,7 +2030,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-08-18",
         "desc": "Assessment stage for Embedded Software Engineer",
         "status": "completed"
@@ -2156,7 +2151,7 @@
     "title": "Embedded Software Engineer",
     "company": "Silicon Circuit Labs",
     "type": "Full-Time",
-    "status": "Assessment",
+    "status": "Interview",
     "appliedDate": "2026-05-04",
     "hasReferral": false,
     "currentStageIndex": 2,
@@ -2182,7 +2177,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-05-10",
         "desc": "Assessment stage for Embedded Software Engineer",
         "status": "active"
@@ -2299,7 +2294,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-06-12",
         "desc": "Assessment stage for Embedded Software Engineer",
         "status": "completed"
@@ -2350,7 +2345,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-07-13",
         "desc": "Assessment stage for Hardware Verification Intern",
         "status": "completed"
@@ -2426,7 +2421,7 @@
     "title": "Embedded Software Engineer",
     "company": "Silicon Circuit Labs",
     "type": "Full-Time",
-    "status": "Assessment",
+    "status": "Interview",
     "appliedDate": "2026-07-08",
     "hasReferral": false,
     "currentStageIndex": 2,
@@ -2452,7 +2447,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-07-14",
         "desc": "Assessment stage for Embedded Software Engineer",
         "status": "active"
@@ -2569,7 +2564,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-08-26",
         "desc": "Assessment stage for Graduate Electrical Engineer",
         "status": "completed"
@@ -2806,7 +2801,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-08-31",
         "desc": "Assessment stage for Industrial Automation Engineer",
         "status": "completed"
@@ -2863,7 +2858,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-09-09",
         "desc": "Assessment stage for Graduate Electrical Engineer",
         "status": "completed"
@@ -2984,7 +2979,7 @@
     "title": "Graduate Electrical Engineer",
     "company": "VoltGrid Energy",
     "type": "Full-Time",
-    "status": "Assessment",
+    "status": "Interview",
     "appliedDate": "2026-04-02",
     "hasReferral": false,
     "currentStageIndex": 2,
@@ -3010,7 +3005,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-04-08",
         "desc": "Assessment stage for Graduate Electrical Engineer",
         "status": "active"
@@ -3127,7 +3122,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-05-10",
         "desc": "Assessment stage for Graduate Electrical Engineer",
         "status": "completed"
@@ -3178,7 +3173,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-06-11",
         "desc": "Assessment stage for Power Systems Intern",
         "status": "completed"
@@ -3280,7 +3275,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-09-14",
         "desc": "Assessment stage for Graduate Mechanical Engineer",
         "status": "completed"
@@ -3517,7 +3512,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-09-19",
         "desc": "Assessment stage for Industrial Automation Engineer",
         "status": "completed"
@@ -3548,7 +3543,7 @@
     "title": "Graduate Mechanical Engineer",
     "company": "MotionWorks Engineering",
     "type": "Full-Time",
-    "status": "Assessment",
+    "status": "Interview",
     "appliedDate": "2026-08-03",
     "hasReferral": false,
     "currentStageIndex": 2,
@@ -3574,7 +3569,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-08-09",
         "desc": "Assessment stage for Graduate Mechanical Engineer",
         "status": "active"
@@ -3619,7 +3614,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-09-10",
         "desc": "Assessment stage for Design Engineering Intern",
         "status": "completed"
@@ -3709,7 +3704,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-09-11",
         "desc": "Assessment stage for Graduate Mechanical Engineer",
         "status": "completed"
@@ -3818,7 +3813,7 @@
     "title": "Graduate Mechanical Engineer",
     "company": "MotionWorks Engineering",
     "type": "Full-Time",
-    "status": "Assessment",
+    "status": "Interview",
     "appliedDate": "2026-10-07",
     "hasReferral": false,
     "currentStageIndex": 2,
@@ -3844,7 +3839,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-10-13",
         "desc": "Assessment stage for Graduate Mechanical Engineer",
         "status": "active"
@@ -3961,7 +3956,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-09-30",
         "desc": "Assessment stage for Graduate Structural Engineer",
         "status": "completed"
@@ -4198,7 +4193,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-10-08",
         "desc": "Assessment stage for BIM Application Engineer",
         "status": "completed"
@@ -4255,7 +4250,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-10-20",
         "desc": "Assessment stage for Graduate Structural Engineer",
         "status": "completed"
@@ -4376,7 +4371,7 @@
     "title": "Graduate Structural Engineer",
     "company": "UrbanBuild Infrastructure",
     "type": "Full-Time",
-    "status": "Assessment",
+    "status": "Interview",
     "appliedDate": "2026-07-08",
     "hasReferral": false,
     "currentStageIndex": 2,
@@ -4402,7 +4397,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-07-14",
         "desc": "Assessment stage for Graduate Structural Engineer",
         "status": "active"
@@ -4447,7 +4442,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-08-08",
         "desc": "Assessment stage for Project Planning Intern",
         "status": "completed"
@@ -4537,7 +4532,7 @@
         "status": "completed"
       },
       {
-        "stage": "Assessment",
+        "stage": "Interview",
         "date": "2026-08-09",
         "desc": "Assessment stage for Graduate Structural Engineer",
         "status": "completed"
