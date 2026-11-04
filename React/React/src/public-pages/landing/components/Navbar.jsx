@@ -5,7 +5,6 @@ import { useTheme } from "../context/ThemeContext";
 function Navbar() {
   const { theme, toggleTheme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,7 +25,6 @@ function Navbar() {
         behavior: "smooth",
       });
     }
-    setMobileOpen(false);
   };
 
   return (
@@ -59,7 +57,7 @@ function Navbar() {
           <span className="logo-text">CareerNest</span>
         </a>
 
-        <ul className={`nav-links ${mobileOpen ? "active" : ""}`} id="nav-links">
+        <ul className="nav-links" id="nav-links">
           <li>
             <a
               href="#hero"
@@ -160,18 +158,6 @@ function Navbar() {
               <line x1="5" y1="12" x2="19" y2="12" />
               <polyline points="12 5 19 12 12 19" />
             </svg>
-          </button>
-
-          <button
-            className={`mobile-toggle ${mobileOpen ? "open" : ""}`}
-            id="mobile-toggle"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle navigation"
-            aria-expanded={mobileOpen}
-          >
-            <span />
-            <span />
-            <span />
           </button>
         </div>
       </div>

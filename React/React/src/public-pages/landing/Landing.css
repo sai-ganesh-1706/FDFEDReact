@@ -467,39 +467,6 @@
   transform: translateX(3px);
 }
 
-.cn-landing .mobile-toggle {
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  gap: 5px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 6px;
-  width: 36px;
-  height: 36px;
-}
-
-.cn-landing .mobile-toggle span {
-  width: 22px;
-  height: 2px;
-  background: var(--text-primary);
-  border-radius: 2px;
-  transition: all 0.3s ease;
-}
-
-.cn-landing .mobile-toggle.open span:nth-child(1) {
-  transform: translateY(7px) rotate(45deg);
-}
-
-.cn-landing .mobile-toggle.open span:nth-child(2) {
-  opacity: 0;
-}
-
-.cn-landing .mobile-toggle.open span:nth-child(3) {
-  transform: translateY(-7px) rotate(-45deg);
-}
-
 /* --------------------------------------------------------------------------
    HERO SECTION
    -------------------------------------------------------------------------- */
@@ -1850,32 +1817,6 @@
 @media (max-width: 768px) {
   .cn-landing .nav-links {
     display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: rgba(10, 15, 30, 0.96);
-    backdrop-filter: blur(20px);
-    flex-direction: column;
-    padding: 24px;
-    gap: 18px;
-    border-bottom: 1px solid var(--glass-border);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-  }
-
-  [data-theme="light"] .cn-landing .nav-links,
-  .cn-landing[data-theme="light"] .nav-links {
-    background: rgba(255, 255, 255, 0.98);
-    border-bottom-color: rgba(226, 232, 240, 0.9);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
-  }
-
-  .cn-landing .nav-links.active {
-    display: flex;
-  }
-
-  .cn-landing .mobile-toggle {
-    display: flex;
   }
 
   .cn-landing .hero {
