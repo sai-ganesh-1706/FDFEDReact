@@ -1,21 +1,26 @@
-import { useViewState } from '../../store/useViewState.js';
-import { infoDialog } from '../../shared/components/AppDialog.jsx';
+// Data Flow (roles/alumni/AlumniApp.jsx):
+// Backend API -> Redux Thunks/Slices (alumniSlice, authSlice, referralsSlice, usersSlice) -> useSelector(selectAlumni, selectAlumniSignOutOpen, selectSession) -> UI render
+// User Actions -> dispatch(logoutUser, fetchReferrals, fetchUserById, loadError) -> Slice reducers/thunks -> Redux state update
 import { useEffect } from 'react';
-import { shallowEqual, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { errorMessage } from '../../services/api.js';
-import { useOperations } from '../../store/useOperations.js';
-import Sidebar from './components/Sidebar';
+import {
+  closeAlumniSignOut,
+  openAlumniSignOut,
+  selectAlumni,
+  selectAlumniSignOutOpen,
+  setAlumniLoadError,
+} from './store/alumniSlice.js';
+import { logoutUser, selectSession } from '../../store/slices/authSlice.js';
+import { fetchReferrals } from '../../store/slices/referralsSlice.js';
+import { fetchUserById } from '../../store/slices/usersSlice.js';
 import AlumniNotifications from './components/AlumniNotifications';
+import Sidebar from './components/Sidebar';
 import SignOutModal from './components/SignOutModal';
 import AlumniDashboard from './pages/AlumniDashboard';
 import AlumniDirectory from './pages/AlumniDirectory';
 import AlumniProfile from './pages/AlumniProfile';
 import ReferralRequests from './pages/ReferralRequests';
-import { savePage } from '../../shared/utils/navigationState.js';
-import { useLogout, useUpdateSession } from '../../shared/context/AuthContext.jsx';
-import { ALUMNI_PAGE_KEY, alumniActions, selectAlumni } from '../../store/alumni/alumniSlice.js';
-import { selectSession } from '../../store/sessionSlice.js';
-import useWorkspaceDispatch from '../../store/useWorkspaceDispatch.js';
 import './styles/Alumni.css';
 
 const PAGES = {
@@ -26,116 +31,43 @@ const PAGES = {
 };
 
 export default function AlumniApp() {
+  // Redux data source: authSlice (session) and alumniSlice (activePage, pageProps, loadError, signOut modal state).
+  // Workspace data is fetched on mount via fetchUserById() (usersSlice) and fetchReferrals() (referralsSlice).
   const session = useSelector(selectSession);
-  const dispatch = useWorkspaceDispatch();
-  const commands = useOperations();
-  const confirmSignOut = useLogout();
-  const updateSession = useUpdateSession();
-  const workspace = useSelector(selectAlumni, shallowEqual);
-  const { pageProps, alumniData, referrals, loadError, personalInfo, skillsList } = workspace;
-  const activePage = workspace.activePage;
-  const [{ isSignOutOpen }, { setIsSignOutOpen }] = useViewState('alumni', 'AlumniApp', () => ({
-    isSignOutOpen: false,
-  }));
-
-  const loadReferrals = commands.listReferrals;
+  const dispatch = useDispatch();
+  const confirmSignOut = () => dispatch(logoutUser());
+  const { activePage, pageProps, loadError } = useSelector(selectAlumni, shallowEqual);
+  const isSignOutOpen = useSelector(selectAlumniSignOutOpen);
 
   useEffect(() => {
-    Promise.all([commands.getUser(session.id), loadReferrals()])
-      .then(() => dispatch(alumniActions.loadErrorChanged('')))
-      .catch((error) => dispatch(alumniActions.loadErrorChanged(errorMessage(error, 'Could not load your alumni workspace from the server.'))));
+    Promise.all([dispatch(fetchUserById(session.id)).unwrap(), dispatch(fetchReferrals()).unwrap()])
+      .then(() => dispatch(setAlumniLoadError('')))
+      .catch((error) => dispatch(setAlumniLoadError(errorMessage(error, 'Could not load your alumni workspace from the server.'))));
     // Pick up new requests while the alumnus has the portal open.
     const timer = setInterval(() => {
-      if (!document.hidden) loadReferrals().then(() => dispatch(alumniActions.loadErrorChanged(''))).catch((error) => dispatch(alumniActions.loadErrorChanged(errorMessage(error, 'Could not refresh referral requests.'))));
+      if (!document.hidden) {
+        dispatch(fetchReferrals())
+          .unwrap()
+          .then(() => dispatch(setAlumniLoadError('')))
+          .catch((error) => dispatch(setAlumniLoadError(errorMessage(error, 'Could not refresh referral requests.'))));
+      }
     }, 20000);
     return () => clearInterval(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const handleSavePersonalInfo = async (info) => {
-    try {
-      await commands.updateUser(session.id, {
-        name: info.name || undefined,
-        company: info.company || undefined,
-        batch: info.batch || undefined,
-        headline: info.role || undefined,
-        location: info.location || undefined,
-        socialLinks: { linkedin: info.linkedin, github: info.github, portfolio: info.portfolio },
-      });
-      // Keep the session copy in sync so other open tabs immediately reflect
-      // profile changes as well.
-      const nextSession = {
-        ...session,
-        name: info.name || session?.name,
-        company: info.company || session?.company,
-      };
-      updateSession(nextSession);
-    } catch (error) {
-      infoDialog(errorMessage(error, 'Could not save your profile.'));
-    }
-  };
-
-  const handleSetSkills = async (nextSkills) => {
-    const value = typeof nextSkills === 'function' ? nextSkills(skillsList) : nextSkills;
-    try {
-      await commands.updateUser(session.id, { skills: value });
-    } catch (error) {
-      infoDialog(errorMessage(error, 'Could not save your skills.'));
-    }
-  };
-
-  // Approve or decline a referral request. The candidate sees the decision and the note straight away.
-  const handleUpdateReferralStatus = async (id, status, note) => {
-    try {
-      await commands.respondToReferral(id, {
-        status: status === 'declined' ? 'Rejected' : 'Approved',
-        alumniResponse: note || undefined,
-      });
-      await loadReferrals().catch(() => {
-        dispatch(alumniActions.loadErrorChanged('Response saved. Could not refresh referral requests.'));
-      });
-    } catch (error) {
-      infoDialog(errorMessage(error, 'Could not save your response. Please try again.'));
-    }
-  };
-
-  // Support both string navigation and object navigation
-  const handleNavigate = (page, props = {}) => {
-    if (typeof page === 'string') {
-      const nextPage = Object.hasOwn(PAGES, page) ? page : 'dashboard';
-      savePage(ALUMNI_PAGE_KEY, nextPage);
-      dispatch(alumniActions.pageChanged({ page: nextPage, props: props || {} }));
-    }
-  };
 
   const ActivePageComponent = PAGES[activePage] || AlumniDashboard;
 
   return (
     <div className="cn-alumni" style={{ display: 'contents' }}>
     <div className="alumni-app">
-      <Sidebar
-        activePage={activePage}
-        onNavigate={handleNavigate}
-        onOpenSignOut={() => setIsSignOutOpen(true)}
-        alumni={alumniData}
-      />
+      <Sidebar onOpenSignOut={() => dispatch(openAlumniSignOut())} />
       {loadError && <div role="alert" style={{ margin: '12px 20px', padding: 12, borderRadius: 8, background: '#fef2f2', color: '#b91c1c' }}>{loadError}</div>}
-      <ActivePageComponent
-        alumniData={alumniData}
-        referrals={referrals}
-        onUpdateReferralStatus={handleUpdateReferralStatus}
-        onNavigate={handleNavigate}
-        // Lifted profile state passed down to AlumniProfile
-        personalInfo={personalInfo}
-        onSavePersonalInfo={handleSavePersonalInfo}
-        skillsList={skillsList}
-        onSetSkillsList={handleSetSkills}
-        {...pageProps}
-      />
+      <ActivePageComponent {...pageProps} />
       <AlumniNotifications />
       <SignOutModal
         isOpen={isSignOutOpen}
-        onClose={() => setIsSignOutOpen(false)}
+        onClose={() => dispatch(closeAlumniSignOut())}
         onConfirm={confirmSignOut}
       />
     </div>

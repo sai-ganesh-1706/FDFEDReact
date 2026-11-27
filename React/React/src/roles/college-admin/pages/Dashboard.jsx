@@ -1,3 +1,7 @@
+// Data Flow (roles/college-admin/pages/Dashboard.jsx):
+// Backend API -> Redux Thunks/Slices (collegeAdminSlice) -> useSelector(store state) -> UI render
+// User Actions -> dispatch(slice actions) -> Slice reducers/thunks -> Redux state update
+import { useDispatch } from "react-redux";
 import {
   ShieldCheck,
   GraduationCap,
@@ -11,6 +15,7 @@ import {
   UserPlus,
   Clock,
 } from "lucide-react";
+import { setCollegeAdminTab } from "../store/collegeAdminSlice.js";
 
 function FunnelCard({ students, placed, onNavigate }) {
   const rate = students > 0 ? Math.round((placed / students) * 100) : 0;
@@ -143,9 +148,12 @@ export default function CADashboard({
   officers,
   students,
   alumniCount,
-  setActiveTab,
   placedCount,
 }) {
+  const dispatch = useDispatch();
+  const navigateToTab = (tab) => {
+    dispatch(setCollegeAdminTab(tab));
+  };
   const placed =
     placedCount ?? students.filter((s) => s.status === "placed").length;
 
@@ -206,7 +214,7 @@ export default function CADashboard({
             className="stat-card"
             key={k.label}
             onClick={() =>
-              setActiveTab(
+              navigateToTab(
                 {
                   Students: "students",
                   "Placement Officers": "officers",
@@ -245,11 +253,11 @@ export default function CADashboard({
         <FunnelCard
           students={students.length}
           placed={placed}
-          onNavigate={() => setActiveTab("reports")}
+          onNavigate={() => navigateToTab("reports")}
         />
         <OfficerSummaryCard
           officers={officers}
-          onNavigate={() => setActiveTab("officers")}
+          onNavigate={() => navigateToTab("officers")}
         />
       </div>
 
@@ -260,7 +268,7 @@ export default function CADashboard({
       <div className="quick-actions-list-grid">
         <button
           className="quick-action-row"
-          onClick={() => setActiveTab("officers")}
+          onClick={() => navigateToTab("officers")}
         >
           <div className="qa-icon" style={{ background: "#f0f9ff" }}>
             <UserPlus size={18} color="#0ea5e9" />
@@ -274,7 +282,7 @@ export default function CADashboard({
 
         <button
           className="quick-action-row"
-          onClick={() => setActiveTab("students")}
+          onClick={() => navigateToTab("students")}
         >
           <div className="qa-icon" style={{ background: "#f0fdf4" }}>
             <GraduationCap size={18} color="#22c55e" />
@@ -288,7 +296,7 @@ export default function CADashboard({
 
         <button
           className="quick-action-row"
-          onClick={() => setActiveTab("announcements")}
+          onClick={() => navigateToTab("announcements")}
         >
           <div className="qa-icon" style={{ background: "#fffbeb" }}>
             <Megaphone size={18} color="#f59e0b" />
@@ -302,7 +310,7 @@ export default function CADashboard({
 
         <button
           className="quick-action-row"
-          onClick={() => setActiveTab("reports")}
+          onClick={() => navigateToTab("reports")}
         >
           <div className="qa-icon" style={{ background: "#f5f3ff" }}>
             <BarChart2 size={18} color="#7c3aed" />
@@ -318,13 +326,13 @@ export default function CADashboard({
       <div className="quick-actions-list-grid" style={{ margin: "16px 0" }}>
         <button
           className="quick-action-row"
-          onClick={() => setActiveTab("alumni")}
+          onClick={() => navigateToTab("alumni")}
         >
-          Manage Alumni · Add or import from CSV <ArrowRight size={16} />
+          Manage Alumni Â· Add or import from CSV <ArrowRight size={16} />
         </button>
         <button
           className="quick-action-row"
-          onClick={() => setActiveTab("activity")}
+          onClick={() => navigateToTab("activity")}
         >
           Placement Officer Activity <ArrowRight size={16} />
         </button>
@@ -334,7 +342,7 @@ export default function CADashboard({
         <h2>Placement Officers</h2>
         <button
           className="btn btn-primary btn-sm"
-          onClick={() => setActiveTab("officers")}
+          onClick={() => navigateToTab("officers")}
         >
           <ArrowRight size={14} /> View All
         </button>
@@ -360,10 +368,10 @@ export default function CADashboard({
                     color: "#94a3b8",
                   }}
                 >
-                  No placement officers yet —{" "}
+                  No placement officers yet â€”{" "}
                   <button
                     className="btn btn-ghost btn-sm"
-                    onClick={() => setActiveTab("officers")}
+                    onClick={() => navigateToTab("officers")}
                   >
                     Add one
                   </button>
@@ -383,8 +391,8 @@ export default function CADashboard({
                       </div>
                     </div>
                   </td>
-                  <td style={{ fontSize: 12 }}>{u.department || "—"}</td>
-                  <td style={{ fontSize: 13 }}>{u.studentsHandled ?? "—"}</td>
+                  <td style={{ fontSize: 12 }}>{u.department || "â€”"}</td>
+                  <td style={{ fontSize: 13 }}>{u.studentsHandled ?? "â€”"}</td>
                   <td>
                     <span
                       className={`badge ${u.status === "active" ? "badge-green" : "badge-gray"}`}

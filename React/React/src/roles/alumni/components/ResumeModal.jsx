@@ -1,56 +1,49 @@
-import { ReduxAnchor } from '../../../shared/components/ReduxLink.jsx';
-import { useViewState } from '../../../store/useViewState.js';
+// Data Flow (roles/alumni/components/ResumeModal.jsx):
+// Backend API -> Redux Thunks/Slices (alumniSlice, referralsSlice) -> useSelector(selectResumeModal) -> UI render
+// User Actions -> dispatch(fetchReferralResume, createObjectURL) -> Slice reducers/thunks -> Redux state update
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { errorMessage } from '../../../services/api.js';
-import { useOperations } from '../../../store/useOperations.js';
+import {
+  resetResumeModal,
+  selectResumeModal,
+  setResumeDocument,
+  setResumeError,
+  setResumeLoading,
+} from '../store/alumniSlice.js';
+import { fetchReferralResume } from '../../../store/slices/referralsSlice.js';
 
 export default function ResumeModal({ isOpen, onClose, candidateName = 'Candidate', candidate = null }) {
-  const commands = useOperations();
-  const [
-    { documentUrl, fileType, error, loading },
-    { setDocumentUrl, setFileType, setError, setLoading },
-  ] = useViewState('alumni', 'ResumeModal', () => ({
-    documentUrl: '',
-    fileType: '',
-    error: '',
-    loading: false,
-  }));
+  const dispatch = useDispatch();
+  const { documentUrl, fileType, error, loading } = useSelector(selectResumeModal);
 
   useEffect(() => {
-    setDocumentUrl('');
-    setFileType('');
-    setError('');
+    dispatch(resetResumeModal());
     if (!isOpen || !candidate?.id) {
-      setLoading(false);
       return;
     }
     let active = true;
     let url = '';
-    setLoading(true);
-    commands.getReferralResume(candidate.id)
-      .then(({ data }) => {
+    dispatch(setResumeLoading(true));
+    dispatch(fetchReferralResume(candidate.id))
+      .unwrap()
+      .then((blob) => {
         if (!active) return;
-        url = URL.createObjectURL(data);
-        setDocumentUrl(url);
-        setFileType(data.type);
+        url = URL.createObjectURL(blob);
+        dispatch(setResumeDocument({ documentUrl: url, fileType: blob.type }));
       })
-      .catch(async (failure) => {
+      .catch((failure) => {
         if (!active) return;
-        let message = errorMessage(failure, 'Could not load the resume document.');
-        if (failure.response?.data instanceof Blob) {
-          try {
-            const body = JSON.parse(await failure.response.data.text());
-            message = Array.isArray(body.message) ? body.message.join(', ') : body.message || message;
-          } catch { /* Keep the standard error. */ }
-        }
-        if (active) setError(message);
+        dispatch(setResumeError(errorMessage(failure, 'Could not load the resume document.')));
       })
-      .finally(() => { if (active) setLoading(false); });
+      .finally(() => {
+        if (active) dispatch(setResumeLoading(false));
+      });
     return () => {
       active = false;
       if (url) URL.revokeObjectURL(url);
     };
-  }, [isOpen, candidate?.id]);
+  }, [dispatch, isOpen, candidate?.id]);
 
   if (!isOpen) return null;
   const isPdf = fileType === 'application/pdf';
@@ -63,7 +56,7 @@ export default function ResumeModal({ isOpen, onClose, candidateName = 'Candidat
         <div className="resume-modal-header">
           <div className="resume-modal-title" id="alumni-resume-title">{candidateName}'s applied resume</div>
           <div className="resume-modal-actions-top">
-            {documentUrl && <ReduxAnchor className="resume-download-btn" href={documentUrl} download={downloadName}>Download resume</ReduxAnchor>}
+            {documentUrl && <a className="resume-download-btn" href={documentUrl} download={downloadName}>Download resume</a>}
             <button type="button" className="resume-modal-close" onClick={onClose} aria-label="Close resume">×</button>
           </div>
         </div>

@@ -1,10 +1,17 @@
-import { useViewState } from '../../../store/useViewState.js';
+// Data Flow (roles/alumni/components/DeclineModal.jsx):
+// Backend API -> Redux Thunks/Slices (alumniSlice) -> useSelector(selectDeclineModal) -> UI render
+// User Actions -> dispatch(slice actions) -> Slice reducers/thunks -> Redux state update
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  resetDeclineModal,
+  selectDeclineModal,
+  setDeclineError,
+  setDeclineReason,
+} from '../store/alumniSlice.js';
 
 export default function DeclineModal({ isOpen, candidateName, onClose, onConfirm }) {
-  const [{ reason, error }, { setReason, setError }] = useViewState('alumni', 'DeclineModal', () => ({
-    reason: '',
-    error: '',
-  }));
+  const dispatch = useDispatch();
+  const { reason, error } = useSelector(selectDeclineModal);
 
   if (!isOpen) return null;
 
@@ -13,13 +20,12 @@ export default function DeclineModal({ isOpen, candidateName, onClose, onConfirm
     const wordCount = words.length;
 
     if (wordCount < 10) {
-      setError(`Reason must be at least 10 words. (${wordCount}/10)`);
+      dispatch(setDeclineError(`Reason must be at least 10 words. (${wordCount}/10)`));
       return;
     }
 
-    setError('');
     onConfirm(reason.trim());
-    setReason('');
+    dispatch(resetDeclineModal());
   };
 
   return (
@@ -60,10 +66,7 @@ export default function DeclineModal({ isOpen, candidateName, onClose, onConfirm
           className="decline-textarea"
           placeholder="Enter the reason for declining this candidate's application..."
           value={reason}
-          onChange={(e) => {
-            setReason(e.target.value);
-            if (error) setError('');
-          }}
+          onChange={(e) => dispatch(setDeclineReason(e.target.value))}
           style={error ? { borderColor: '#e60000', boxShadow: '0 0 0 3px rgba(230,0,0,0.15)' } : {}}
         />
         {error && <div className="decline-error">{error}</div>}

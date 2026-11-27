@@ -1,15 +1,32 @@
-import { useViewState } from '../../../store/useViewState.js';
+// Data Flow (roles/college-admin/pages/Officers.jsx):
+// Backend API -> Redux Thunks/Slices (collegeAdminSlice, usersSlice) -> useSelector(selectCollegeOfficersUi) -> UI render
+// User Actions -> dispatch(refreshCollegeAdminData, createPlacementOfficer, deleteUser, updatePlacementOfficerStatus) -> Slice reducers/thunks -> Redux state update
+import { useDispatch, useSelector } from 'react-redux';
 import { phoneError, phoneInputProps } from '../../../shared/utils/phone.js';
 import { collegeEmailDomain, collegeEmailError } from '../../../shared/utils/collegeEmail.js';
 import { confirmDialog } from '../../../shared/components/AppDialog.jsx';
 import { errorMessage } from '../../../services/api.js';
+import {
+  refreshCollegeAdminData,
+  selectCollegeOfficersUi,
+  setCollegeOfficersUi,
+} from '../store/collegeAdminSlice.js';
+import {
+  createPlacementOfficer,
+  deleteUser,
+  updatePlacementOfficerStatus,
+} from '../../../store/slices/usersSlice.js';
 import { UserPlus, Trash2, ShieldCheck, Ban, CheckCircle } from 'lucide-react';
 
 function AddOfficerModal({ onClose, onSave, emailDomain }) {
-  const [{ form, error }, { setForm, setError }] = useViewState('collegeAdmin', 'AddOfficerModal', () => ({
-    form: { name: '', email: '', department: '', phone: '' },
-    error: '',
-  }));
+  const dispatch = useDispatch();
+  // Redux data source: collegeAdminSlice (selectCollegeOfficersUi for modal form state) + usersSlice (create/delete/status thunks).
+  const { form, error } = useSelector(selectCollegeOfficersUi);
+  const setForm = (updater) => {
+    const next = typeof updater === 'function' ? updater(form) : updater;
+    dispatch(setCollegeOfficersUi({ form: next }));
+  };
+  const setError = (v) => dispatch(setCollegeOfficersUi({ error: v }));
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
   const handleSave = () => {
@@ -65,12 +82,15 @@ function AddOfficerModal({ onClose, onSave, emailDomain }) {
   );
 }
 
-export default function Officers({ officers, platform, collegeName, collegeInfo, showToast }) {
+export default function Officers({ officers, collegeName, collegeInfo, showToast }) {
+  const dispatch = useDispatch();
   const emailDomain = collegeEmailDomain(collegeInfo);
-  const [{ showAdd, filter }, { setShowAdd, setFilter }] = useViewState('collegeAdmin', 'Officers', () => ({
-    showAdd: false,
-    filter: 'all',
-  })); // all | active | inactive
+  const { showAdd, filter } = useSelector(selectCollegeOfficersUi);
+  const setShowAdd = (v) => dispatch(setCollegeOfficersUi({
+    showAdd: v,
+    ...(v ? { form: { name: '', email: '', department: '', phone: '' }, error: '' } : {}),
+  }));
+  const setFilter = (v) => dispatch(setCollegeOfficersUi({ filter: v }));
 
   const filteredOfficers = officers.filter(o => {
     if (filter === 'active')   return o.status === 'active';
@@ -84,7 +104,8 @@ export default function Officers({ officers, platform, collegeName, collegeInfo,
       return false;
     }
     try {
-      await platform.addOfficer(officer);
+      await dispatch(createPlacementOfficer(officer)).unwrap();
+      await dispatch(refreshCollegeAdminData({ silentAfterMutation: true }));
       showToast('Placement officer added successfully!', 'success');
       return true;
     } catch (err) {
@@ -97,8 +118,8 @@ export default function Officers({ officers, platform, collegeName, collegeInfo,
     const newStatus = officer.status === 'active' ? 'inactive' : 'active';
     const verb = newStatus === 'active' ? 'activated' : 'deactivated';
     try {
-      // Using setStudentsStatus for the officer ID — works via the same user endpoint
-      await platform.setStudentsStatus([officer.id], newStatus);
+      await dispatch(updatePlacementOfficerStatus({ id: officer.id, status: newStatus })).unwrap();
+      await dispatch(refreshCollegeAdminData({ silentAfterMutation: true }));
       showToast(`Officer ${verb}.`, 'success');
     } catch (err) {
       showToast(errorMessage(err, 'Could not update the officer.'), 'error');
@@ -108,7 +129,8 @@ export default function Officers({ officers, platform, collegeName, collegeInfo,
   const handleRemove = async (id, name) => {
     if (!await confirmDialog(`Permanently remove placement officer "${name}"? This cannot be undone.`)) return;
     try {
-      await platform.removeUser(id);
+      await dispatch(deleteUser(id)).unwrap();
+      await dispatch(refreshCollegeAdminData({ silentAfterMutation: true }));
       showToast('Officer removed.', 'success');
     } catch (err) {
       showToast(errorMessage(err, 'Could not remove the officer.'), 'error');

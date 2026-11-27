@@ -1,3 +1,5 @@
+// Data Flow (roles/college-admin/components/SignOutModal.jsx):
+// Presentational component receiving Redux-backed data and dispatch callbacks as props from its parent container.
 import { LogOut } from 'lucide-react';
 
 export default function SignOutModal({ isOpen, onClose, onConfirm }) {

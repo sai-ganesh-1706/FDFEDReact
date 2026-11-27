@@ -1,33 +1,39 @@
-import { useEntityList } from '../../../store/useEntities.js';
-import { useViewState } from '../../../store/useViewState.js';
+// Data Flow (roles/alumni/components/AlumniNotifications.jsx):
+// Backend API -> Redux Thunks/Slices (alumniSlice, notificationsSlice) -> useSelector(selectAlumniNotificationsOpen, selectInboxNotifications) -> UI render
+// User Actions -> dispatch(fetchNotifications, markAllNotificationsRead, loadNotifications, markAllRead) -> Slice reducers/thunks -> Redux state update
 import { useEffect } from 'react';
-import { useOperations } from '../../../store/useOperations.js';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  selectAlumniNotificationsOpen,
+  toggleAlumniNotifications,
+} from '../store/alumniSlice.js';
+import {
+  fetchNotifications,
+  markAllNotificationsRead,
+  selectInboxNotifications,
+} from '../../../store/slices/notificationsSlice.js';
 
 export default function AlumniNotifications() {
-  const commands = useOperations();
-  const notifications = useEntityList('notifications', 'inbox');
-  const [
-    { isOpen },
-    { setIsOpen },
-  ] = useViewState('alumni', 'AlumniNotifications', () => ({
-    isOpen: false,
-  }));
+  const dispatch = useDispatch();
+  const notifications = useSelector(selectInboxNotifications);
+  const isOpen = useSelector(selectAlumniNotificationsOpen);
 
-  const loadNotifications = () => commands.listNotifications().catch(() => {});
+  const loadNotifications = () => dispatch(fetchNotifications());
 
   useEffect(() => {
     loadNotifications();
     const refresh = window.setInterval(loadNotifications, 30000);
     return () => window.clearInterval(refresh);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const openNotifications = async () => {
     const nextOpen = !isOpen;
-    setIsOpen(nextOpen);
+    dispatch(toggleAlumniNotifications());
     if (nextOpen) await loadNotifications();
   };
 
-  const markAllRead = () => commands.markAllNotificationsRead().catch(() => {});
+  const markAllRead = () => dispatch(markAllNotificationsRead());
 
   const unreadCount = notifications.filter((notification) => !notification.isRead).length;
 

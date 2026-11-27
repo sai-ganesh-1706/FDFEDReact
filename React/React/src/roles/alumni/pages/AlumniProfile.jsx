@@ -1,51 +1,52 @@
-import { ReduxAnchor } from '../../../shared/components/ReduxLink.jsx';
-import { useViewState } from '../../../store/useViewState.js';
+// Data Flow (roles/alumni/pages/AlumniProfile.jsx):
+// Backend API -> Redux Thunks/Slices (alumniSlice, authSlice, usersSlice) -> useSelector(selectAlumni, selectAlumniProfileUi, selectAlumniSignOutOpen, selectSession) -> UI render
+// User Actions -> dispatch(updateSessionUser, updateUser, updateSession) -> Slice reducers/thunks -> Redux state update
 import { Building2, GraduationCap, UserRound } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 import SignOutModal from '../components/SignOutModal';
 import ChangePasswordModal from '../../../shared/components/ChangePasswordModal';
-import { useSelector } from 'react-redux';
-import { selectSession } from '../../../store/sessionSlice.js';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { errorMessage } from '../../../services/api.js';
+import { infoDialog } from '../../../shared/components/AppDialog.jsx';
+import {
+  
+  cancelEditingAlumniProfile,
+  cancelEditingAlumniSocials,
+  closeAlumniChangePassword,
+  closeAlumniSignOut,
+  openAlumniChangePassword,
+  openAlumniSignOut,
+  selectAlumni,
+  selectAlumniProfileUi,
+  selectAlumniSignOutOpen,
+  setAlumniEditField,
+  setAlumniNewSkill,
+  setAlumniPage,
+  setAlumniSocialField,
+  setShowAddAlumniSkill,
+  startEditingAlumniProfile,
+  startEditingAlumniSocials,
+} from '../store/alumniSlice.js';
+import { selectSession, updateSessionUser } from '../../../store/slices/authSlice.js';
+import { updateUser } from '../../../store/slices/usersSlice.js';
 import '../styles/Alumni.css';
 
-export default function AlumniProfile({
-  alumniData,
-  referrals = [],
-  onNavigate,
-  // Lifted state from AlumniApp (persists across navigation)
-  personalInfo,
-  onSavePersonalInfo,
-  skillsList,
-  onSetSkillsList,
-}) {
-  const [
-    { isSignOutOpen, isChangePasswordOpen },
-    { setIsSignOutOpen, setIsChangePasswordOpen },
-  ] = useViewState('alumni', 'AlumniProfile', () => ({
-    isSignOutOpen: false,
-    isChangePasswordOpen: false,
-  }));
-  const userId = useSelector(selectSession)?.id;
-
-  // Personal info edit state
-  const [
-    { isEditing, editFields, isEditingSocials, editSocials },
-    { setIsEditing, setEditFields, setIsEditingSocials, setEditSocials },
-  ] = useViewState('alumni', 'AlumniProfile/isEditing', () => ({
-    isEditing: false,
-    editFields: {},
-    isEditingSocials: false,
-    editSocials: {},
-  }));
-
-  // Skills UI state
-  const [
-    { newSkill, showAddSkill },
-    { setNewSkill, setShowAddSkill },
-  ] = useViewState('alumni', 'AlumniProfile/newSkill', () => ({
-    newSkill: '',
-    showAddSkill: false,
-  }));
+export default function AlumniProfile() {
+  const dispatch = useDispatch();
+  const updateSession = (u) => dispatch(updateSessionUser({ user: u }));
+  const session = useSelector(selectSession);
+  const { alumniData, referrals = [], personalInfo, skillsList } = useSelector(selectAlumni, shallowEqual);
+  const isSignOutOpen = useSelector(selectAlumniSignOutOpen);
+  const {
+    changePasswordOpen: isChangePasswordOpen,
+    isEditing,
+    editFields,
+    isEditingSocials,
+    editSocials,
+    newSkill,
+    showAddSkill,
+  } = useSelector(selectAlumniProfileUi);
+  const userId = session?.id;
 
   const alumni = alumniData || {};
 
@@ -116,45 +117,91 @@ export default function AlumniProfile({
 
   // ---- Edit handlers ----
   const handleStartEdit = () => {
-    setEditFields({ ...info });
-    setIsEditing(true);
+    dispatch(startEditingAlumniProfile({ ...info }));
   };
 
   const handleEditChange = (field, value) => {
-    setEditFields((prev) => ({ ...prev, [field]: value }));
+    dispatch(setAlumniEditField({ field, value }));
   };
 
-  const handleSaveEdit = () => {
-    if (onSavePersonalInfo) onSavePersonalInfo({ ...editFields });
-    setIsEditing(false);
+  const handleSaveEdit = async () => {
+    const nextInfo = { ...editFields };
+    try {
+      await dispatch(updateUser({
+        id: session.id,
+        data: {
+          name: nextInfo.name || undefined,
+          company: nextInfo.company || undefined,
+          batch: nextInfo.batch || undefined,
+          headline: nextInfo.role || undefined,
+          location: nextInfo.location || undefined,
+          socialLinks: { linkedin: nextInfo.linkedin, github: nextInfo.github, portfolio: nextInfo.portfolio },
+        },
+      })).unwrap();
+      updateSession({
+        ...session,
+        name: nextInfo.name || session?.name,
+        company: nextInfo.company || session?.company,
+      });
+    } catch (error) {
+      infoDialog(errorMessage(error, 'Could not save your profile.'));
+    }
+    dispatch(cancelEditingAlumniProfile());
   };
 
   const handleCancelEdit = () => {
-    setIsEditing(false);
+    dispatch(cancelEditingAlumniProfile());
   };
 
   const handleStartSocialEdit = () => {
-    setEditSocials({ linkedin: info.linkedin, github: info.github, portfolio: info.portfolio });
-    setIsEditingSocials(true);
+    dispatch(startEditingAlumniSocials({ linkedin: info.linkedin, github: info.github, portfolio: info.portfolio }));
   };
 
-  const handleSaveSocialEdit = () => {
-    if (onSavePersonalInfo) onSavePersonalInfo({ ...info, ...editSocials });
-    setIsEditingSocials(false);
+  const handleSaveSocialEdit = async () => {
+    const nextInfo = { ...info, ...editSocials };
+    try {
+      await dispatch(updateUser({
+        id: session.id,
+        data: {
+          name: nextInfo.name || undefined,
+          company: nextInfo.company || undefined,
+          batch: nextInfo.batch || undefined,
+          headline: nextInfo.role || undefined,
+          location: nextInfo.location || undefined,
+          socialLinks: { linkedin: nextInfo.linkedin, github: nextInfo.github, portfolio: nextInfo.portfolio },
+        },
+      })).unwrap();
+      updateSession({
+        ...session,
+        name: nextInfo.name || session?.name,
+        company: nextInfo.company || session?.company,
+      });
+    } catch (error) {
+      infoDialog(errorMessage(error, 'Could not save your profile.'));
+    }
+    dispatch(cancelEditingAlumniSocials());
   };
 
   // ---- Skill handlers ----
-  const handleAddSkill = () => {
+  const handleAddSkill = async () => {
     const trimmed = newSkill.trim();
     if (trimmed && skillsList && !skillsList.includes(trimmed)) {
-      if (onSetSkillsList) onSetSkillsList((prev) => [...prev, trimmed]);
+      try {
+        await dispatch(updateUser({ id: session.id, data: { skills: [...skillsList, trimmed] } })).unwrap();
+      } catch (error) {
+        infoDialog(errorMessage(error, 'Could not save your skills.'));
+      }
     }
-    setNewSkill('');
-    setShowAddSkill(false);
+    dispatch(setAlumniNewSkill(''));
+    dispatch(setShowAddAlumniSkill(false));
   };
 
-  const handleRemoveSkill = (skill) => {
-    if (onSetSkillsList) onSetSkillsList((prev) => prev.filter((s) => s !== skill));
+  const handleRemoveSkill = async (skill) => {
+    try {
+      await dispatch(updateUser({ id: session.id, data: { skills: (skillsList || []).filter((s) => s !== skill) } })).unwrap();
+    } catch (error) {
+      infoDialog(errorMessage(error, 'Could not save your skills.'));
+    }
   };
 
   const skills = skillsList || [];
@@ -163,9 +210,7 @@ export default function AlumniProfile({
     <div className="layout alumni-app-container">
       <Sidebar
         activePage="profile"
-        onNavigate={onNavigate}
-        onOpenSignOut={() => setIsSignOutOpen(true)}
-        alumni={alumni}
+        onOpenSignOut={() => dispatch(openAlumniSignOut())}
       />
 
       <main className="main">
@@ -176,7 +221,9 @@ export default function AlumniProfile({
               type="button"
               className="avatar avatar--topbar"
               title="My Profile"
-              onClick={() => onNavigate && onNavigate('profile')}
+              onClick={() => {
+                dispatch(setAlumniPage({ page: 'profile', props: {} }));
+              }}
               style={{ cursor: 'pointer', border: 'none' }}
             >
               {alumni.initials || 'SR'}
@@ -223,7 +270,7 @@ export default function AlumniProfile({
           {/* Two-Column Grid */}
           <div className="profile-grid">
 
-            {/* ── Personal Information ── */}
+            {/* â”€â”€ Personal Information â”€â”€ */}
             <div className="profile-section">
               <div className="profile-section-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -239,11 +286,11 @@ export default function AlumniProfile({
                 {!isEditing ? (
                   <>
                   <div style={{ display: 'flex', gap: '6px' }}>
-                    <button type="button" onClick={() => setIsChangePasswordOpen(true)} className="profile-edit-btn">
+                    <button type="button" onClick={() => dispatch(openAlumniChangePassword())} className="profile-edit-btn">
                       Change Password
                     </button>
                     <button type="button" onClick={handleStartEdit} className="profile-edit-btn">
-                    ✏️ Edit
+                    âœï¸ Edit
                   </button>
                   </div>
                   </>
@@ -288,7 +335,7 @@ export default function AlumniProfile({
               )}
             </div>
 
-            {/* ── Skills & Expertise ── */}
+            {/* â”€â”€ Skills & Expertise â”€â”€ */}
             <div className="profile-section">
               <div className="profile-section-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -299,7 +346,7 @@ export default function AlumniProfile({
                   </div>
                   <span>Skills &amp; Expertise</span>
                 </div>
-                <button type="button" onClick={() => setShowAddSkill((v) => !v)} className="profile-add-skill-btn">
+                <button type="button" onClick={() => dispatch(setShowAddAlumniSkill(!showAddSkill))} className="profile-add-skill-btn">
                   + Add Skill
                 </button>
               </div>
@@ -310,13 +357,13 @@ export default function AlumniProfile({
                     type="text"
                     placeholder="e.g. Kotlin, Figma..."
                     value={newSkill}
-                    onChange={(e) => setNewSkill(e.target.value)}
+                    onChange={(e) => dispatch(setAlumniNewSkill(e.target.value))}
                     onKeyDown={(e) => e.key === 'Enter' && handleAddSkill()}
                     className="profile-skill-input"
                     autoFocus
                   />
                   <button type="button" onClick={handleAddSkill} className="profile-save-btn">Add</button>
-                  <button type="button" onClick={() => { setShowAddSkill(false); setNewSkill(''); }} className="profile-cancel-btn">✕</button>
+                  <button type="button" onClick={() => { dispatch(setShowAddAlumniSkill(false)); dispatch(setAlumniNewSkill('')); }} className="profile-cancel-btn">âœ•</button>
                 </div>
               )}
 
@@ -330,7 +377,7 @@ export default function AlumniProfile({
                       title={`Remove ${skill}`}
                       style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', fontSize: '13px', lineHeight: 1, padding: '0 0 0 2px' }}
                     >
-                      ×
+                      Ã—
                     </button>
                   </span>
                 ))}
@@ -352,7 +399,7 @@ export default function AlumniProfile({
                 ) : (
                   <div style={{ display: 'flex', gap: '6px' }}>
                     <button type="button" onClick={handleSaveSocialEdit} className="profile-save-btn">Save</button>
-                    <button type="button" onClick={() => setIsEditingSocials(false)} className="profile-cancel-btn">Cancel</button>
+                    <button type="button" onClick={() => dispatch(cancelEditingAlumniSocials())} className="profile-cancel-btn">Cancel</button>
                   </div>
                 )}
               </div>
@@ -365,7 +412,7 @@ export default function AlumniProfile({
                   ].map(({ field, label, placeholder }) => (
                     <div key={field}>
                       <label className="profile-edit-label">{label}</label>
-                      <input type="url" value={editSocials[field] || ''} placeholder={placeholder} onChange={(e) => setEditSocials((prev) => ({ ...prev, [field]: e.target.value }))} className="profile-edit-input" />
+                      <input type="url" value={editSocials[field] || ''} placeholder={placeholder} onChange={(e) => dispatch(setAlumniSocialField({ field, value: e.target.value }))} className="profile-edit-input" />
                     </div>
                   ))}
                 </div>
@@ -378,7 +425,7 @@ export default function AlumniProfile({
               )}
             </div>
 
-            {/* ── Recent Activity (Full Width) ── */}
+            {/* â”€â”€ Recent Activity (Full Width) â”€â”€ */}
             <div className="profile-section profile-full-width">
               <div className="profile-section-title">
                 <div className="profile-section-icon profile-section-icon--green">
@@ -416,7 +463,7 @@ export default function AlumniProfile({
                         <strong>{act.action}</strong> {act.name}'s referral for <strong>{act.role}</strong>
                       </div>
                       <div className="profile-activity-time">
-                        {act.company} • {act.department} • <span style={{ color: '#e76a00', fontWeight: 600 }}>{formatTimeAgo(act.updatedAt)}</span>
+                        {act.company} â€¢ {act.department} â€¢ <span style={{ color: '#e76a00', fontWeight: 600 }}>{formatTimeAgo(act.updatedAt)}</span>
                       </div>
                     </div>
                   </div>
@@ -435,7 +482,7 @@ export default function AlumniProfile({
                         <strong>Pending</strong> review for {act.name} &mdash; <strong>{act.role}</strong>
                       </div>
                       <div className="profile-activity-time">
-                        {act.company} • {act.department} • <span style={{ color: '#64748b' }}>Received {formatTimeAgo(act.updatedAt)}</span>
+                        {act.company} â€¢ {act.department} â€¢ <span style={{ color: '#64748b' }}>Received {formatTimeAgo(act.updatedAt)}</span>
                       </div>
                     </div>
                   </div>
@@ -447,10 +494,10 @@ export default function AlumniProfile({
         </div>
       </main>
 
-      <SignOutModal isOpen={isSignOutOpen} onClose={() => setIsSignOutOpen(false)} />
+      <SignOutModal isOpen={isSignOutOpen} onClose={() => dispatch(closeAlumniSignOut())} />
       <ChangePasswordModal
         isOpen={isChangePasswordOpen}
-        onClose={() => setIsChangePasswordOpen(false)}
+        onClose={() => dispatch(closeAlumniChangePassword())}
         userId={userId}
         accentColor="#e76a00"
       />
@@ -472,9 +519,9 @@ function SocialLinkRow({ label, value }) {
     <div className="profile-info-row">
       <span className="profile-info-label">{label}</span>
       {value ? (
-        <ReduxAnchor href={value} target="_blank" rel="noopener noreferrer" className="profile-info-value" style={{ color: '#2563eb', textDecoration: 'none' }}>
+        <a href={value} target="_blank" rel="noopener noreferrer" className="profile-info-value" style={{ color: '#2563eb', textDecoration: 'none' }}>
           {value.replace(/^https?:\/\//, '')}
-        </ReduxAnchor>
+        </a>
       ) : <span className="profile-info-value" style={{ color: '#94a3b8' }}>Not added</span>}
     </div>
   );

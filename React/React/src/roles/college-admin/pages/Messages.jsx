@@ -1,9 +1,12 @@
-import { useEntityList } from '../../../store/useEntities.js';
-import { useViewState } from '../../../store/useViewState.js';
+// Data Flow (roles/college-admin/pages/Messages.jsx):
+// Backend API -> Redux Thunks/Slices (collegeAdminSlice, messagesSlice) -> useSelector(selectCollegeMessagesUi, selectInboxMessages) -> UI render
+// User Actions -> dispatch(fetchInboxMessages) -> Slice reducers/thunks -> Redux state update
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Mail, Megaphone, Inbox } from 'lucide-react';
 import { errorMessage } from '../../../services/api.js';
-import { useOperations } from '../../../store/useOperations.js';
+import { selectCollegeMessagesUi, setCollegeMessagesUi } from '../store/collegeAdminSlice.js';
+import { fetchInboxMessages, selectInboxMessages } from '../../../store/slices/messagesSlice.js';
 
 const fmt = (iso) => {
   const d = new Date(iso);
@@ -12,15 +15,14 @@ const fmt = (iso) => {
 
 /** Messages sent to this college by the platform's super admin. */
 export default function Messages({ onSeen }) {
-  const commands = useOperations();
-  const messages = useEntityList('messages', 'inbox');
-  const [{ error, loaded }, { setError, setLoaded }] = useViewState('collegeAdmin', 'Messages', () => ({
-    error: '',
-    loaded: false,
-  }));
+  const dispatch = useDispatch();
+  const messages = useSelector(selectInboxMessages);
+  const { error, loaded } = useSelector(selectCollegeMessagesUi);
+  const setError = (v) => dispatch(setCollegeMessagesUi({ error: v }));
+  const setLoaded = (v) => dispatch(setCollegeMessagesUi({ loaded: v }));
 
   useEffect(() => {
-    commands.listInboxMessages()
+    dispatch(fetchInboxMessages()).unwrap()
       .then(() => { onSeen?.(); })
       .catch((e) => { setError(errorMessage(e, 'Could not load messages.')); })
       .finally(() => setLoaded(true));

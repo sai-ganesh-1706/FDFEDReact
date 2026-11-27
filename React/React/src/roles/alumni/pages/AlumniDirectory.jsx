@@ -1,10 +1,26 @@
-import { ReduxAnchor } from '../../../shared/components/ReduxLink.jsx';
-import { useViewState } from '../../../store/useViewState.js';
+// Data Flow (roles/alumni/pages/AlumniDirectory.jsx):
+// Backend API -> Redux Thunks/Slices (alumniSlice, usersSlice) -> useSelector(selectAlumni, selectAlumniDirectoryUi, selectAlumniSignOutOpen, selectAlumniDirectory) -> UI render
+// User Actions -> dispatch(fetchAlumniDirectory) -> Slice reducers/thunks -> Redux state update
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Sidebar from '../components/Sidebar';
 import SignOutModal from '../components/SignOutModal';
-import { useOperations } from '../../../store/useOperations.js';
-import { useEntityList } from '../../../store/useEntities.js';
+import {
+  
+  clearDirectoryFilters,
+  closeAlumniSignOut,
+  openAlumniSignOut,
+  selectAlumni,
+  selectAlumniDirectoryUi,
+  selectAlumniSignOutOpen,
+  setAlumniPage,
+  setDirectoryBatch,
+  setDirectoryDept,
+  setDirectoryError,
+  setDirectoryLoading,
+  setDirectorySearchQuery,
+} from '../store/alumniSlice.js';
+import { fetchAlumniDirectory, selectAlumniDirectory } from '../../../store/slices/usersSlice.js';
 import '../styles/Alumni.css';
 
 const AVATAR_COLORS = [
@@ -23,31 +39,24 @@ const DEPT_CODES = {
   mechanical: 'MECH', civil: 'CIV', it: 'IT', 'data science': 'DS',
 };
 
-export default function AlumniDirectory({ alumniData, onNavigate }) {
-  const commands = useOperations();
-  const users = useEntityList('users', 'alumniDirectory');
-  const [
-    { searchQuery, batch, dept, loading, errorMessage, isSignOutOpen },
-    { setSearchQuery, setBatch, setDept, setLoading, setErrorMessage, setIsSignOutOpen },
-  ] = useViewState('alumni', 'AlumniDirectory', () => ({
-    searchQuery: '',
-    batch: '',
-    dept: '',
-    loading: false,
-    errorMessage: '',
-    isSignOutOpen: false,
-  }));
+export default function AlumniDirectory() {
+  const dispatch = useDispatch();
+  const users = useSelector(selectAlumniDirectory);
+  const { alumniData } = useSelector(selectAlumni);
+  const { searchQuery, batch, dept, loading, errorMessage } = useSelector(selectAlumniDirectoryUi);
+  const isSignOutOpen = useSelector(selectAlumniSignOutOpen);
 
   useEffect(() => {
-    setLoading(true);
-    setErrorMessage('');
-    commands.listAlumniDirectory()
+    dispatch(setDirectoryLoading(true));
+    dispatch(setDirectoryError(''));
+    dispatch(fetchAlumniDirectory())
+      .unwrap()
       .catch((error) => {
         const message = error.response?.data?.message || error.message || 'Failed to fetch directory';
-        setErrorMessage(error.response?.status === 403 || String(message).includes('PREMIUM') ? 'PREMIUM_REQUIRED' : String(message));
+        dispatch(setDirectoryError(error.response?.status === 403 || String(message).includes('PREMIUM') ? 'PREMIUM_REQUIRED' : String(message)));
       })
-      .finally(() => setLoading(false));
-  }, [commands, setErrorMessage, setLoading]);
+      .finally(() => dispatch(setDirectoryLoading(false)));
+  }, [dispatch]);
 
   const query = searchQuery.toLowerCase();
   const alumniList = users.map((user) => ({
@@ -62,18 +71,14 @@ export default function AlumniDirectory({ alumniData, onNavigate }) {
   );
 
   const handleClear = () => {
-    setSearchQuery('');
-    setBatch('');
-    setDept('');
+    dispatch(clearDirectoryFilters());
   };
 
   return (
     <div className="layout alumni-app-container">
       <Sidebar
         activePage="directory"
-        onNavigate={onNavigate}
-        onOpenSignOut={() => setIsSignOutOpen(true)}
-        alumni={alumniData}
+        onOpenSignOut={() => dispatch(openAlumniSignOut())}
       />
 
       <main className="main">
@@ -86,7 +91,9 @@ export default function AlumniDirectory({ alumniData, onNavigate }) {
               type="button"
               className="avatar avatar--topbar"
               title="My Profile"
-              onClick={() => onNavigate && onNavigate('profile')}
+              onClick={() => {
+                dispatch(setAlumniPage({ page: 'profile', props: {} }));
+              }}
               style={{ cursor: 'pointer', border: 'none', background: undefined }}
             >
               {alumniData?.initials || 'SR'}
@@ -120,16 +127,16 @@ export default function AlumniDirectory({ alumniData, onNavigate }) {
               className="directory-search-input"
               placeholder="Search by name, company, or location..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => dispatch(setDirectorySearchQuery(e.target.value))}
             />
             {searchQuery && (
               <button
                 type="button"
                 className="directory-search-clear"
-                onClick={() => setSearchQuery('')}
+                onClick={() => dispatch(setDirectorySearchQuery(''))}
                 aria-label="Clear search"
               >
-                ×
+                Ã—
               </button>
             )}
           </div>
@@ -142,7 +149,7 @@ export default function AlumniDirectory({ alumniData, onNavigate }) {
                 id="batch-filter"
                 className="directory-filter-select"
                 value={batch}
-                onChange={(e) => setBatch(e.target.value)}
+                onChange={(e) => dispatch(setDirectoryBatch(e.target.value))}
               >
                 <option value="">All Batches</option>
                 <option value="2018">2018</option>
@@ -159,7 +166,7 @@ export default function AlumniDirectory({ alumniData, onNavigate }) {
                 id="dept-filter"
                 className="directory-filter-select"
                 value={dept}
-                onChange={(e) => setDept(e.target.value)}
+                onChange={(e) => dispatch(setDirectoryDept(e.target.value))}
               >
                 <option value="">All Depts</option>
                 <option value="CSE">CSE</option>
@@ -173,7 +180,7 @@ export default function AlumniDirectory({ alumniData, onNavigate }) {
 
             {(searchQuery || batch || dept) && (
               <button type="button" className="btn-clear" onClick={handleClear}>
-                ✕ Clear All
+                âœ• Clear All
               </button>
             )}
           </div>
@@ -194,7 +201,7 @@ export default function AlumniDirectory({ alumniData, onNavigate }) {
 
           {!loading && errorMessage === 'PREMIUM_REQUIRED' && (
             <div className="empty-state">
-              <div className="empty-state-icon">🔒</div>
+              <div className="empty-state-icon">ðŸ”’</div>
               <div className="empty-state-title">Access Restricted</div>
               <div className="empty-state-desc">
                 Alumni Directory is currently restricted. Contact your college admin for access.
@@ -250,18 +257,18 @@ export default function AlumniDirectory({ alumniData, onNavigate }) {
                     <div className="alumni-tags-dir">
                       <span className="tag tag-batch">Batch {a.batch}</span>
                       {a.dept && <span className="tag tag-dept">{a.dept}</span>}
-                      {a.location && <span className="tag tag-loc">📍 {a.location}</span>}
+                      {a.location && <span className="tag tag-loc">ðŸ“ {a.location}</span>}
                     </div>
 
                     {a.linkedin && (
-                      <ReduxAnchor
+                      <a
                         className="connect-btn"
                         href={a.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        🔗 View on LinkedIn
-                      </ReduxAnchor>
+                        ðŸ”— View on LinkedIn
+                      </a>
                     )}
                   </div>
                 );
@@ -273,7 +280,7 @@ export default function AlumniDirectory({ alumniData, onNavigate }) {
 
       <SignOutModal
         isOpen={isSignOutOpen}
-        onClose={() => setIsSignOutOpen(false)}
+        onClose={() => dispatch(closeAlumniSignOut())}
       />
     </div>
   );

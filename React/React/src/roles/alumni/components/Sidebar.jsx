@@ -1,13 +1,22 @@
-import { ReduxAnchor } from '../../../shared/components/ReduxLink.jsx';
+// Data Flow (roles/alumni/components/Sidebar.jsx):
+// Backend API -> Redux Thunks/Slices (alumniSlice) -> useSelector(selectAlumni) -> UI render
+// User Actions -> dispatch(slice actions) -> Slice reducers/thunks -> Redux state update
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { selectAlumni, setAlumniPage } from '../store/alumniSlice.js';
 
-export default function Sidebar({ activePage, onNavigate, onOpenSignOut, alumni }) {
-  const currentAlumni = alumni || {};
+export default function Sidebar({ activePage: activePageProp, onNavigate, onOpenSignOut, alumni }) {
+  const dispatch = useDispatch();
+  const alumniState = useSelector(selectAlumni, shallowEqual);
+  const activePage = activePageProp || alumniState.activePage;
+  const currentAlumni = alumni || alumniState.alumniData || {};
 
   const handleNav = (page, e) => {
+    e.preventDefault();
     if (onNavigate) {
-      e.preventDefault();
       onNavigate(page);
+      return;
     }
+    dispatch(setAlumniPage({ page, props: {} }));
   };
 
   return (
@@ -17,7 +26,7 @@ export default function Sidebar({ activePage, onNavigate, onOpenSignOut, alumni 
         <div className="brand-sub">Alumni</div>
       </div>
 
-      <ReduxAnchor
+      <a
         href="#profile"
         className="sidebar-profile"
         title="My Profile"
@@ -29,7 +38,7 @@ export default function Sidebar({ activePage, onNavigate, onOpenSignOut, alumni 
           <div className="profile-email">{currentAlumni.email}</div>
           <div className="profile-company">{currentAlumni.company}</div>
         </div>
-      </ReduxAnchor>
+      </a>
 
       <nav className="sidebar-nav">
         <span className="nav-section-title">MAIN</span>

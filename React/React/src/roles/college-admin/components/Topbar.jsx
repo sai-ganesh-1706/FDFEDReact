@@ -1,22 +1,29 @@
-import { useViewState } from '../../../store/useViewState.js';
+// Data Flow (roles/college-admin/components/Topbar.jsx):
+// Backend API -> Redux Thunks/Slices (collegeAdminSlice) -> useSelector(selectCollegeTopbarUi) -> UI render
+// User Actions -> dispatch(slice actions) -> Slice reducers/thunks -> Redux state update
 import { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { LogOut, User } from 'lucide-react';
+import { selectCollegeTopbarUi, setCollegeTopbarUi } from '../store/collegeAdminSlice.js';
 
 export default function CATopbar({ title, userName, avatarInitials, onProfileClick, onSignOutClick }) {
-  const [{ dropdownOpen }, { setDropdownOpen }] = useViewState('collegeAdmin', 'CATopbar', () => ({
-    dropdownOpen: false,
-  }));
+  const dispatch = useDispatch();
+  const { dropdownOpen } = useSelector(selectCollegeTopbarUi);
+  const setDropdownOpen = (updater) => {
+    const next = typeof updater === 'function' ? updater(dropdownOpen) : updater;
+    dispatch(setCollegeTopbarUi({ dropdownOpen: next }));
+  };
   const dropdownRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false);
+        dispatch(setCollegeTopbarUi({ dropdownOpen: false }));
       }
     };
     if (dropdownOpen) document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [dropdownOpen]);
+  }, [dispatch, dropdownOpen]);
 
   return (
     <header className="topbar">

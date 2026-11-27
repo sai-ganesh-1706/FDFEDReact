@@ -1,7 +1,16 @@
+// Data Flow (roles/college-admin/components/Sidebar.jsx):
+// Backend API -> Redux Thunks/Slices (collegeAdminSlice) -> useSelector(store state) -> UI render
+// User Actions -> dispatch(slice actions) -> Slice reducers/thunks -> Redux state update
+import { useDispatch } from 'react-redux';
 import {
   LayoutDashboard, ShieldCheck, GraduationCap, UsersRound,
   Megaphone, BarChart2, Building2, LogOut, Mail
 } from 'lucide-react';
+import {
+  
+  COLLEGE_ADMIN_TABS,
+  setCollegeAdminTab,
+} from '../store/collegeAdminSlice.js';
 
 const NAV_ITEMS = [
   { id: 'dashboard',      label: 'Dashboard',           icon: LayoutDashboard },
@@ -15,7 +24,8 @@ const NAV_ITEMS = [
   { id: 'reports',        label: 'Reports',             icon: BarChart2 },
 ];
 
-export default function CollegeAdminSidebar({ activeTab, setActiveTab, collegeName, onSignOut, unreadMessages = 0 }) {
+export default function CollegeAdminSidebar({ activeTab, collegeName, onSignOut, unreadMessages = 0 }) {
+  const dispatch = useDispatch();
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
@@ -32,7 +42,10 @@ export default function CollegeAdminSidebar({ activeTab, setActiveTab, collegeNa
           <button
             key={id}
             className={`nav-item ${activeTab === id ? 'active' : ''}`}
-            onClick={() => setActiveTab(id)}
+            onClick={() => {
+              const nextTab = COLLEGE_ADMIN_TABS.includes(id) ? id : 'dashboard';
+              dispatch(setCollegeAdminTab(nextTab));
+            }}
           >
             <Icon size={17} />
             {label}

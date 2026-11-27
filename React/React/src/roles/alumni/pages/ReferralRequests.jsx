@@ -1,4 +1,30 @@
-import { useViewState } from '../../../store/useViewState.js';
+// Data Flow (roles/alumni/pages/ReferralRequests.jsx):
+// Backend API -> Redux Thunks/Slices (alumniSlice, referralsSlice) -> useSelector(selectAlumni, selectAlumniSignOutOpen, selectReferralsUi) -> UI render
+// User Actions -> dispatch(fetchReferrals, respondToReferral) -> Slice reducers/thunks -> Redux state update
+import { useEffect } from 'react';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { errorMessage } from '../../../services/api.js';
+import { infoDialog } from '../../../shared/components/AppDialog.jsx';
+import {
+  
+  closeAlumniSignOut,
+  closeDeclineModal,
+  closeResumeModal,
+  initReferralsUi,
+  openAlumniSignOut,
+  openDeclineModal,
+  openResumeModal,
+  selectAlumni,
+  selectAlumniSignOutOpen,
+  selectReferralsUi,
+  setAlumniLoadError,
+  setAlumniPage,
+  setReferralReplyMessage,
+  setReferralsFilter,
+  setReferralsSearch,
+  toggleReferralCard,
+} from '../store/alumniSlice.js';
+import { fetchReferrals, respondToReferral } from '../../../store/slices/referralsSlice.js';
 import Sidebar from '../components/Sidebar';
 import ResumeModal from '../components/ResumeModal';
 import DeclineModal from '../components/DeclineModal';
@@ -6,25 +32,25 @@ import SignOutModal from '../components/SignOutModal';
 import '../styles/Alumni.css';
 
 export default function ReferralRequests({
-  referrals = [],
-  alumniData,
   initialFilter = 'all',
   openCardId = null,
-  onUpdateReferralStatus,
-  onNavigate,
 }) {
-  const [
-    { currentFilter, searchQuery, openCards, replyMessages, resumeReferralId, declineReferralId, isSignOutOpen },
-    { setCurrentFilter, setSearchQuery, setOpenCards, setReplyMessages, setResumeReferralId, setDeclineReferralId, setIsSignOutOpen },
-  ] = useViewState('alumni', 'ReferralRequests', () => ({
-    currentFilter: initialFilter,
-    searchQuery: '',
-    openCards: openCardId ? { [openCardId]: true } : {},
-    replyMessages: {},
-    resumeReferralId: null,
-    declineReferralId: null,
-    isSignOutOpen: false,
-  }));
+  const dispatch = useDispatch();
+  // Redux data source: alumniSlice (selectAlumni -> referrals from referralsSlice, selectReferralsUi -> filters/modals).
+  const { alumniData, referrals = [] } = useSelector(selectAlumni, shallowEqual);
+  const {
+    currentFilter,
+    searchQuery,
+    openCards,
+    replyMessages,
+    resumeReferralId,
+    declineReferralId,
+  } = useSelector(selectReferralsUi);
+  const isSignOutOpen = useSelector(selectAlumniSignOutOpen);
+
+  useEffect(() => {
+    dispatch(initReferralsUi({ initialFilter, openCardId }));
+  }, [dispatch, initialFilter, openCardId]);
 
   const alumni = alumniData || {};
   const resumeReferral = referrals.find((referral) => referral.id === resumeReferralId);
@@ -38,37 +64,49 @@ export default function ReferralRequests({
   };
 
   const toggleCard = (id) => {
-    setOpenCards((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+    dispatch(toggleReferralCard(id));
   };
 
   const handleReplyChange = (id, text) => {
-    setReplyMessages((prev) => ({
-      ...prev,
-      [id]: text,
-    }));
+    dispatch(setReferralReplyMessage({ id, text }));
   };
 
-  const handleAccept = (candidateId, e) => {
+  const handleAccept = async (candidateId, e) => {
     e.stopPropagation();
     const note = (replyMessages[candidateId] || '').trim() || 'Referral approved.';
-    if (onUpdateReferralStatus) {
-      onUpdateReferralStatus(candidateId, 'approved', note);
+    try {
+      await dispatch(respondToReferral({
+        id: candidateId,
+        data: { status: 'Approved', alumniResponse: note },
+      })).unwrap();
+      await dispatch(fetchReferrals()).unwrap().catch(() => {
+        dispatch(setAlumniLoadError('Response saved. Could not refresh referral requests.'));
+      });
+    } catch (error) {
+      infoDialog(errorMessage(error, 'Could not save your response. Please try again.'));
     }
   };
 
   const handleOpenDeclineModal = (candidate, e) => {
     e.stopPropagation();
-    setDeclineReferralId(candidate.id);
+    dispatch(openDeclineModal(candidate.id));
   };
 
-  const handleConfirmDecline = (reason) => {
-    if (onUpdateReferralStatus && declineReferral) {
-      onUpdateReferralStatus(declineReferral.id, 'declined', reason);
+  const handleConfirmDecline = async (reason) => {
+    if (declineReferral) {
+      try {
+        await dispatch(respondToReferral({
+          id: declineReferral.id,
+          data: { status: 'Rejected', alumniResponse: reason || undefined },
+        })).unwrap();
+        await dispatch(fetchReferrals()).unwrap().catch(() => {
+          dispatch(setAlumniLoadError('Response saved. Could not refresh referral requests.'));
+        });
+      } catch (error) {
+        infoDialog(errorMessage(error, 'Could not save your response. Please try again.'));
+      }
     }
-    setDeclineReferralId(null);
+    dispatch(closeDeclineModal());
   };
 
   // Filter and search
@@ -85,9 +123,7 @@ export default function ReferralRequests({
     <div className="layout alumni-app-container">
       <Sidebar
         activePage="referrals"
-        onNavigate={onNavigate}
-        onOpenSignOut={() => setIsSignOutOpen(true)}
-        alumni={alumni}
+        onOpenSignOut={() => dispatch(openAlumniSignOut())}
       />
 
       <main className="main">
@@ -115,16 +151,18 @@ export default function ReferralRequests({
               id="search-input"
               placeholder="Search by name, year, dept, or cgpa..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => dispatch(setReferralsSearch(e.target.value))}
             />
           </div>
 
-          {/* Topbar Avatar → Profile */}
+          {/* Topbar Avatar â†’ Profile */}
           <button
             type="button"
             className="avatar avatar--topbar"
             title="My Profile"
-            onClick={() => onNavigate && onNavigate('profile')}
+            onClick={() => {
+              dispatch(setAlumniPage({ page: 'profile', props: {} }));
+            }}
             style={{ cursor: 'pointer', border: 'none', marginLeft: '12px', flexShrink: 0 }}
           >
             {alumni.initials || ''}
@@ -138,7 +176,7 @@ export default function ReferralRequests({
               key={filterKey}
               type="button"
               className={`tab ${currentFilter === filterKey ? 'tab--active' : ''}`}
-              onClick={() => setCurrentFilter(filterKey)}
+              onClick={() => dispatch(setReferralsFilter(filterKey))}
             >
               {filterKey.charAt(0).toUpperCase() + filterKey.slice(1)} ({counts[filterKey] || 0})
             </button>
@@ -188,7 +226,7 @@ export default function ReferralRequests({
                       <div className="card-info">
                         <div className="card-name">{r.name}</div>
                         <p className="card-detail">
-                          {r.department} • CGPA: {r.cgpa} • Batch {r.batch}
+                          {r.department} â€¢ CGPA: {r.cgpa} â€¢ Batch {r.batch}
                         </p>
                         <p className="card-for">
                           <span className="label">For: </span>
@@ -276,7 +314,7 @@ export default function ReferralRequests({
                       <button
                         type="button"
                         className="resume-btn"
-                        onClick={() => setResumeReferralId(r.id)}
+                        onClick={() => dispatch(openResumeModal(r.id))}
                       >
                         View Applied Resume
                       </button>
@@ -345,19 +383,19 @@ export default function ReferralRequests({
         isOpen={Boolean(resumeReferral)}
         candidateName={resumeReferral?.name}
         candidate={resumeReferral}
-        onClose={() => setResumeReferralId(null)}
+        onClose={() => dispatch(closeResumeModal())}
       />
 
       <DeclineModal
         isOpen={Boolean(declineReferral)}
         candidateName={declineReferral?.name}
-        onClose={() => setDeclineReferralId(null)}
+        onClose={() => dispatch(closeDeclineModal())}
         onConfirm={handleConfirmDecline}
       />
 
       <SignOutModal
         isOpen={isSignOutOpen}
-        onClose={() => setIsSignOutOpen(false)}
+        onClose={() => dispatch(closeAlumniSignOut())}
       />
     </div>
   );

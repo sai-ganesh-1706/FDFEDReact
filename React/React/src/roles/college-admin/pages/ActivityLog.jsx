@@ -1,30 +1,29 @@
-import { useEntityList } from '../../../store/useEntities.js';
-import { useViewState } from '../../../store/useViewState.js';
+// Data Flow (roles/college-admin/pages/ActivityLog.jsx):
+// Backend API -> Redux Thunks/Slices (activitySlice, collegeAdminSlice) -> useSelector(selectOfficerActivity, selectCollegeActivityLogUi) -> UI render
+// User Actions -> dispatch(fetchOfficerActivity) -> Slice reducers/thunks -> Redux state update
 import { useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { errorMessage } from '../../../services/api.js';
-import { useOperations } from '../../../store/useOperations.js';
+import { fetchOfficerActivity, selectOfficerActivity } from '../../../store/slices/activitySlice.js';
+import { selectCollegeActivityLogUi, setCollegeActivityLogUi } from '../store/collegeAdminSlice.js';
 
 export default function ActivityLog() {
-  const commands = useOperations();
-  const entries = useEntityList('activityEntries', 'officers');
-  const [
-    { loading, error, query },
-    { setLoading, setError, setQuery },
-  ] = useViewState('collegeAdmin', 'ActivityLog', () => ({
-    loading: true,
-    error: "",
-    query: "",
-  }));
+  const dispatch = useDispatch();
+  const entries = useSelector(selectOfficerActivity);
+  const { loading, error, query } = useSelector(selectCollegeActivityLogUi);
+  const setLoading = useCallback((v) => dispatch(setCollegeActivityLogUi({ loading: v })), [dispatch]);
+  const setError = useCallback((v) => dispatch(setCollegeActivityLogUi({ error: v })), [dispatch]);
+  const setQuery = (v) => dispatch(setCollegeActivityLogUi({ query: v }));
   const load = useCallback(async () => {
     try {
-      await commands.listOfficerActivity();
+      await dispatch(fetchOfficerActivity()).unwrap();
       setError("");
     } catch (failure) {
       setError(errorMessage(failure, "Could not load officer activity."));
     } finally {
       setLoading(false);
     }
-  }, [commands, setError, setLoading]);
+  }, [dispatch]);
   useEffect(() => {
     load();
     const timer = setInterval(load, 20000);

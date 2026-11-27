@@ -1,34 +1,37 @@
-import { useEntityList } from '../../../store/useEntities.js';
-import { useViewState } from '../../../store/useViewState.js';
+// Data Flow (roles/college-admin/pages/Recruiters.jsx):
+// Backend API -> Redux Thunks/Slices (collegeAdminSlice, recruitersSlice) -> useSelector(selectCollegeRecruitersUi, selectRecruiterRegistrations) -> UI render
+// User Actions -> dispatch(deleteRecruiter, fetchRecruiterRegistrations, loadRecruiters) -> Slice reducers/thunks -> Redux state update
 import { useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { errorMessage } from '../../../services/api.js';
-import { useOperations } from '../../../store/useOperations.js';
+import { selectCollegeRecruitersUi, setCollegeRecruitersUi } from '../store/collegeAdminSlice.js';
+import {
+  deleteRecruiter,
+  fetchRecruiterRegistrations,
+  selectRecruiterRegistrations,
+} from '../../../store/slices/recruitersSlice.js';
 import RecruiterOpportunitiesModal from "../../../shared/components/RecruiterOpportunitiesModal.jsx";
 import { confirmDialog, infoDialog } from "../../../shared/components/AppDialog.jsx";
 
 export default function Recruiters() {
-  const commands = useOperations();
-  const recruiters = useEntityList('recruiterRegistrations', 'workspace');
-  const [
-    { selectedId, error, loading, removingId },
-    { setSelectedId, setError, setLoading, setRemovingId },
-  ] = useViewState('collegeAdmin', 'Recruiters', () => ({
-    selectedId: null,
-    error: "",
-    loading: true,
-    removingId: null,
-  }));
+  const dispatch = useDispatch();
+  const recruiters = useSelector(selectRecruiterRegistrations);
+  const { selectedId, error, loading, removingId } = useSelector(selectCollegeRecruitersUi);
+  const setSelectedId = (v) => dispatch(setCollegeRecruitersUi({ selectedId: v }));
+  const setError = useCallback((v) => dispatch(setCollegeRecruitersUi({ error: v })), [dispatch]);
+  const setLoading = useCallback((v) => dispatch(setCollegeRecruitersUi({ loading: v })), [dispatch]);
+  const setRemovingId = (v) => dispatch(setCollegeRecruitersUi({ removingId: v }));
   const selected = recruiters.find((recruiter) => recruiter.id === selectedId);
   const loadRecruiters = useCallback(async () => {
     try {
-      await commands.listRecruiterRegistrations();
+      await dispatch(fetchRecruiterRegistrations()).unwrap();
       setError('');
     } catch (failure) {
       setError(errorMessage(failure, 'Could not load recruiters.'));
     } finally {
       setLoading(false);
     }
-  }, [commands, setError, setLoading]);
+  }, [dispatch]);
   useEffect(() => {
     loadRecruiters();
   }, [loadRecruiters]);
@@ -36,7 +39,7 @@ export default function Recruiters() {
     if (!await confirmDialog(`Remove recruiter ${recruiter.name} (${recruiter.email})? Their login access will be removed. This cannot be undone.`)) return;
     setRemovingId(recruiter.id);
     try {
-      await commands.deleteRecruiter(recruiter.id);
+      await dispatch(deleteRecruiter(recruiter.id)).unwrap();
       await loadRecruiters();
       infoDialog(`${recruiter.name} was removed.`);
     } catch (failure) {

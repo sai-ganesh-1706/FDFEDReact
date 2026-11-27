@@ -1,7 +1,11 @@
-import { useLogout } from '../../../shared/context/AuthContext.jsx';
+// Data Flow (roles/alumni/components/SignOutModal.jsx):
+// Backend API -> Redux Thunks/Slices (authSlice) -> useSelector(store state) -> UI render
+// User Actions -> dispatch(logoutUser) -> Slice reducers/thunks -> Redux state update
+import { useDispatch } from 'react-redux';
+import { logoutUser } from '../../../store/slices/authSlice.js';
 
 export default function SignOutModal({ isOpen, onClose, onConfirm }) {
-  const confirmSignOut = useLogout();
+  const dispatch = useDispatch();
   if (!isOpen) return null;
 
   return (
@@ -32,7 +36,7 @@ export default function SignOutModal({ isOpen, onClose, onConfirm }) {
               if (onConfirm) {
                 onConfirm();
               } else {
-                confirmSignOut();
+                dispatch(logoutUser());
               }
             }}
           >

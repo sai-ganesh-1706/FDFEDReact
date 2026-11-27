@@ -1,13 +1,15 @@
-import { ReduxAnchor } from '../../../shared/components/ReduxLink.jsx';
-import { useEntity } from '../../../store/useEntities.js';
-import { useViewState } from '../../../store/useViewState.js';
+// Data Flow (roles/college-admin/pages/Profile.jsx):
+// Backend API -> Redux Thunks/Slices (authSlice, collegeAdminSlice, collegesSlice, usersSlice) -> useSelector(selectSession, selectCollegeProfileUi, selectCollegeById, selectUserById) -> UI render
+// User Actions -> dispatch(fetchCollegeById, fetchUserById, updateUser, fetchProfile, saveProfile) -> Slice reducers/thunks -> Redux state update
 import { phoneError, phoneInputProps } from '../../../shared/utils/phone.js';
 import { useEffect } from 'react';
 import { Building2, ExternalLink, Mail, Shield, User } from 'lucide-react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { errorMessage } from '../../../services/api.js';
-import { useOperations } from '../../../store/useOperations.js';
-import { selectSession } from '../../../store/sessionSlice.js';
+import { selectSession } from '../../../store/slices/authSlice.js';
+import { selectCollegeProfileUi, setCollegeProfileUi } from '../store/collegeAdminSlice.js';
+import { fetchCollegeById, selectCollegeById } from '../../../store/slices/collegesSlice.js';
+import { fetchUserById, selectUserById, updateUser } from '../../../store/slices/usersSlice.js';
 import ChangePasswordModal from '../../../shared/components/ChangePasswordModal.jsx';
 
 const EMPTY_EDIT_FIELDS = {
@@ -15,20 +17,19 @@ const EMPTY_EDIT_FIELDS = {
 };
 
 export default function Profile({ collegeName, showToast, onProfileUpdated }) {
-  const commands = useOperations();
+  const dispatch = useDispatch();
   const session = useSelector(selectSession) || {};
-  const profile = useEntity('users', session.id);
-  const collegeInfo = useEntity('colleges', session.collegeId);
-  const [
-    { loading, isEditing, editFields, saving, isChangePasswordOpen },
-    { setLoading, setIsEditing, setEditFields, setSaving, setIsChangePasswordOpen },
-  ] = useViewState('collegeAdmin', 'Profile', () => ({
-    loading: true,
-    isEditing: false,
-    editFields: EMPTY_EDIT_FIELDS,
-    saving: false,
-    isChangePasswordOpen: false,
-  }));
+  const profile = useSelector((state) => selectUserById(state, session.id));
+  const collegeInfo = useSelector((state) => selectCollegeById(state, session.collegeId));
+  const { loading, isEditing, editFields, saving, isChangePasswordOpen } = useSelector(selectCollegeProfileUi);
+  const setLoading = (v) => dispatch(setCollegeProfileUi({ loading: v }));
+  const setIsEditing = (v) => dispatch(setCollegeProfileUi({ isEditing: v }));
+  const setEditFields = (updater) => {
+    const next = typeof updater === 'function' ? updater(editFields) : updater;
+    dispatch(setCollegeProfileUi({ editFields: next }));
+  };
+  const setSaving = (v) => dispatch(setCollegeProfileUi({ saving: v }));
+  const setIsChangePasswordOpen = (v) => dispatch(setCollegeProfileUi({ isChangePasswordOpen: v }));
 
   useEffect(() => {
     let active = true;
@@ -40,8 +41,8 @@ export default function Profile({ collegeName, showToast, onProfileUpdated }) {
       }
       try {
         await Promise.all([
-          commands.getUser(session.id),
-          session.collegeId ? commands.getCollege(session.collegeId) : Promise.resolve(null),
+          dispatch(fetchUserById(session.id)).unwrap(),
+          session.collegeId ? dispatch(fetchCollegeById(session.collegeId)).unwrap() : Promise.resolve(null),
         ]);
       } catch (error) {
         if (active) showToast?.(errorMessage(error, 'Failed to load profile.'), 'error');
@@ -52,7 +53,7 @@ export default function Profile({ collegeName, showToast, onProfileUpdated }) {
 
     fetchProfile();
     return () => { active = false; };
-  }, [session.id, session.collegeId, showToast]);
+  }, [dispatch, session.id, session.collegeId, showToast]);
 
   const startEditing = () => {
     if (!profile) return;
@@ -78,17 +79,21 @@ export default function Profile({ collegeName, showToast, onProfileUpdated }) {
     if (phoneError(editFields.phone)) { showToast?.(phoneError(editFields.phone), 'error'); return; }
     setSaving(true);
     try {
-      const { data: updated } = await commands.updateUser(session.id, {
-        name: editFields.name.trim(),
-        phone: editFields.phone.trim(),
-        department: editFields.department.trim(),
-        location: editFields.location.trim(),
-        about: editFields.about.trim(),
-        socialLinks: {
-          linkedin: editFields.linkedin.trim(),
-          portfolio: editFields.portfolio.trim(),
+      const updated = await dispatch(updateUser({
+        id: session.id,
+        data: {
+          name: editFields.name.trim(),
+          phone: editFields.phone.trim(),
+          department: editFields.department.trim(),
+          location: editFields.location.trim(),
+          about: editFields.about.trim(),
+          socialLinks: {
+            linkedin: editFields.linkedin.trim(),
+            portfolio: editFields.portfolio.trim(),
+          },
         },
-      });
+      })).unwrap();
+      if (!updated) return;
       const nextSession = { ...session, name: updated.name, email: updated.email };
       if (onProfileUpdated?.(nextSession) === false) return;
       setIsEditing(false);
@@ -210,7 +215,7 @@ function LinkRow({ label, value }) {
   return (
     <div className="ca-profile-info-row">
       <span className="ca-profile-info-label">{label}</span>
-      {value ? <ReduxAnchor href={value} target="_blank" rel="noopener noreferrer" className="ca-profile-info-link">{value} <ExternalLink size={12} /></ReduxAnchor> : <span className="ca-profile-info-value">—</span>}
+      {value ? <a href={value} target="_blank" rel="noopener noreferrer" className="ca-profile-info-link">{value} <ExternalLink size={12} /></a> : <span className="ca-profile-info-value">—</span>}
     </div>
   );
 }

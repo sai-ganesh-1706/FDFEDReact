@@ -1,3 +1,5 @@
+// Data Flow (roles/college-admin/pages/Reports.jsx):
+// Presentational component receiving Redux-backed data and dispatch callbacks as props from its parent container.
 import { BarChart2, Award, TrendingUp, GraduationCap, Users, CheckCircle, Clock } from 'lucide-react';
 
 // Build department-wise stats from the real students array

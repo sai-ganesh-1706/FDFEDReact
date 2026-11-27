@@ -1,13 +1,21 @@
-import { useEntityList } from '../../../store/useEntities.js';
-import { useViewState } from '../../../store/useViewState.js';
+// Data Flow (roles/college-admin/pages/Announcements.jsx):
+// Backend API -> Redux Thunks/Slices (announcementsSlice, collegeAdminSlice) -> useSelector(selectWorkspaceAnnouncements, selectCollegeAnnouncementsUi) -> UI render
+// User Actions -> dispatch(createAnnouncement, deleteAnnouncement, fetchAnnouncements) -> Slice reducers/thunks -> Redux state update
 import { infoDialog, confirmDialog } from '../../../shared/components/AppDialog.jsx';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  createAnnouncement,
+  deleteAnnouncement,
+  fetchAnnouncements,
+  selectWorkspaceAnnouncements,
+} from '../../../store/slices/announcementsSlice.js';
+import { selectCollegeAnnouncementsUi, setCollegeAnnouncementsUi } from '../store/collegeAdminSlice.js';
+import { errorMessage } from '../../../services/api.js';
 import {
   Megaphone, Plus, Clock, CheckCircle, Info, AlertTriangle,
   X, RefreshCw, XCircle
 } from 'lucide-react';
-import { usePlatformData } from '../../../shared/context/PlatformDataContext.jsx';
-import { errorMessage } from '../../../services/api.js';
 
 const TYPE_OPTIONS = [
   { value: 'general',   label: 'General',     color: '#0ea5e9' },
@@ -28,14 +36,14 @@ const TYPE_ICON = {
 };
 
 function AddAnnouncementModal({ onClose, onSave }) {
-  const [
-    { form, error, saving },
-    { setForm, setError, setSaving },
-  ] = useViewState('collegeAdmin', 'AddAnnouncementModal', () => ({
-    form: { title: '', message: '', type: 'general' },
-    error: '',
-    saving: false,
-  }));
+  const dispatch = useDispatch();
+  const { form, error, saving } = useSelector(selectCollegeAnnouncementsUi);
+  const setForm = (updater) => {
+    const next = typeof updater === 'function' ? updater(form) : updater;
+    dispatch(setCollegeAnnouncementsUi({ form: next }));
+  };
+  const setError = (v) => dispatch(setCollegeAnnouncementsUi({ error: v }));
+  const setSaving = (v) => dispatch(setCollegeAnnouncementsUi({ saving: v }));
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
   const handleSave = async () => {
@@ -108,36 +116,35 @@ function AddAnnouncementModal({ onClose, onSave }) {
 }
 
 export default function Announcements({ collegeName }) {
-  const { getAnnouncements, postAnnouncement, deleteAnnouncement } = usePlatformData();
-  const announcements = useEntityList('announcements', 'workspace');
-  const [
-    { loading, err, showAdd },
-    { setLoading, setErr, setShowAdd },
-  ] = useViewState('collegeAdmin', 'Announcements', () => ({
-    loading: true,
-    err: '',
-    showAdd: false,
+  const dispatch = useDispatch();
+  const announcements = useSelector(selectWorkspaceAnnouncements);
+  const { loading, err, showAdd } = useSelector(selectCollegeAnnouncementsUi);
+  const setLoading = useCallback((v) => dispatch(setCollegeAnnouncementsUi({ loading: v })), [dispatch]);
+  const setErr = useCallback((v) => dispatch(setCollegeAnnouncementsUi({ err: v })), [dispatch]);
+  const setShowAdd = (v) => dispatch(setCollegeAnnouncementsUi({
+    showAdd: v,
+    ...(v ? { form: { title: '', message: '', type: 'general' }, error: '', saving: false } : {}),
   }));
 
-  const load = () => {
+  const load = useCallback(() => {
     setLoading(true);
     setErr('');
-    getAnnouncements()
+    dispatch(fetchAnnouncements()).unwrap()
       .catch(e   => setErr(errorMessage(e, 'Could not load announcements.')))
       .finally(() => setLoading(false));
-  };
+  }, [dispatch]);
 
-  useEffect(load, []);
+  useEffect(load, [load]);
 
   const handleSave = async (payload) => {
-    await postAnnouncement(payload);
+    await dispatch(createAnnouncement(payload)).unwrap();
     load();
   };
 
   const handleDelete = async (id) => {
     if (!await confirmDialog('Remove this announcement?')) return;
     try {
-      await deleteAnnouncement(id);
+      await dispatch(deleteAnnouncement(id)).unwrap();
       load();
     } catch (e) {
       infoDialog(errorMessage(e, 'Could not remove announcement.'));

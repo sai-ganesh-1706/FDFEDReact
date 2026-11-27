@@ -1,21 +1,31 @@
-import { useViewState } from '../../../store/useViewState.js';
+// Data Flow (roles/alumni/pages/AlumniDashboard.jsx):
+// Backend API -> Redux Thunks/Slices (alumniSlice, referralsSlice) -> useSelector(selectAlumni, selectAlumniSignOutOpen, selectFadingCardId) -> UI render
+// User Actions -> dispatch(fetchReferrals, respondToReferral) -> Slice reducers/thunks -> Redux state update
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { errorMessage } from '../../../services/api.js';
+import { infoDialog } from '../../../shared/components/AppDialog.jsx';
+import {
+  
+  closeAlumniSignOut,
+  openAlumniSignOut,
+  selectAlumni,
+  selectAlumniSignOutOpen,
+  selectFadingCardId,
+  setAlumniLoadError,
+  setAlumniPage,
+  setFadingCardId,
+} from '../store/alumniSlice.js';
+import { fetchReferrals, respondToReferral } from '../../../store/slices/referralsSlice.js';
 import Sidebar from '../components/Sidebar';
 import SignOutModal from '../components/SignOutModal';
 import '../styles/Alumni.css';
 
-export default function AlumniDashboard({
-  alumniData,
-  referrals = [],
-  onUpdateReferralStatus,
-  onNavigate,
-}) {
-  const [
-    { isSignOutOpen, fadingCardId },
-    { setIsSignOutOpen, setFadingCardId },
-  ] = useViewState('alumni', 'AlumniDashboard', () => ({
-    isSignOutOpen: false,
-    fadingCardId: null,
-  }));
+export default function AlumniDashboard() {
+  const dispatch = useDispatch();
+  // Redux data source: alumniSlice (selectAlumni derives alumniData from usersSlice and referrals from referralsSlice).
+  const { alumniData, referrals = [] } = useSelector(selectAlumni, shallowEqual);
+  const isSignOutOpen = useSelector(selectAlumniSignOutOpen);
+  const fadingCardId = useSelector(selectFadingCardId);
 
   const alumni = alumniData || {};
 
@@ -88,28 +98,28 @@ export default function AlumniDashboard({
 
   const handleQuickApprove = (candidateId, e) => {
     e.stopPropagation();
-    setFadingCardId(candidateId);
-    setTimeout(() => {
-      if (onUpdateReferralStatus) {
-        onUpdateReferralStatus(candidateId, 'approved', 'Referral approved from dashboard.');
+    dispatch(setFadingCardId(candidateId));
+    setTimeout(async () => {
+      try {
+        await dispatch(respondToReferral({
+          id: candidateId,
+          data: { status: 'Approved', alumniResponse: 'Referral approved from dashboard.' },
+        })).unwrap();
+        await dispatch(fetchReferrals()).unwrap().catch(() => {
+          dispatch(setAlumniLoadError('Response saved. Could not refresh referral requests.'));
+        });
+      } catch (error) {
+        infoDialog(errorMessage(error, 'Could not save your response. Please try again.'));
       }
-      setFadingCardId(null);
+      dispatch(setFadingCardId(null));
     }, 400);
-  };
-
-  const handleStatClick = (filter) => {
-    if (onNavigate) {
-      onNavigate('referrals', { filter });
-    }
   };
 
   return (
     <div className="layout alumni-app-container">
       <Sidebar
         activePage="dashboard"
-        onNavigate={onNavigate}
-        onOpenSignOut={() => setIsSignOutOpen(true)}
-        alumni={alumni}
+        onOpenSignOut={() => dispatch(openAlumniSignOut())}
       />
 
       <main className="main">
@@ -121,7 +131,9 @@ export default function AlumniDashboard({
               type="button"
               className="avatar avatar--topbar"
               title="My Profile"
-              onClick={() => onNavigate && onNavigate('profile')}
+              onClick={() => {
+                dispatch(setAlumniPage({ page: 'profile', props: {} }));
+              }}
             >
               {alumni.initials || 'SR'}
             </button>
@@ -132,10 +144,10 @@ export default function AlumniDashboard({
           {/* Welcome Banner */}
           <div className="welcome-banner">
             <h2 className="welcome-title">
-              Welcome back, {alumni.name ? alumni.name.split(' ')[0] : 'Alumni'}! 👋
+              Welcome back, {alumni.name ? alumni.name.split(' ')[0] : 'Alumni'}! ðŸ‘‹
             </h2>
             <p className="welcome-sub">
-              {alumni.company} • Class of {alumni.batch}
+              {alumni.company} â€¢ Class of {alumni.batch}
             </p>
             <p className="welcome-desc">
               Your referrals make a real difference to students' careers. Review pending requests and help deserving candidates get noticed by recruiters.
@@ -143,7 +155,9 @@ export default function AlumniDashboard({
             <button
               type="button"
               className="welcome-btn"
-              onClick={() => onNavigate && onNavigate('referrals')}
+              onClick={() => {
+                dispatch(setAlumniPage({ page: 'referrals', props: {} }));
+              }}
             >
               Review Referral Requests &rarr;
             </button>
@@ -155,7 +169,9 @@ export default function AlumniDashboard({
               <div
                 key={s.filter}
                 className="stat-card"
-                onClick={() => handleStatClick(s.filter)}
+                onClick={() => {
+                  dispatch(setAlumniPage({ page: 'referrals', props: { filter: s.filter } }));
+                }}
               >
                 <div className={`stat-icon ${s.iconClass}`}>
                   <svg
@@ -214,7 +230,7 @@ export default function AlumniDashboard({
                         <div>
                           <div className="mini-name">{r.name}</div>
                           <div className="mini-detail">
-                            {r.department} • CGPA: {r.cgpa}
+                            {r.department} â€¢ CGPA: {r.cgpa}
                           </div>
                         </div>
                       </div>
@@ -244,7 +260,9 @@ export default function AlumniDashboard({
                       <button
                         type="button"
                         className="mini-btn mini-btn--review"
-                        onClick={() => onNavigate && onNavigate('referrals', { openCardId: r.id })}
+                        onClick={() => {
+                          dispatch(setAlumniPage({ page: 'referrals', props: { openCardId: r.id } }));
+                        }}
                       >
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <circle cx="12" cy="12" r="10" />
@@ -320,7 +338,7 @@ export default function AlumniDashboard({
 
       <SignOutModal
         isOpen={isSignOutOpen}
-        onClose={() => setIsSignOutOpen(false)}
+        onClose={() => dispatch(closeAlumniSignOut())}
       />
     </div>
   );

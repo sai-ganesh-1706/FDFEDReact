@@ -1,7 +1,9 @@
-import { useViewState } from '../../store/useViewState.js';
+// Data Flow (roles/college-admin/CollegeAdminApp.jsx):
+// Backend API -> Redux Thunks/Slices (authSlice, collegeAdminSlice, messagesSlice) -> useSelector(selectSession, selectCollegeAdmin, selectCollegeAdminPlatform, selectCollegeAdminSignOutOpen, selectUnreadCollegeMessages) -> UI render
+// User Actions -> dispatch(logoutUser, updateSessionUser, loadCollegeInboxSeenTime, markCollegeInboxSeen, refreshCollegeAdminData, fetchInboxMessages, updateSession, markMessagesSeen) -> Slice reducers/thunks -> Redux state update
 import { infoDialog } from '../../shared/components/AppDialog.jsx';
 import { useCallback, useEffect } from 'react';
-import { shallowEqual, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import CollegeAdminSidebar from './components/Sidebar';
 import CATopbar from './components/Topbar';
 import CADashboard from './pages/Dashboard';
@@ -14,14 +16,22 @@ import Reports from './pages/Reports';
 import Profile from './pages/Profile';
 import SignOutModal from './components/SignOutModal';
 import Messages from './pages/Messages';
-import { useOperations } from '../../store/useOperations.js';
-import { useLogout, useUpdateSession } from '../../shared/context/AuthContext.jsx';
-import { COLLEGE_ADMIN_TAB_KEY, COLLEGE_ADMIN_TABS, collegeAdminActions, selectCollegeAdmin, selectUnreadCollegeMessages } from '../../store/college-admin/collegeAdminSlice.js';
-import { loadInboxSeenTime, markInboxSeen } from '../../store/college-admin/collegeInboxCommands.js';
-import { selectSession } from '../../store/sessionSlice.js';
-import useWorkspaceDispatch from '../../store/useWorkspaceDispatch.js';
-import { usePlatformData } from '../../shared/context/PlatformDataContext.jsx';
-import { savePage } from '../../shared/utils/navigationState.js';
+import { logoutUser, selectSession, updateSessionUser } from '../../store/slices/authSlice.js';
+import {
+  
+  COLLEGE_ADMIN_TABS,
+  closeCollegeAdminSignOut,
+  loadCollegeInboxSeenTime,
+  markCollegeInboxSeen,
+  openCollegeAdminSignOut,
+  refreshCollegeAdminData,
+  selectCollegeAdmin,
+  selectCollegeAdminPlatform,
+  selectCollegeAdminSignOutOpen,
+  selectUnreadCollegeMessages,
+  setCollegeAdminTab,
+} from './store/collegeAdminSlice.js';
+import { fetchInboxMessages } from '../../store/slices/messagesSlice.js';
 import './styles/CollegeAdmin.css';
 
 function getInitials(name = '') {
@@ -45,31 +55,37 @@ function getTitle(tab) {
 }
 
 export default function CollegeAdminApp() {
-  const commands = useOperations();
-  const platform = usePlatformData();
-  const { data }  = platform;
+  const dispatch = useDispatch();
+  // Redux data source: collegeAdminSlice (colleges, officers, students, alumni, applications) and authSlice (session).
+  // Hydrated on mount via refreshCollegeAdminData() and fetchInboxMessages() thunks.
+  const platform = useSelector(selectCollegeAdminPlatform);
+  const { data } = platform;
   const user = useSelector(selectSession);
-  const dispatch = useWorkspaceDispatch();
-  const confirmSignOut = useLogout();
-  const updateSession = useUpdateSession();
+  const confirmSignOut = () => dispatch(logoutUser());
+  const updateSession = (u) => dispatch(updateSessionUser({ user: u }));
   const workspace = useSelector(selectCollegeAdmin, shallowEqual);
   const userName = user.name || 'College Admin';
 
   const activeTab = workspace.activeTab;
   const unread = useSelector(selectUnreadCollegeMessages);
-  const [{ isSignOutOpen }, { setIsSignOutOpen }] = useViewState('collegeAdmin', 'CollegeAdminApp', () => ({
-    isSignOutOpen: false,
-  }));
+  const isSignOutOpen = useSelector(selectCollegeAdminSignOutOpen);
+  const setIsSignOutOpen = (v) => dispatch(v ? openCollegeAdminSignOut() : closeCollegeAdminSignOut());
+
+  useEffect(() => {
+    if (user.role === 'college_admin' && user.collegeId != null) {
+      dispatch(refreshCollegeAdminData()).catch(() => {});
+    }
+  }, [dispatch, user.role, user.collegeId]);
 
   // Messages from the super admin: badge = how many arrived since the admin last opened the inbox.
   useEffect(() => {
-    dispatch(loadInboxSeenTime());
-    const check = () => commands.listInboxMessages().catch(() => {});
+    dispatch(loadCollegeInboxSeenTime());
+    const check = () => dispatch(fetchInboxMessages()).catch(() => {});
     check();
     const timer = setInterval(check, 20000);
     return () => clearInterval(timer);
-  }, [commands, dispatch, user.collegeId]);
-  const markMessagesSeen = () => dispatch(markInboxSeen());
+  }, [dispatch, user.collegeId]);
+  const markMessagesSeen = () => dispatch(markCollegeInboxSeen());
 
   const collegeId   = Number(user.collegeId) || 1;
   const collegeInfo = data.colleges.find(c => c.id === collegeId) || data.colleges[0] || { name: '' };
@@ -90,12 +106,6 @@ export default function CollegeAdminApp() {
 
   const showToast = useCallback((msg) => { infoDialog(msg); }, []);
 
-  const setActiveTab = useCallback((tab) => {
-    const nextTab = COLLEGE_ADMIN_TABS.includes(tab) ? tab : 'dashboard';
-    savePage(COLLEGE_ADMIN_TAB_KEY, nextTab);
-    dispatch(collegeAdminActions.tabChanged(nextTab));
-  }, [dispatch]);
-
   const handleSignOut = () => setIsSignOutOpen(true);
 
   const sharedProps = {
@@ -104,7 +114,6 @@ export default function CollegeAdminApp() {
     collegeName: collegeInfo.name,
     collegeInfo,
     showToast,
-    setActiveTab,
     userName,
   };
 
@@ -114,7 +123,6 @@ export default function CollegeAdminApp() {
         {/* Sidebar */}
         <CollegeAdminSidebar
           activeTab={activeTab}
-          setActiveTab={setActiveTab}
           collegeName={collegeInfo.name}
           onSignOut={handleSignOut}
           unreadMessages={unread}
@@ -126,7 +134,10 @@ export default function CollegeAdminApp() {
             title={getTitle(activeTab)}
             userName={userName}
             avatarInitials={getInitials(userName)}
-            onProfileClick={() => setActiveTab('profile')}
+            onProfileClick={() => {
+              const nextTab = COLLEGE_ADMIN_TABS.includes('profile') ? 'profile' : 'dashboard';
+              dispatch(setCollegeAdminTab(nextTab));
+            }}
             onSignOutClick={handleSignOut}
           />
 
@@ -134,15 +145,15 @@ export default function CollegeAdminApp() {
             {platform.error && (
               <div role="status">
                 {platform.error}{' '}
-                <button type="button" className="btn btn-ghost btn-sm" onClick={() => platform.refresh().catch(() => {})}>
+                <button type="button" className="btn btn-ghost btn-sm" onClick={() => dispatch(refreshCollegeAdminData()).catch(() => {})}>
                   Retry refresh
                 </button>
               </div>
             )}
             {activeTab === 'dashboard'     && <CADashboard     {...sharedProps} />}
             {activeTab === 'officers'      && <Officers        {...sharedProps} />}
-            {activeTab === 'students' && <AccountDirectory key="students" canCreate initialTab="candidates" showTabs={false} onChanged={platform.refresh} />}
-            {activeTab === 'alumni' && <AccountDirectory key="alumni" canCreate initialTab="alumni" showTabs={false} onChanged={platform.refresh} />}
+            {activeTab === 'students' && <AccountDirectory key="students" canCreate initialTab="candidates" showTabs={false} onChanged={() => dispatch(refreshCollegeAdminData())} />}
+            {activeTab === 'alumni' && <AccountDirectory key="alumni" canCreate initialTab="alumni" showTabs={false} onChanged={() => dispatch(refreshCollegeAdminData())} />}
             {activeTab === 'recruiters' && <Recruiters />}
             {activeTab === 'activity' && <ActivityLog />}
             {activeTab === 'announcements' && <Announcements   collegeName={collegeInfo.name} />}
